@@ -1,0 +1,57 @@
+/*
+
+// @mui material components
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+
+// Material Dashboard 2 React components
+import MDBox from "components/MDBox";
+import MDTypography from "components/MDTypography";
+
+// Material Dashboard 2 React example components
+import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+
+import Axios  from "axios";
+import { useState } from "react";
+
+
+function Department() {
+
+  const [departmentList, setDepartmentList] = useState([]);
+  const getDepartment = () => {
+    Axios.get('http://localhost:3003/department').then((response) => {
+      setDepartmentList(response.data);
+    });
+  }
+
+  return (
+    <DashboardLayout>
+      <DashboardNavbar />
+      <div className="=container">
+        <div className="department">
+          <button class="btn btn-primary" onClick={getDepartment}>Show</button>
+          <br></br>
+          <br></br>
+          {departmentList.map((val, key) => {
+            return (
+              <div className="employee card">
+                <div className="card-body text-left">
+                  <p className="card-text">DepartmentID: {val.DepartmentID}</p>
+                  <p className="card-text">DepartmentName: {val.DepartmentName}</p>
+                  <p className="card-text">CreateDate: {val.CreateDate}</p>
+                  <p className="card-text">CreateBy: {val.CreateBy}</p>
+                  <p className="card-text">UpdateDate: {val.UpdateDate}</p>
+                  <p className="card-text">UpdateBy: {val.UpdateBy}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+    </DashboardLayout>
+  );
+}
+export default Department;
+*/

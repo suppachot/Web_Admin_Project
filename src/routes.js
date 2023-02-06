@@ -24,7 +24,8 @@
 import Dashboard from "layouts/dashboard";
 import Tables from "layouts/tables";
 import Meetingroom from "layouts/meetingroom";
-import Employee from "layouts/employee";
+import AddEmployee from "layouts/employee/addemployee";
+import HomeEmployee from "layouts/employee/homeemployee";
 import Department from "layouts/department";
 import News from "layouts/news";
 import Checkin from "layouts/checkin";
@@ -36,6 +37,7 @@ import SignUp from "layouts/login/sign-up";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import { MeetingRoom } from "@mui/icons-material";
+
 
 
 const routes = [
@@ -53,7 +55,7 @@ const routes = [
     key: "employee",
     icon: <Icon fontSize="small"></Icon>,
     route: "/employee",
-    component: <Employee />, //edit
+    component: <HomeEmployee />, 
   },
   {
     type: "collapse",
@@ -61,7 +63,7 @@ const routes = [
     key: "department",
     icon: <Icon fontSize="small"></Icon>,
     route: "/department",
-    component: <Department />,  //edit
+    component: <Department />,  
   },
   {
     type: "collapse",
@@ -69,7 +71,7 @@ const routes = [
     key: "Meeting-room",
     icon: <Icon fontSize="small"></Icon>,
     route: "/meetingroom",
-    component: <Meetingroom />,  //edit
+    component: <Meetingroom />,  
   },
   {
     type: "collapse",
@@ -77,7 +79,7 @@ const routes = [
     key: "news",
     icon: <Icon fontSize="small"></Icon>,
     route: "/news",
-    component: <News />,  //edit
+    component: <News />,  
   },
   {
     type: "collapse",
@@ -85,7 +87,7 @@ const routes = [
     key: "checkin",
     icon: <Icon fontSize="small"></Icon>,
     route: "/checkin",
-    component: <Checkin />,  //edit
+    component: <Checkin />,  
   },
   {
     type: "collapse",
@@ -93,7 +95,7 @@ const routes = [
     key: "checkout",
     icon: <Icon fontSize="small"></Icon>,
     route: "/checkout",
-    component: <Checkout />,  //edit
+    component: <Checkout />,  
   },
   {
     type: "collapse",
@@ -117,7 +119,7 @@ const routes = [
     key: "notifications",
     icon: <Icon fontSize="small">notifications</Icon>,
     route: "/notifications",
-    component: <Notifications />,
+    component: <AddEmployee />,
   },
  
 ];

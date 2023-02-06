@@ -56,6 +56,7 @@ export default function App() {
   const { pathname } = useLocation();
 
   // Cache for the rtl
+  /*
   useMemo(() => {
     const cacheRtl = createCache({
       key: "rtl",
@@ -64,7 +65,7 @@ export default function App() {
 
     setRtlCache(cacheRtl);
   }, []);
-
+*/
   // Open sidenav when mouse enter on mini sidenav
   const handleOnMouseEnter = () => {
     if (miniSidenav && !onMouseEnter) {

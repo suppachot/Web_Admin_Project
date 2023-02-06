@@ -1,0 +1,110 @@
+/*
+
+// @mui material components
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+
+// Material Dashboard 2 React components
+import MDBox from "components/MDBox";
+import MDTypography from "components/MDTypography";
+
+// Material Dashboard 2 React example components
+import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+
+import Axios from "axios";
+import { useState, useEffect } from "react";
+import DataTable from 'react-data-table-component';
+
+function Checkin() {
+
+  const [error, setError] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [items, setItems] = useState([]);
+  const [totalRows, setTotalRows] = useState(0);
+  const [perPage, setPerPage] = useState(10);
+
+  const columns = [
+    {
+      name: 'TransactionID',
+      selector: row => row.TransactionID,
+      width: '150px'
+    },
+    {
+      name: 'EmployeeID',
+      selector: row => row.EmployeeID,
+      width: '200px'
+    },
+    {
+      name: 'CheckInDate',
+      selector: row => row.CheckInDate,
+      width: '250px'
+    },
+    {
+      name: 'CheckInTime',
+      selector: row => row.CheckInTime,
+      width: '150px'
+    },
+    {
+      name: 'Location',
+      selector: row => row.Location,
+      width: '250px'
+    },
+    {
+      name: 'Model',
+      selector: row => row.Model,
+      width: '150px'
+    }
+  ];
+
+  useEffect(() => {
+    fetchData(1, perPage);
+  }, [])
+
+  const fetchData = async (page, per_page) => {
+    fetch(`http://localhost:5000/checkin?page=${page} & per_page=${per_page}`)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setIsLoaded(true);
+          setItems(result.data);
+          setTotalRows(result.total)
+        },
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      )
+  }
+
+  const handlePageChange = page => {
+    fetchData(page, perPage);
+  }
+  const handlePerRowsChange = async (newPerPage, page) => {
+    setPerPage(newPerPage);
+    fetchData(page.newPerPage);
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  } else if (!isLoaded) {
+    return <div>Loading...</div>;
+  } else {
+    return (
+      <DashboardLayout>
+        <DashboardNavbar />
+        <DataTable
+          columns={columns}
+          data={items}
+          pagination
+          paginationServer
+          paginationTotalRows={totalRows}
+          onChangePage={handlePageChange}
+          onChangeRowsPerPage={handlePerRowsChange}
+        />
+      </DashboardLayout>
+    );
+  }
+}
+export default Checkin;
+*/

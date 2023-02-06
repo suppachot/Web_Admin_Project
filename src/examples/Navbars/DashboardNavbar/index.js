@@ -90,7 +90,9 @@ function DashboardNavbar({ absolute, light, isMini }) {
       onClose={handleCloseMenu}
       sx={{ mt: 2 }}
     >
-      <NotificationItem icon={<Icon>email</Icon>} title="Check new messages" />
+        <Link to="/meetingroom">
+          <NotificationItem  icon={<Icon>email</Icon>}  title="Check new meeting approve"/>
+        </Link>
     </Menu>
   );
 
@@ -123,7 +125,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
               <MDInput label="Search here" />
             </MDBox>
             <MDBox color={light ? "white" : "inherit"}>
-              <Link to="/login/sign-in/basic">
+              <Link to="/employee">
                 <IconButton sx={navbarIconButton} size="small" disableRipple>
                   <Icon sx={iconsStyle}>account_circle</Icon>
                 </IconButton>
