@@ -56,19 +56,23 @@ app.get('/employee/:firstname', (req, res) => {
     })
 
 })
-
+// create Emp
 app.post('/addemployee', (req, res) => {
-    const employeeid = req.body.employeeid;
-    const titlename = req.body.titlename;
-    const firstname = req.body.firstname;
-    const lastname = req.body.lastname;
-    const phonenumber = req.body.phonenumber;
-    const email = req.body.email;
-    const departmentname = req.body.departmentname;
-    const rolename = req.body.rolename;
+    const EmployeeID = req.body.EmployeeID;
+    const TitleName = req.body.TitleName;
+    const FirstName = req.body.FirstName;
+    const LastName = req.body.LastName;
+    const PhoneNumber = req.body.PhoneNumber;
+    const Email = req.body.Email;
+    const DepartmentName = req.body.DepartmentName;
+    const RoleName = req.body.RoleName;
+    // const CreateDate = req.body.CreateDate;
+    // const CreateBy = req.body.CreateBy;
+    // const UpdateDate = req.body.UpdateDate;
+    // const UpdateBy = req.body.UpdateBy;
 
-    db.query("INSERT INTO employee (EmployeeID, TitleName, FirstName , LastName, PhoneNumber, Email, DepartmentName, RoleName) VALUES(?,?,?,?,?,?,?,?)",
-        [employeeid, titlename, firstname, lastname, phonenumber, email, departmentname, rolename],
+    db.query("INSERT INTO employee (EmployeeID, TitleName, FirstName , LastName, PhoneNumber, Email, DepartmentName, RoleName ) VALUES(?,?,?,?,?,?,?,?)",
+        [EmployeeID, TitleName, FirstName, LastName, PhoneNumber, Email, DepartmentName, RoleName],
         (err, result) => {
             if (err) {
                 console.log(err);
@@ -81,18 +85,18 @@ app.post('/addemployee', (req, res) => {
     console.log('Insert success');
 })
 //Update employe
-app.put("/updateemployee", (req, res) => {
-    const employeeid = req.body.employeeid;
-    const firstname = req.body.firstname;
-    const lastname = req.body.lastname;
-    const phonenumber = req.body.phonenumber;
-    const email = req.body.email;
-    const departmentname = req.body.departmentname;
-    const rolename = req.body.rolename;
+app.put("/updateemployee/:EmployeeID", (req, res) => {
+    const EmployeeID = req.body.EmployeeID;
+    const TitleName = req.body.TitleName;
+    const FirstName = req.body.FirstName;
+    const LastName = req.body.LastName;
+    const PhoneNumber = req.body.PhoneNumber;
+    const Email = req.body.Email;
+    const DepartmentName = req.body.DepartmentName;
+    const RoleName = req.body.RoleName;
 
-
-    db.query("UPDATE employee SET  FirstName = ? , LastName = ? , PhoneNumber = ? , Email = ? , DepartmentName = ? , RoleName = ? WHERE employeeid = ?",
-        [firstname, lastname, phonenumber, email, departmentname, rolename, employeeid], (err, result) => {
+    db.query("UPDATE employee SET TitleName=? , FirstName = ? , LastName = ? , PhoneNumber = ? , Email = ? , DepartmentName = ? , RoleName = ? WHERE EmployeeID = ?",
+        [TitleName, FirstName, LastName, PhoneNumber, Email, DepartmentName, RoleName,EmployeeID], (err, result) => {
             if (err) {
                 console.log(err);
             }
@@ -104,9 +108,9 @@ app.put("/updateemployee", (req, res) => {
 })
 
 // deleate empoyee  front end ยังทำงานไม่ได้
-app.delete('/deleteemployee/:employeeid', (req, res) => {
-    const employeeid = req.params.employeeid;
-    db.query("DELETE FROM  employee WHERE EmployeeID = ?", employeeid, (err, result) => {
+app.delete('/deleteemployee/:EmployeeID', (req, res) => {
+    const EmployeeID = req.params.EmployeeID;
+    db.query("DELETE FROM employee WHERE EmployeeID = ?", EmployeeID, (err, result) => {
         if (err) {
             console.log(err);
         }

@@ -27,11 +27,12 @@ import Meetingroom from "layouts/meetingroom";
 import AddEmployee from "layouts/employee/addemployee";
 import HomeEmployee from "layouts/employee/homeemployee";
 import Department from "layouts/department";
+import UpEMP from "layouts/employee/updateemployee";
 //news
 import News from "layouts/news/news";
 import CreateNews from "layouts/news/createnews";
 import DetailNews from "layouts/news/detailnews";
-import EditNews from "layouts/news/editnews";
+import EditsNews from "layouts/news/editnews";
 
 import Checkin from "layouts/checkin";
 import Checkout from "layouts/checkout";
@@ -99,8 +100,8 @@ const routes = [
     name: "Check",
     key: "news",
     icon: <Icon fontSize="small"></Icon>,
-    route: "/news/editnews",
-    component: <EditNews />,  
+    route: "/editsnews",
+    component: <EditsNews />,  
   },
   {
     key: "news",
