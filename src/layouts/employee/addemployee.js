@@ -16,14 +16,14 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 
 function AddEmployee() {
   // เก็บบันทึกค่าลง state
-  const [employeeid, setEmployeeID] = useState("");
-  const [titlename, setTitleName] = useState("");
-  const [firstname, setFirstName] = useState("");
-  const [lastname, setLastName] = useState("");
-  const [phonenumber, setPhoneNumber] = useState("");
-  const [email, setEmail] = useState("");
-  const [departmentname, setDepartmentName] = useState("");
-  const [rolename, setRoleName] = useState("");
+  const [EmployeeID, setEmployeeID] = useState("");
+  const [TitleName, setTitleName] = useState("");
+  const [FirstName, setFirstName] = useState("");
+  const [LastName, setLastName] = useState("");
+  const [PhoneNumber, setPhoneNumber] = useState("");
+  const [Email, setEmail] = useState("");
+  const [DepartmentName, setDepartmentName] = useState("");
+  const [RoleName, setRoleName] = useState("");
 
   // อ่านค่าจาก db
   const [employeeList, setEmployeeList] = useState([]);
@@ -36,26 +36,26 @@ function AddEmployee() {
   // ส่งข้อมูล 
   const addEmployee = () => {
     Axios.post('http://localhost:5000/addemployee', {
-      employeeid: employeeid,
-      titlename: titlename,
-      firstname: firstname,
-      lastname: lastname,
-      phonenumber: phonenumber,
-      email: email,
-      departmentname: departmentname,
-      rolename: rolename
+      EmployeeID: EmployeeID,
+      TitleName: TitleName,
+      FirstName: FirstName,
+      LastName: LastName,
+      PhoneNumber: PhoneNumber,
+      Email: Email,
+      DepartmentName: DepartmentName,
+      RoleName: RoleName
     }).then(() => {
       setEmployeeList([
         ...employeeList,
         {
-          employeeid: employeeid,
-          titlename: titlename,
-          firstname: firstname,
-          lastname: lastname,
-          phonenumber: phonenumber,
-          email: email,
-          departmentname: departmentname,
-          rolename: rolename
+          EmployeeID: EmployeeID,
+          TitleName: TitleName,
+          FirstName: FirstName,
+          LastName: LastName,
+          PhoneNumber: PhoneNumber,
+          Email: Email,
+          DepartmentName: DepartmentName,
+          RoleName: RoleName
         }
       ])
     })

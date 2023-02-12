@@ -93,7 +93,7 @@ function HomeEmployee() {
                 <div className="employee" >
                     <br></br>
                     <button class="btn btn-danger" >Delete</button>
-                    <button class="btn btn-warning" >Edit</button>
+                    <Link to='/editsnews' class="btn btn-warning" >Edit</Link>
 
                     <br></br>
                 </div>
@@ -136,6 +136,7 @@ function HomeEmployee() {
                 <DataTable
                     columns={columns}
                     data={items}
+                    
                 />
                 <br></br>
                 <br></br>

@@ -20,7 +20,7 @@ function DetailNews() {
 
     useEffect(() => {
         fetch("http://localhost:5000/news/" + NewsNo).then((res) => {
-            return res.json();
+            
         }).then((resp) => {
             newsdatachange(resp);
         }).catch((err) => {
