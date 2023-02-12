@@ -92,8 +92,6 @@ function HomeEmployee() {
             selector: row =>
                 <div className="employee" >
                     <br></br>
-                    <button class="btn btn-secondary" >ดูรายละเอียด</button>
-                    <br></br><br></br>
                     <button class="btn btn-danger" >Delete</button>
                     <button class="btn btn-warning" >Edit</button>
 

@@ -27,16 +27,23 @@ import Meetingroom from "layouts/meetingroom";
 import AddEmployee from "layouts/employee/addemployee";
 import HomeEmployee from "layouts/employee/homeemployee";
 import Department from "layouts/department";
-import News from "layouts/news";
+//news
+import News from "layouts/news/news";
+import CreateNews from "layouts/news/createnews";
+import DetailNews from "layouts/news/detailnews";
+import EditNews from "layouts/news/editnews";
+
 import Checkin from "layouts/checkin";
 import Checkout from "layouts/checkout";
 import Notifications from "layouts/notifications";
 import SignIn from "layouts/login/sign-in";
 import SignUp from "layouts/login/sign-up";
 
+
+
 // @mui icons
 import Icon from "@mui/material/Icon";
-import { MeetingRoom } from "@mui/icons-material";
+import { ImportExport, MeetingRoom } from "@mui/icons-material";
 
 
 
@@ -82,6 +89,26 @@ const routes = [
     component: <News />,  
   },
   {
+    key: "news",
+    icon: <Icon fontSize="small"></Icon>,
+    route: "/createnews",
+    component: <CreateNews />,  
+  },
+  {
+    type: "collapse",
+    name: "Check",
+    key: "news",
+    icon: <Icon fontSize="small"></Icon>,
+    route: "/news/editnews",
+    component: <EditNews />,  
+  },
+  {
+    key: "news",
+    icon: <Icon fontSize="small"></Icon>,
+    route: "/detailsenews",
+    component: <DetailNews />,  
+  },
+  {
     type: "collapse",
     name: "Checkin",
     key: "checkin",
@@ -107,18 +134,9 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Tables",
-    key: "tables",
-    icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/tables",
-    component: <Tables />,
-  },
-  {
-    type: "collapse",
-    name: "Notifications",
+    name: "addempoytest",
     key: "notifications",
-    icon: <Icon fontSize="small">notifications</Icon>,
-    route: "/notifications",
+    route: "/addempolyee",
     component: <AddEmployee />,
   },
  

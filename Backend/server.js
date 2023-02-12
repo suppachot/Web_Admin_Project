@@ -54,7 +54,7 @@ app.get('/employee/:firstname', (req, res) => {
             res.send(result);
         }
     })
-    
+
 })
 
 app.post('/addemployee', (req, res) => {
@@ -92,14 +92,14 @@ app.put("/updateemployee", (req, res) => {
 
 
     db.query("UPDATE employee SET  FirstName = ? , LastName = ? , PhoneNumber = ? , Email = ? , DepartmentName = ? , RoleName = ? WHERE employeeid = ?",
-     [firstname, lastname, phonenumber, email, departmentname, rolename,employeeid], (err, result) => {
-        if (err) {
-            console.log(err);
-        }
-        else {
-            res.send("Values Updated");
-        }
-    })
+        [firstname, lastname, phonenumber, email, departmentname, rolename, employeeid], (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                res.send("Values Updated");
+            }
+        })
     console.log('Update success');
 })
 
@@ -155,7 +155,7 @@ app.get('/meeting_approve', (req, res) => {
     })
 })
 
-//news db
+//news 
 app.get('/news', (req, res) => {
     db.query("SELECT * FROM  news", (err, result) => {
         if (err) {
@@ -166,10 +166,31 @@ app.get('/news', (req, res) => {
         }
     })
 })
+//details
+app.get('/news/:NewsNo', (req, res) => {
+    const NewsNo = req.params.NewsNo;
+    db.query("SELECT * FROM  news WHERE NewsNo = ? ;", [NewsNo], (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.send(result);
+        }
+    })
 
+})
 //insert news
-db.query("INSERT INTO `news`(`NewsNo`, `NewsDate`, `NewsDetail`, `CreateBy`, `UpdateDate`, `UpdateBy`) VALUES (?,?,?,?,?,?)",
-        [],
+app.post('/createnews', (req, res) => {
+    const NewsNo = req.body.NewsNo;
+    const NewsDate = req.body.NewsDate;
+    const TopicNews = req.body.TopicNews;
+    const NewsDetail = req.body.NewsDetail;
+    const CreateBy = req.body.CreateBy;
+    const UpdateDate = req.body.UpdateDate;
+    const UpdateBy = req.body.UpdateBy;
+
+    db.query("INSERT INTO news (NewsNo, NewsDate, TopicNews,NewsDetail, CreateBy, UpdateDate, UpdateBy) VALUES (?,?,?,?,?,?,?)",
+        [NewsNo, NewsDate, TopicNews, NewsDetail, CreateBy, UpdateDate, UpdateBy],
         (err, result) => {
             if (err) {
                 console.log(err);
@@ -180,6 +201,42 @@ db.query("INSERT INTO `news`(`NewsNo`, `NewsDate`, `NewsDetail`, `CreateBy`, `Up
         }
     );
     console.log('Insert success');
+})
+//Delete news
+app.delete('/deletenews/:NewsNo', (req, res) => {
+    const NewsNo = req.params.NewsNo;
+    db.query("DELETE FROM news WHERE NewsNo = ?", NewsNo, (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.send(result);
+        }
+    })
+    console.log('Delete success');
+})
+//Update news
+app.put("/updatenews", (req, res) => {
+    const NewsNo = req.body.NewsNo;
+    const NewsDate = req.body.NewsDate;
+    const TopicNews = req.body.TopicNews;
+    const NewsDetail = req.body.NewsDetail;
+    const CreateBy = req.body.CreateBy;
+    const UpdateDate = req.body.UpdateDate;
+    const UpdateBy = req.body.UpdateBy;
+
+    db.query("UPDATE news SET  NewsDate = ? , TopicNews = ? , NewsDetail = ? , CreateBy = ? , UpdateDate = ? , UpdateBy = ? WHERE NewsNo = ?",
+        [NewsDate, TopicNews, NewsDetail, CreateBy, UpdateDate, UpdateBy, NewsNo], (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                res.send("Values Updated");
+            }
+        })
+    console.log('Update success');
+})
+
 
 // account
 app.get('/account', (req, res) => {

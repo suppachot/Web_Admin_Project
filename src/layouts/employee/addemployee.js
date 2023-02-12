@@ -54,7 +54,7 @@ function AddEmployee() {
           lastname: lastname,
           phonenumber: phonenumber,
           email: email,
-          departmentname: departmentaname,
+          departmentname: departmentname,
           rolename: rolename
         }
       ])
