@@ -1,4 +1,4 @@
-import  Axios from "axios";
+import Axios from "axios";
 import { useState } from "react";
 import DataTable from 'react-data-table-component';
 // @mui material components
@@ -12,7 +12,7 @@ import MDTypography from "components/MDTypography";
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-
+import { Link, useNavigate } from "react-router-dom";
 
 function AddEmployee() {
   // เก็บบันทึกค่าลง state
@@ -24,9 +24,16 @@ function AddEmployee() {
   const [Email, setEmail] = useState("");
   const [DepartmentName, setDepartmentName] = useState("");
   const [RoleName, setRoleName] = useState("");
+  const [CreateDate, setCreateDate] = useState("");
+  const [CreateBy, setCreateBy] = useState("");
+  const [UpdateDate, setUpdateDate] = useState("");
+  const [UpdateBy, setUpdateBy] = useState("");
+
+  const navigate = useNavigate();
 
   // อ่านค่าจาก db
   const [employeeList, setEmployeeList] = useState([]);
+  
   const getEmployee = () => {
     Axios.get('http://localhost:5000/employee').then((response) => {
       setEmployeeList(response.data);
@@ -34,7 +41,8 @@ function AddEmployee() {
   }
 
   // ส่งข้อมูล 
-  const addEmployee = () => {
+  const addEmployee = (e) => {
+    e.preventDefault();
     Axios.post('http://localhost:5000/addemployee', {
       EmployeeID: EmployeeID,
       TitleName: TitleName,
@@ -43,7 +51,11 @@ function AddEmployee() {
       PhoneNumber: PhoneNumber,
       Email: Email,
       DepartmentName: DepartmentName,
-      RoleName: RoleName
+      RoleName: RoleName,
+      CreateDate: CreateDate,
+      CreateBy: CreateBy,
+      UpdateDate: UpdateDate,
+      UpdateBy: UpdateBy
     }).then(() => {
       setEmployeeList([
         ...employeeList,
@@ -55,9 +67,18 @@ function AddEmployee() {
           PhoneNumber: PhoneNumber,
           Email: Email,
           DepartmentName: DepartmentName,
-          RoleName: RoleName
+          RoleName: RoleName,
+          CreateDate: CreateDate,
+          CreateBy: CreateBy,
+          UpdateDate: UpdateDate,
+          UpdateBy: UpdateBy
         }
       ])
+    }).then((res) => {
+      alert('Saved successfully.')
+      navigate('/');
+    }).catch((err) => {
+      console.log(err.message)
     })
   }
 
@@ -65,160 +86,113 @@ function AddEmployee() {
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox pt={6} pb={3}>
-        <div className="=container">
-          <div className="information">
-            <from action="">
-              <div className="mb-3">
-                <label htmlFor="employeeid" className="form-label col-sm-2">
-                  EmployeeID:
-                </label>
-                <input
-                  type="text"
-                  className="from-control"
-                  placeholder="Enter EmployeeID"
-                  onChange={(event) => {
-                    setEmployeeID(event.target.value)
-                  }}
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="titleid" className="form-label col-sm-2">
-                  Title:
-                </label>
-                <input
-                  type="text"
-                  className="from-control"
-                  placeholder="Enter Title"
-                  onChange={(event) => {
-                    setTitleName(event.target.value)
-                  }}
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="firstname" className="form-label col-sm-2">
-                  FirstName:
-                </label>
-                <input
-                  type="text"
-                  className="from-control"
-                  placeholder="Enter FirstName"
-                  onChange={(event) => {
-                    setFirstName(event.target.value)
-                  }}
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="lastname" className="form-label col-sm-2">
-                  LastName:
-                </label>
-                <input
-                  type="text"
-                  className="from-control"
-                  placeholder="Enter LastName"
-                  onChange={(event) => {
-                    setLastName(event.target.value)
-                  }}
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="phonenumber" className="form-label col-sm-2">
-                  PhoneNumber:
-                </label>
-                <input
-                  type="tel"
-                  className="from-control"
-                  placeholder="Enter PhoneNumber"
-                  pattern="[0]{1}[6,8,9]{1}[0-9]{1}[0-9]{3}[0-9]{4}"
-                  onChange={(event) => {
-                    setPhoneNumber(event.target.value)
-                  }}
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="email" className="form-label col-sm-2">
-                  Email:
-                </label>
-                <input
-                  type="email"
-                  className="from-control"
-                  placeholder="Enter Email"
-                  onChange={(event) => {
-                    setEmail(event.target.value)
-                  }}
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="departmentid" className="form-label col-sm-2">
-                  DepartmentName:
-                </label>
-                <input
-                  type="text"
-                  className="from-control"
-                  placeholder="Enter DepartmentName"
-                  onChange={(event) => {
-                  setDepartmentName(event.target.value)
-                  }}
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="roleid" className="form-label col-sm-2">
-                  RoleName:
-                </label>
-                <input
-                  type="text"
-                  className="from-control"
-                  placeholder="Enter RoleName"
-                  onChange={(event) => {
-                  setRoleName(event.target.value)
-                  }}
-                />
-              </div><hr>
-              </hr>
-              <div className="mb-3">
-                <label htmlFor="roleid" className="form-label col-sm-1">
-                  Import File
-                </label>
-                <input
-                  type="file"
-                  className="from-file"
-                />
-              </div>
+        <div className="row">
+          <div className="offset-lg-3 col-lg-6">
+            <form className="container" onSubmit={addEmployee}>
+              <div className="card" style={{ "textAlign": "left" }}>
+                <div className="card-body">
 
-              <button type="button" class="btn btn-danger">ยกเลิก</button>
-              <button type="button" class="btn btn-success" onClick={addEmployee}>บันทึก</button>
-            </from>
-          </div>
-          <hr />
+                  <div className="row">
 
-          <div className="employee">
-            <button class="btn btn-primary" onClick={getEmployee}>Show</button>
-            <br></br>
-            <br></br>     
-            {employeeList.map((val, key) => {
-              return (
-                <div className="employee card">
-                  <div className="card-body text-left">
-                    <p className="card-text">EmployeeID: {val.EmployeeID}</p>
-                    <p className="card-text">TitleID: {val.TitleName}</p>
-                    <p className="card-text">FirstName: {val.FirstName}</p>
-                    <p className="card-text">LastName: {val.LastName}</p>
-                    <p className="card-text">PhoneNumber: {val.PhoneNumber}</p>
-                    <p className="card-text">Email: {val.Email}</p>
-                    <p className="card-text">DepartmentID: {val.DepartmentName}</p>
-                    <p className="card-text">RoleID: {val.RoleName}</p>
-                    <p className="card-text">CreateDate: {val.CreateDate}</p>
-                    <p className="card-text">CreateBy: {val.CreateBy}</p>
-                    <p className="card-text">UpdateDate: {val.UpdateDate}</p>
-                    <p className="card-text">UpdateBy: {val.UpdateBy}</p>
+                    <div className="col-lg-12">
+                      <div className="form-group">
+                        <label>EmployeeID</label>
+                        <input required value={EmployeeID} type="text" onChange={e => setEmployeeID(e.target.value)} className="form-control"></input>
+                      </div>
+                    </div>
 
+                    <div className="col-lg-12">
+                      <div className="form-group">
+                        <label>TitleName</label>
+                        <input required value={TitleName} onMouseDown={e => valchange(true)} type="text" onChange={e => setTitleName(e.target.value)} className="form-control"></input>
+                      </div>
+                    </div>
+
+                    <div className="col-lg-12">
+                      <div className="form-group">
+                        <label>FirstName</label>
+                        <input required value={FirstName} onMouseDown={e => valchange(true)} type="text" onChange={e => setFirstName(e.target.value)} className="form-control"></input>
+                      </div>
+                    </div>
+
+                    <div className="col-lg-12">
+                      <div className="form-group">
+                        <label>LastName</label>
+                        <input value={LastName} type="text" onChange={e => setLastName(e.target.value)} className="form-control"></input>
+                      </div>
+                    </div>
+
+                    <div className="col-lg-12">
+                      <div className="form-group">
+                        <label>PhoneNumber</label>
+                        <input value={PhoneNumber} type="text" onChange={e => setPhoneNumber(e.target.value)} className="form-control"></input>
+                      </div>
+                    </div>
+
+                    <div className="col-lg-12">
+                      <div className="form-group">
+                        <label>Email</label>
+                        <input value={Email} type="email" onChange={e => setEmail(e.target.value)} className="form-control"></input>
+                      </div>
+                    </div>
+
+                    <div className="col-lg-12">
+                      <div className="form-group">
+                        <label>DepartmentName</label>
+                        <input value={DepartmentName} type="text" onChange={e => setDepartmentName(e.target.value)} className="form-control"></input>
+                      </div>
+                    </div>
+
+                    <div className="col-lg-12">
+                      <div className="form-group">
+                        <label>RoleName</label>
+                        <input value={RoleName} type="text" onChange={e => setRoleName(e.target.value)} className="form-control"></input>
+                      </div>
+                    </div>
+
+                    <div className="col-lg-12">
+                      <div className="form-group">
+                        <label>CreateDate</label>
+                        <input value={CreateDate} type="datetime-local" onChange={e => setCreateDate(e.target.value)} className="form-control"></input>
+                      </div>
+                    </div>
+
+                    <div className="col-lg-12">
+                      <div className="form-group">
+                        <label>CreateBy</label>
+                        <input value={CreateBy} type="text" onChange={e => setCreateBy(e.target.value)} className="form-control"></input>
+                      </div>
+                    </div>
+
+                    <div className="col-lg-12">
+                      <div className="form-group">
+                        <label>UpdateDate</label>
+                        <input value={UpdateDate} type="datetime-local" onChange={e => setUpdateDate(e.target.value)} className="form-control"></input>
+                      </div>
+                    </div>
+
+                    <div className="col-lg-12">
+                      <div className="form-group">
+                        <label>UpdateBy</label>
+                        <input value={UpdateBy} type="text" onChange={e => setUpdateBy(e.target.value)} className="form-control"></input>
+                      </div>
+                    </div>
+
+                    <div className="col-lg-12">
+                      <div className="form-group ">
+                        <br></br>
+                        <Link to="/employee" className="btn btn-danger">Back</Link>
+                        <Link to="/employee" className="btn btn-success" type="submit">Save</Link>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              );
-            })}
-            </div>
+              </div>
+            </form>
           </div>
-         
-          
+        </div>
+
+
       </MDBox>
 
     </DashboardLayout>

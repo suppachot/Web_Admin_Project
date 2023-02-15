@@ -14,9 +14,8 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Axios from "axios";
 import { useState, useEffect } from "react";
 import DataTable from 'react-data-table-component';
-import AddEmployee from "./addemployee";
 import { Button } from '@mui/material';
-import { Link, Route, Routes } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 
@@ -28,61 +27,74 @@ function HomeEmployee() {
 
     const columns = [
         {
+            id: 'employeeid',
             name: 'EmployeeID',
             selector: row => row.EmployeeID,
             width: '100px'
         },
         {
+            id: 'title',
             name: 'Title',
             selector: row => row.TitleName,
             width: '100px'
         },
         {
+            id: 'firstName',
             name: 'FirstName',
             selector: row => row.FirstName,
             width: '200px'
         },
         {
+            id: 'lastName',
             name: 'LastName',
             selector: row => row.LastName,
             width: '200px'
         },
         {
+            id: 'phonenumber',
             name: 'PhoneNumber',
             selector: row => row.PhoneNumber,
             width: '150px'
         },
         {
+            id: 'email',
             name: 'Email',
             selector: row => row.Email,
             width: '200px'
         },
         {
+
+            id: 'department',
             name: 'Department',
             selector: row => row.DepartmentName,
             width: '150px'
         },
         {
+            id: 'role',
             name: 'Role',
             selector: row => row.RoleName,
             width: '150px'
         },
         {
+            id: 'createdate',
             name: 'CreateDate',
             selector: row => row.CreateDate,
             width: '250px'
         },
         {
+            id: 'createby',
             name: 'CreateBy',
             selector: row => row.CreateBy,
             width: '150px'
         },
         {
+            id: 'updatedate',
             name: 'UpdateDate',
             selector: row => row.UpdateDate,
             width: '250px'
         },
         {
+            id: 'updateby',
             name: 'UpdateBy',
             selector: row => row.UpdateBy,
             width: '150px'
@@ -90,25 +102,37 @@ function HomeEmployee() {
         {
             name: 'Action',
             selector: row =>
-                <div className="employee" >
-                    <br></br>
-                    <button class="btn btn-danger" >Delete</button>
-                    <Link to='/editsnews' class="btn btn-warning" >Edit</Link>
+            
+                <div class="btn-group" role="group" aria-label="Basic example">
 
-                    <br></br>
+                    <button className="btn btn-primary" onClick={(clickHandler) => { LoadDetail(row.EmployeeID) }} >Detail</button>
+                    <button className="btn btn-warning" onClick={() => { LoadEdit(row.EmployeeID) }} >Edit</button>
+                    <button className="btn btn-danger" onClick={() => { Removefunction(row.EmployeeID) }} >Delete</button>
+
                 </div>
-
-
-
-
-
-
-
-
 
         }
     ];
-
+    const [employeedata, employeedatachange] = useState(null);
+    const navigate = useNavigate();
+    
+    const LoadDetail = (EmployeeID) => {
+        navigate("/empolyee/detail/" + EmployeeID);
+    }
+    const LoadEdit = (EmployeeID) => {
+        navigate("/employee/edit/" + EmployeeID);
+    }
+    const Removefunction = (EmployeeID) => {
+        if (window.confirm('Do you want to remove?')) {
+            Axios.post("http://localhost:5000/deleteemployee/" + EmployeeID, {
+            }).then((res) => {
+                alert('Removed successfully.')
+                window.location.reload();
+            }).catch((err) => {
+                console.log(err.message)
+            })
+        }
+    }
     useEffect(() => {
         fetch("http://localhost:5000/employee")
             .then(res => res.json())
@@ -121,7 +145,11 @@ function HomeEmployee() {
                     setIsLoaded(true);
                     setError(error);
                 }
-            )
+            ).then((resp) => {
+                employeedatachange(resp);
+            }).catch((err) => {
+                console.log(err.message);
+            })
     }, [])
 
 
@@ -133,13 +161,19 @@ function HomeEmployee() {
         return (
             <DashboardLayout>
                 <DashboardNavbar />
-                <DataTable
-                    columns={columns}
-                    data={items}
-                    
-                />
-                <br></br>
-                <br></br>
+                <div className="LayoutContainer">
+                    <div className="card-body">
+                        <div className="btn">
+                            <Link to="/addEmpolyee" className="btn btn-success">Add New</Link>
+                        </div>
+
+                        <DataTable
+                            columns={columns}
+                            data={items}
+                        />
+
+                    </div>
+                </div>
             </DashboardLayout>
 
         );

@@ -19,7 +19,7 @@ function News() {
   const navigate = useNavigate();
 
   const LoadDetail = (NewsNo) => {
-    navigate("/detailsenews" + NewsNo);
+    navigate("/news/detail/" + NewsNo);
   }
   const LoadEdit = (NewsNo) => {
     navigate("/editnews" + NewsNo);
