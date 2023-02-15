@@ -50,10 +50,10 @@ function DetailNews() {
                             <h6>UpdateBy : {val.UpdateBy}</h6>
                             <br></br>
                             <Link className="btn btn-danger" to="/news" >Back to Listing</Link>
-                            
+
                         </div>
-                    ))
-                    }
+                    ))}
+
                 </div>
             </div>
 
