@@ -40,7 +40,7 @@ function DetailEmpolyee() {
                         <h2>Employee Detail</h2>
                     </div>
                     <div className="card-body"></div>
-                   { employeedata&& employeedata.map(val => (
+                   { employeedata && employeedata.map(val => (
                         <div>
                             <h2>EmployeeID : <b>{val.EmployeeID}</b></h2>
                             <h4>Detail list</h4>

@@ -18,7 +18,7 @@ function EditsNews() {
     const { newsno } = useParams();
 
     useEffect(() => {
-        // Axios.post("http://localhost:5000/updatenews/" + newsno).then((res) => {
+        // Axios.get("http://localhost:5000/updatenews/" + newsno).then((res) => {
         fetch("http://localhost:5000/news/edit/" + newsno).then((res) => {
             return res.json();
         }).then((resp) => {
@@ -35,6 +35,7 @@ function EditsNews() {
         })
     }, []);
 
+    const [newsdata, setnewsdata] = useState(null);
     const [NewsNo, setNewsNo] = useState("");
     const [NewsDate, setNewsDate] = useState("");
     const [TopicNews, setTopicNews] = useState("");
@@ -58,6 +59,7 @@ function EditsNews() {
         })
     }
 
+    
     return (
         <DashboardLayout>
             <DashboardNavbar />
@@ -77,14 +79,21 @@ function EditsNews() {
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>NewsNo</label>
-                                            <input value={NewsNo} disabled="disabled" onChange={e => setNewsNo(e.target.value)} className="form-control"></input>
+                                            <input value={NewsNo} disabled="disabled"
+                                                onChange={e => setNewsNo(e.target.value)}
+                                                className="form-control">
+                                            </input>
                                         </div>
                                     </div>
 
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>NewsDate</label>
-                                            <input required value={NewsDate} type="datetime-local" onChange={e => setNewsDate(e.target.value)} className="form-control"></input>
+                                            <input required value={NewsDate}
+                                                type="datetime-local"
+                                                onChange={e => setNewsDate(e.target.value)}
+                                                className="form-control">
+                                            </input>
                                             {NewsDate.length == 0 && validation && <span className="text-danger">Enter Date</span>}
                                         </div>
                                     </div>
@@ -92,39 +101,65 @@ function EditsNews() {
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>TopicNews</label>
-                                            <input value={TopicNews} type="text" onChange={e => setTopicNews(e.target.value)} className="form-control"></input>
+                                            <input value={TopicNews}
+                                                type="text"
+                                                onChange={e => setTopicNews(e.target.value)}
+                                                className="form-control">
+                                            </input>
                                         </div>
                                     </div>
 
-                                    
-
+                                    <div className="col-lg-12">
+                                        <div className="form-group">
+                                            <label>NewsDetail</label>
+                                            <input value={NewsDetail}
+                                                type="text"
+                                                onChange={e => setNewsDetail(e.target.value)}
+                                                className="form-control">
+                                            </input>
+                                        </div>
+                                    </div>
 
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>CreateBy</label>
-                                            <input value={CreateBy} type="text" disabled="disabled" onChange={e => setCreateBy(e.target.value)} className="form-control"></input>
+                                            <input value={CreateBy}
+                                                type="text" disabled="disabled"
+                                                onChange={e => setCreateBy(e.target.value)}
+                                                className="form-control">
+                                            </input>
                                         </div>
                                     </div>
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>UpdateDate</label>
-                                            <input value={UpdateDate} type="datetime-local" onChange={e => setUpdateDate(e.target.value)} className="form-control"></input>
+                                            <input value={UpdateDate}
+                                                type="datetime-local"
+                                                onChange={e => setUpdateDate(e.target.value)}
+                                                className="form-control">
+                                            </input>
                                         </div>
                                     </div>
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>UpdateBy</label>
-                                            <input value={UpdateBy} type="text" onChange={e => setUpdateBy(e.target.value)} className="form-control"></input>
+                                            <input value={UpdateBy}
+                                                type="text"
+                                                onChange={e => setUpdateBy(e.target.value)}
+                                                className="form-control">
+                                            </input>
                                         </div>
                                     </div>
 
                                     {/* <div className="col-lg-12">
-                                    <div className="form-check">
-                                    <input checked={active} onChange={e=>activechange(e.target.checked)} type="checkbox" className="form-check-input"></input>
-                                        <label  className="form-check-label">Is Active</label>
-                                        
-                                    </div>
-                                </div> */}
+                                        <div className="form-check">
+                                            <input checked={active} onChange={e=>activechange(e.target.checked)} 
+                                                type="checkbox" className="form-check-input">
+                                            </input>
+                                            <label  className="form-check-label">Is Active</label>
+                                        </div>
+                                    </div> */}
+
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <br></br>
@@ -133,18 +168,14 @@ function EditsNews() {
                                             {/* <Link to='/news' className="btn btn-success" type="submit">Save</Link>  */}
                                             {/* <button className="btn btn-success" onClick={() => { handlesubmit(e.target.NewsNo) }} >Save</button> */}
 
-
                                         </div>
                                     </div>
 
                                 </div>
-
                             </div>
-
                         </div>
 
                     </form>
-
                 </div>
             </div>
         </DashboardLayout>
