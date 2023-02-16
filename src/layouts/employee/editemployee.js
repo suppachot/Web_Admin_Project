@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Axios } from "axios";
 
-function UpEMP() {
+function EditEmp() {
 
   return (
     <DashboardLayout>
@@ -22,4 +22,4 @@ function UpEMP() {
     </DashboardLayout>
   );
 }
-export default UpEMP;
+export default EditEmp;

@@ -13,16 +13,16 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 
-function DetailNews() {
+function DetailEmpolyee() {
 
-    const { NewsNo } = useParams();
-    const [newsdata, newsdatachange] = useState(null);
+    const {EmployeeID} = useParams();
+    const [employeedata, employeedatachange] = useState(null);
 
     useEffect(() => {
-        fetch("http://localhost:5000/news/detail/" + NewsNo)
+        fetch("http://localhost:5000/empolyee/detail/" + EmployeeID)
             .then(res => res.json())
             .then((resp) => {
-                newsdatachange(resp);
+                employeedatachange(resp);
             }).catch((err) => {
                 console.log(err.message);
             })
@@ -37,28 +37,33 @@ function DetailNews() {
 
                 <div className="card row mb-3" style={{ "textAlign": "center" }}>
                     <div className="card-title">
-                        <h2>News Detail</h2>
+                        <h2>Employee Detail</h2>
                     </div>
                     <div className="card-body"></div>
-                    {newsdata && newsdata.map(val => (
+                   { employeedata&& employeedata.map(val => (
                         <div>
-                            <h2>TopicNews : <b>{val.TopicNews}</b> ({val.NewsNo},{val.NewsDate})</h2>
+                            <h2>EmployeeID : <b>{val.EmployeeID}</b></h2>
                             <h4>Detail list</h4>
-                            <h6>Detail : {val.NewsDetail}</h6>
+                            <h6>Name : {val.TitleName}  {val.FirstName}  {val.LastName}</h6>
+                            <h6>PhoneNumber: {val.PhoneNumber}</h6>
+                            <h6>Email : {val.Email}</h6>
+                            <h6>Department : {val.DepartmentName}</h6>
+                            <h6>Role : {val.RoleName}</h6>
+                            <h6>CreateDate : {val.CreateDate}</h6>
                             <h6>CreateBy : {val.CreateBy}</h6>
                             <h6>UpdateDate : {val.UpdateDate}</h6>
                             <h6>UpdateBy : {val.UpdateBy}</h6>
                             <br></br>
-                            <Link className="btn btn-danger" to="/news" >Back to Listing</Link>
+                            <Link className="btn btn-danger" to="/employee" >Back to Listing</Link>
 
                         </div>
                     ))}
-
                 </div>
             </div>
 
         </DashboardLayout>
     );
 }
+export default DetailEmpolyee;
 
-export default DetailNews;
+

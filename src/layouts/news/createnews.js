@@ -27,7 +27,7 @@ function CreateNews() {
   const navigate = useNavigate();
 
   const [newsList, setNewsList] = useState([]);
-  const getEmployee = () => {
+  const getNews = () => {
     Axios.get('http://localhost:5000/news').then((response) => {
       setNewsList(response.data);
     });

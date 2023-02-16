@@ -28,9 +28,14 @@ import Meetingroom from "layouts/meetingroom";
 import AddEmployee from "layouts/employee/addemployee";
 import HomeEmployee from "layouts/employee/homeemployee";
 import DetailEmpolyee from "layouts/employee/detailemployee";
+import EditEmp from "layouts/employee/editemployee";
 //Department
 import Department from "layouts/department";
-import UpEMP from "layouts/employee/updateemployee";
+//Role
+
+//Title
+
+
 //news
 import News from "layouts/news/news";
 import CreateNews from "layouts/news/createnews";
@@ -39,7 +44,6 @@ import EditsNews from "layouts/news/editnews";
 
 import Checkin from "layouts/checkin";
 import Checkout from "layouts/checkout";
-import Notifications from "layouts/notifications";
 import SignIn from "layouts/login/sign-in";
 import SignUp from "layouts/login/sign-up";
 
@@ -132,7 +136,7 @@ const routes = [
     name: "editsnews",
     key: "news",
     icon: <Icon fontSize="small"></Icon>,
-    route: "/editsnews",
+    route: "/news/edit/:NewsNo",
     component: <EditsNews />,  
   },
   {
@@ -140,6 +144,12 @@ const routes = [
     icon: <Icon fontSize="small"></Icon>,
     route: "/empolyee/detail/:EmployeeID",
     component: <DetailEmpolyee />,  
+  },
+  {
+    key: "editemployee",
+    icon: <Icon fontSize="small"></Icon>,
+    route: "/empolyee/edit/:EmployeeID",
+    component: <EditEmp />,  
   },
   {
     key: "detailsenews",
