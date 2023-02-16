@@ -54,7 +54,6 @@ app.get('/employee/:firstname', (req, res) => {
             res.send(result);
         }
     })
-
 })
 // create Emp
 app.post('/employee/add', (req, res) => {
@@ -235,7 +234,17 @@ app.delete('/deletenews/:NewsNo', (req, res) => {
     console.log('Delete success');
 })
 //Update news
-
+// app.get('/news/edit/:newsno', (req, res) => {
+//     const newsno = req.params.newsno;
+//     db.query("SELECT * FROM  news WHERE NewsNo = ? ;", [newsno], (err, result) => {
+//         if (err) {
+//             console.log(err);
+//         }
+//         else {
+//             res.send(result);
+//         }
+//     })
+// })
 app.put("/news/edit/:NowsNo", (req, res) => {
     const NewsNo = req.body.NewsNo;
     const NewsDate = req.body.NewsDate;

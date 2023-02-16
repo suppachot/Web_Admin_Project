@@ -49,10 +49,10 @@ function EditsNews() {
 
     const handlesubmit = (e) => {
         e.preventDefault();
-        Axios.post("http://localhost:5000/news/edit/" + newsno, {
+        Axios.put("http://localhost:5000/news/edit/" + newsno, {
         }).then((res) => {
             alert('Saved successfully.')
-            navigate("/editsnews");
+            navigate("/news");
         }).catch((err) => {
             console.log(err.message)
         })
@@ -77,14 +77,14 @@ function EditsNews() {
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>NewsNo</label>
-                                            <input value={NewsNo} disabled="disabled" className="form-control"></input>
+                                            <input value={NewsNo} disabled="disabled" onChange={e => setNewsNo(e.target.value)} className="form-control"></input>
                                         </div>
                                     </div>
 
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>NewsDate</label>
-                                            <input required value={NewsDate} type="date" onMouseDown={e => setNewsDate(true)} onChange={e => namechange(e.target.value)} className="form-control"></input>
+                                            <input required value={NewsDate} type="datetime-local" onChange={e => setNewsDate(e.target.value)} className="form-control"></input>
                                             {NewsDate.length == 0 && validation && <span className="text-danger">Enter Date</span>}
                                         </div>
                                     </div>
@@ -107,7 +107,7 @@ function EditsNews() {
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>CreateBy</label>
-                                            <input value={CreateBy} type="text" onChange={e => setCreateBy(e.target.value)} className="form-control"></input>
+                                            <input value={CreateBy} type="text" disabled="disabled" onChange={e => setCreateBy(e.target.value)} className="form-control"></input>
                                         </div>
                                     </div>
                                     <div className="col-lg-12">
@@ -134,7 +134,10 @@ function EditsNews() {
                                         <div className="form-group">
                                             <br></br>
                                             <Link to="/news" className="btn btn-danger">Back</Link>
-                                            <Link to='/news' className="btn btn-success" type="submit">Save</Link>
+                                            <button className="btn btn-success" type="submit">Save</button>
+                                            {/* <Link to='/news' className="btn btn-success" type="submit">Save</Link>  */}
+                                            {/* <button className="btn btn-success" onClick={() => { handlesubmit(e.target.NewsNo) }} >Save</button> */}
+
 
                                         </div>
                                     </div>
