@@ -1,5 +1,3 @@
-import Axios from "axios";
-import { useState } from "react";
 import DataTable from 'react-data-table-component';
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -12,6 +10,8 @@ import MDTypography from "components/MDTypography";
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import Axios from "axios";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 function AddEmployee() {
@@ -28,12 +28,11 @@ function AddEmployee() {
   const [CreateBy, setCreateBy] = useState("");
   const [UpdateDate, setUpdateDate] = useState("");
   const [UpdateBy, setUpdateBy] = useState("");
+  const [validation, valchange] = useState(false);
 
   const navigate = useNavigate();
-
   // อ่านค่าจาก db
-  const [employeeList, setEmployeeList] = useState([]);
-  
+   const [employeeList, setEmployeeList] = useState([]);
   const getEmployee = () => {
     Axios.get('http://localhost:5000/employee').then((response) => {
       setEmployeeList(response.data);
@@ -41,9 +40,9 @@ function AddEmployee() {
   }
 
   // ส่งข้อมูล 
-  const addEmployee = (e) => {
+  const handlesubmit = (e) => {
     e.preventDefault();
-    Axios.post('http://localhost:5000/addemployee', {
+    Axios.post('http://localhost:5000/employee/add', {
       EmployeeID: EmployeeID,
       TitleName: TitleName,
       FirstName: FirstName,
@@ -56,24 +55,24 @@ function AddEmployee() {
       CreateBy: CreateBy,
       UpdateDate: UpdateDate,
       UpdateBy: UpdateBy
-    }).then(() => {
-      setEmployeeList([
-        ...employeeList,
-        {
-          EmployeeID: EmployeeID,
-          TitleName: TitleName,
-          FirstName: FirstName,
-          LastName: LastName,
-          PhoneNumber: PhoneNumber,
-          Email: Email,
-          DepartmentName: DepartmentName,
-          RoleName: RoleName,
-          CreateDate: CreateDate,
-          CreateBy: CreateBy,
-          UpdateDate: UpdateDate,
-          UpdateBy: UpdateBy
-        }
-      ])
+    // }).then(() => {
+    //   setEmployeeList([
+    //     ...employeeList,
+    //     {
+    //       EmployeeID: EmployeeID,
+    //       TitleName: TitleName,
+    //       FirstName: FirstName,
+    //       LastName: LastName,
+    //       PhoneNumber: PhoneNumber,
+    //       Email: Email,
+    //       DepartmentName: DepartmentName,
+    //       RoleName: RoleName,
+    //       CreateDate: CreateDate,
+    //       CreateBy: CreateBy,
+    //       UpdateDate: UpdateDate,
+    //       UpdateBy: UpdateBy
+    //     }
+    //   ])
     }).then((res) => {
       alert('Saved successfully.')
       navigate('/');
@@ -85,13 +84,11 @@ function AddEmployee() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDBox pt={6} pb={3}>
         <div className="row">
           <div className="offset-lg-3 col-lg-6">
-            <form className="container" onSubmit={addEmployee}>
+            <form className="container" onSubmit={handlesubmit}>
               <div className="card" style={{ "textAlign": "left" }}>
                 <div className="card-body">
-
                   <div className="row">
 
                     <div className="col-lg-12">
@@ -154,6 +151,7 @@ function AddEmployee() {
                       <div className="form-group">
                         <label>CreateDate</label>
                         <input value={CreateDate} type="datetime-local" onChange={e => setCreateDate(e.target.value)} className="form-control"></input>
+                        {CreateDate.length == 0 && validation && <span className="text-danger">Enter the date</span>}
                       </div>
                     </div>
 
@@ -168,6 +166,7 @@ function AddEmployee() {
                       <div className="form-group">
                         <label>UpdateDate</label>
                         <input value={UpdateDate} type="datetime-local" onChange={e => setUpdateDate(e.target.value)} className="form-control"></input>
+                        {UpdateDate.length == 0 && validation && <span className="text-danger">Enter the date</span>}
                       </div>
                     </div>
 
@@ -191,9 +190,6 @@ function AddEmployee() {
             </form>
           </div>
         </div>
-
-
-      </MDBox>
 
     </DashboardLayout>
   );

@@ -57,7 +57,7 @@ app.get('/employee/:firstname', (req, res) => {
 
 })
 // create Emp
-app.post('/addemployee', (req, res) => {
+app.post('/employee/add', (req, res) => {
     const EmployeeID = req.body.EmployeeID;
     const TitleName = req.body.TitleName;
     const FirstName = req.body.FirstName;
@@ -71,7 +71,7 @@ app.post('/addemployee', (req, res) => {
     const UpdateDate = req.body.UpdateDate;
     const UpdateBy = req.body.UpdateBy;
 
-    db.query("INSERT INTO employee (EmployeeID, TitleName, FirstName , LastName, PhoneNumber, Email, DepartmentName, RoleName,CreateDate,CreateBy,UpdateDate,UpdateBy) VALUES(?,?,?,?,?,?,?,?,?,?,?,now())",
+    db.query("INSERT INTO employee (EmployeeID, TitleName, FirstName , LastName, PhoneNumber, Email, DepartmentName, RoleName,CreateDate,CreateBy,UpdateDate,UpdateBy) VALUES(?,?,?,?,?,?,?,?,now(),?,now(),?);",
         [EmployeeID, TitleName, FirstName, LastName, PhoneNumber, Email, DepartmentName, RoleName ,CreateDate,CreateBy,UpdateDate,UpdateBy],
         (err, result) => {
             if (err) {
@@ -85,7 +85,7 @@ app.post('/addemployee', (req, res) => {
     console.log('Insert success');
 })
 //Update employe
-app.put("/updateemployee/:EmployeeID", (req, res) => {
+app.put("/empolyee/edit/:EmployeeID", (req, res) => {
     const EmployeeID = req.body.EmployeeID;
     const TitleName = req.body.TitleName;
     const FirstName = req.body.FirstName;
@@ -99,7 +99,7 @@ app.put("/updateemployee/:EmployeeID", (req, res) => {
     const UpdateDate = req.body.UpdateDate;
     const UpdateBy = req.body.UpdateBy;
 
-    db.query("UPDATE employee SET TitleName=? , FirstName = ? , LastName = ? , PhoneNumber = ? , Email = ? , DepartmentName = ? , RoleName = ? ,CreateDate = ? ,CreateBy = ?,UpdateDate = ?,UpdateBy = ?  WHERE EmployeeID = ?",
+    db.query("UPDATE employee SET TitleName=? , FirstName = ? , LastName = ? , PhoneNumber = ? , Email = ? , DepartmentName = ? , RoleName = ? ,CreateDate = ? ,CreateBy = ?,UpdateDate = now(),UpdateBy = ?  WHERE EmployeeID = ?",
         [TitleName, FirstName, LastName, PhoneNumber, Email, DepartmentName, RoleName,CreateDate,CreateBy,UpdateDate,UpdateBy,EmployeeID], (err, result) => {
             if (err) {
                 console.log(err);
@@ -111,7 +111,7 @@ app.put("/updateemployee/:EmployeeID", (req, res) => {
     console.log('Update success');
 })
 
-// deleate empoyee  front end ยังทำงานไม่ได้
+// deleate empoyee  
 app.delete('/deleteemployee/:EmployeeID', (req, res) => {
     const EmployeeID = req.params.EmployeeID;
     db.query("DELETE FROM employee WHERE EmployeeID = ?", EmployeeID, (err, result) => {
@@ -128,7 +128,7 @@ app.delete('/deleteemployee/:EmployeeID', (req, res) => {
 //details empolyee
 app.get('/empolyee/detail/:EmployeeID', (req, res) => {
     const EmployeeID = req.params.EmployeeID;
-    db.query("SELECT * FROM  employee WHERE EmployeeID = ? ;", [EmployeeID], (err, result) => {
+    db.query("SELECT * FROM employee WHERE EmployeeID = ? ;", [EmployeeID], (err, result) => {
         if (err) {
             console.log(err);
         }
@@ -235,7 +235,8 @@ app.delete('/deletenews/:NewsNo', (req, res) => {
     console.log('Delete success');
 })
 //Update news
-app.put("/updatenews", (req, res) => {
+
+app.put("/news/edit/:NowsNo", (req, res) => {
     const NewsNo = req.body.NewsNo;
     const NewsDate = req.body.NewsDate;
     const TopicNews = req.body.TopicNews;

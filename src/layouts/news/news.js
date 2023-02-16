@@ -22,11 +22,11 @@ function News() {
     navigate("/news/detail/" + NewsNo);
   }
   const LoadEdit = (NewsNo) => {
-    navigate("/editnews" + NewsNo);
+    navigate("/news/edit/" + NewsNo);
   }
   const Removefunction = (NewsNo) => {
     if (window.confirm('Do you want to remove?')) {
-      Axios.post("http://localhost:5000/deletenews" + NewsNo, {
+      Axios.delete("http://localhost:5000/deletenews/" + NewsNo, {
       }).then((res) => {
         alert('Removed successfully.')
         window.location.reload();

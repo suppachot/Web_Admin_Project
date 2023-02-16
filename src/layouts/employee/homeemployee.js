@@ -25,6 +25,27 @@ function HomeEmployee() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
 
+    const [employeedata, employeedatachange] = useState(null);
+    const navigate = useNavigate();
+    
+    const LoadDetail = (EmployeeID) => {
+        navigate("/empolyee/detail/" + EmployeeID);
+    }
+    const LoadEdit = (EmployeeID) => {
+        navigate("/empolyee/edit/" + EmployeeID);
+    }
+    const Removefunction = (EmployeeID) => {
+        if (window.confirm('Do you want to remove?')) {
+            Axios.delete("http://localhost:5000/deleteemployee/" + EmployeeID, {
+            }).then((res) => {
+                alert('Removed successfully.')
+                window.location.reload();
+            }).catch((err) => {
+                console.log(err.message)
+            })
+        }
+    }
+
     const columns = [
         {
             id: 'employeeid',
@@ -113,26 +134,7 @@ function HomeEmployee() {
 
         }
     ];
-    const [employeedata, employeedatachange] = useState(null);
-    const navigate = useNavigate();
-    
-    const LoadDetail = (EmployeeID) => {
-        navigate("/empolyee/detail/" + EmployeeID);
-    }
-    const LoadEdit = (EmployeeID) => {
-        navigate("/employee/edit/" + EmployeeID);
-    }
-    const Removefunction = (EmployeeID) => {
-        if (window.confirm('Do you want to remove?')) {
-            Axios.post("http://localhost:5000/deleteemployee/" + EmployeeID, {
-            }).then((res) => {
-                alert('Removed successfully.')
-                window.location.reload();
-            }).catch((err) => {
-                console.log(err.message)
-            })
-        }
-    }
+   
     useEffect(() => {
         fetch("http://localhost:5000/employee")
             .then(res => res.json())
