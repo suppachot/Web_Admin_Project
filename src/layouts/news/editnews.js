@@ -96,12 +96,7 @@ function EditsNews() {
                                         </div>
                                     </div>
 
-                                    <div className="col-lg-12">
-                                        <div className="form-group">
-                                            <label>NewsDetail</label>
-                                            <input value={NewsDetail} type="text" onChange={e => setNewsDetail(e.target.value)} className="form-control"></input>
-                                        </div>
-                                    </div>
+                                    
 
 
                                     <div className="col-lg-12">
