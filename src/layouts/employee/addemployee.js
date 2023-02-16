@@ -75,7 +75,7 @@ function AddEmployee() {
     //   ])
     }).then((res) => {
       alert('Saved successfully.')
-      navigate('/');
+      navigate('/employee');
     }).catch((err) => {
       console.log(err.message)
     })
@@ -181,7 +181,7 @@ function AddEmployee() {
                       <div className="form-group ">
                         <br></br>
                         <Link to="/employee" className="btn btn-danger">Back</Link>
-                        <Link to="/employee" className="btn btn-success" type="submit">Save</Link>
+                        <button className="btn btn-success" type="submit">Save</button>
                       </div>
                     </div>
                   </div>

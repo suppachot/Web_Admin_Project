@@ -44,7 +44,7 @@ function CreateNews() {
       UpdateBy: UpdateBy
     }).then((res) => {
       alert('Saved successfully.')
-      navigate('/');
+      navigate('/news');
     }).catch((err) => {
       console.log(err.message)
     })
@@ -122,7 +122,7 @@ function CreateNews() {
                     <div className="form-group ">
                       <br></br>
                       <Link to="/news" className="btn btn-danger">Back</Link>
-                      <Link to="/news"  className="btn btn-success" type="submit">Save</Link>
+                      <button className="btn btn-success" type="submit">Save</button>
                     </div>
                   </div>
                 </div>
