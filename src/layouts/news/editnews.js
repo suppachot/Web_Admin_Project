@@ -15,17 +15,18 @@ import { Axios } from "axios";
 
 
 function EditsNews() {
-    const { newsno } = useParams();
+    const { NewsNo } = useParams();
+    const [newsdata, newsdatachange] = useState(null);
 
     useEffect(() => {
         // Axios.get("http://localhost:5000/updatenews/" + newsno).then((res) => {
-        fetch("http://localhost:5000/news/edit/" + newsno).then((res) => {
+        fetch("http://localhost:5000/news/edit/" + NewsNo).then((res) => {
             return res.json();
         }).then((resp) => {
-            setNewsNo(resp.NewsNo);
+            // setNewsNo(resp.NewsNo);
             setNewsDate(resp.NewsDate);
             setTopicNews(resp.TopicNews);
-            setNewsDetail(resp.NewsDetail)
+            setNewsDetail(resp.NewsDetail);
             setCreateBy(resq.CreateBy);
             setUpdateDate(resq.UpdateDate);
             setUpdateBy(resq.UpdateBy);
@@ -35,8 +36,17 @@ function EditsNews() {
         })
     }, []);
 
-    const [newsdata, setnewsdata] = useState(null);
-    const [NewsNo, setNewsNo] = useState("");
+    // useEffect(() => {
+    //     fetch("http://localhost:5000/news/edit/" + NewsNo)
+    //         .then(res => res.json())
+    //         .then((resp) => {
+    //             newsdatachange(resp);
+    //         }).catch((err) => {
+    //             console.log(err.message);
+    //         })
+    // }, []);
+
+    // const [NewsNo, setNewsNo] = useState("");
     const [NewsDate, setNewsDate] = useState("");
     const [TopicNews, setTopicNews] = useState("");
     const [NewsDetail, setNewsDetail] = useState("");
@@ -48,18 +58,30 @@ function EditsNews() {
 
     const navigate = useNavigate();
 
+    const [new_NewsDate, setnew_NewsDate] = useState("");
+    const [new_TopicNews, setnew_TopicNews] = useState("");
+    const [new_NewsDetail, setnew_NewsDetail] = useState("");
+    const [new_UpdateDate, setnew_UpdateDate] = useState("");
+    const [new_UpdateBy, setnew_UpdateBy] = useState("");
+
     const handlesubmit = (e) => {
         e.preventDefault();
-        Axios.put("http://localhost:5000/news/edit/" + newsno, {
+        Axios.put("http://localhost:5000/news/edit/" + NewsNo, {
+            NewsNo: NewsNo,
+            NewsDate: NewsDate,
+            TopicNews: TopicNews,
+            NewsDetail: NewsDetail,
+            CreateBy: CreateBy,
+            UpdateDate: UpdateDate,
+            UpdateBy: UpdateBy
         }).then((res) => {
             alert('Saved successfully.')
-            navigate("/news");
+            navigate('/news/');
         }).catch((err) => {
             console.log(err.message)
         })
     }
 
-    
     return (
         <DashboardLayout>
             <DashboardNavbar />
@@ -72,15 +94,16 @@ function EditsNews() {
                                 <br></br>
                                 <h2>News Edit</h2>
                             </div>
+
                             <div className="card-body">
 
                                 <div className="row">
-
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>NewsNo</label>
-                                            <input value={NewsNo} disabled="disabled"
-                                                onChange={e => setNewsNo(e.target.value)}
+                                            <input value={NewsNo}
+                                                disabled="disabled"
+                                                // onChange={e => setNewsNo(e.target.value)}
                                                 className="form-control">
                                             </input>
                                         </div>
@@ -112,11 +135,11 @@ function EditsNews() {
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>NewsDetail</label>
-                                            <input value={NewsDetail}
+                                            <textarea value={NewsDetail}
                                                 type="text"
                                                 onChange={e => setNewsDetail(e.target.value)}
                                                 className="form-control">
-                                            </input>
+                                            </textarea>
                                         </div>
                                     </div>
 
@@ -124,8 +147,9 @@ function EditsNews() {
                                         <div className="form-group">
                                             <label>CreateBy</label>
                                             <input value={CreateBy}
-                                                type="text" disabled="disabled"
-                                                onChange={e => setCreateBy(e.target.value)}
+                                                type="text"
+                                                disabled="disabled"
+                                                //onChange={e => setCreateBy(e.target.value)}
                                                 className="form-control">
                                             </input>
                                         </div>
@@ -164,17 +188,16 @@ function EditsNews() {
                                         <div className="form-group">
                                             <br></br>
                                             <Link to="/news" className="btn btn-danger">Back</Link>
-                                            <button className="btn btn-success" type="submit">Save</button>
+                                            <button className="btn btn-success" type="submit" >Save</button>
                                             {/* <Link to='/news' className="btn btn-success" type="submit">Save</Link>  */}
                                             {/* <button className="btn btn-success" onClick={() => { handlesubmit(e.target.NewsNo) }} >Save</button> */}
 
                                         </div>
                                     </div>
-
-                                </div>
+                                </div>                        
                             </div>
+        
                         </div>
-
                     </form>
                 </div>
             </div>
