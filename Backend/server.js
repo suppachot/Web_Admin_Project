@@ -77,7 +77,7 @@ app.post('/employee/add', (req, res) => {
                 console.log(err);
             }
             else {
-                res.send("Values inserted");
+                res.send("Values Emp inserted");
             }
         }
     );
@@ -85,6 +85,7 @@ app.post('/employee/add', (req, res) => {
 })
 //Update employe
 app.put("/empolyee/edit/:EmployeeID", (req, res) => {
+    const Employeeid = req.body.Employeeid;
     const EmployeeID = req.body.EmployeeID;
     const TitleName = req.body.TitleName;
     const FirstName = req.body.FirstName;
@@ -98,7 +99,7 @@ app.put("/empolyee/edit/:EmployeeID", (req, res) => {
     const UpdateDate = req.body.UpdateDate;
     const UpdateBy = req.body.UpdateBy;
 
-    db.query("UPDATE employee SET TitleName=? , FirstName = ? , LastName = ? , PhoneNumber = ? , Email = ? , DepartmentName = ? , RoleName = ? ,CreateDate = ? ,CreateBy = ?,UpdateDate = now(),UpdateBy = ?  WHERE EmployeeID = ?",
+    db.query("UPDATE employee SET TitleName=? , FirstName = ? , LastName = ? , PhoneNumber = ? , Email = ? , DepartmentName = ? , RoleName = ? ,CreateDate = ? ,CreateBy = ?,UpdateDate = ?,UpdateBy = ?  WHERE EmployeeID = ?",
         [TitleName, FirstName, LastName, PhoneNumber, Email, DepartmentName, RoleName,CreateDate,CreateBy,UpdateDate,UpdateBy,EmployeeID], (err, result) => {
             if (err) {
                 console.log(err);
@@ -107,13 +108,13 @@ app.put("/empolyee/edit/:EmployeeID", (req, res) => {
                 res.send("Values Updated");
             }
         })
-    console.log('Update success');
+    console.log('Update Emp success');
 })
 
 // deleate empoyee  
-app.delete('/deleteemployee/:EmployeeID', (req, res) => {
-    const EmployeeID = req.params.EmployeeID;
-    db.query("DELETE FROM employee WHERE EmployeeID = ?", EmployeeID, (err, result) => {
+app.delete('/deleteemployee/:EmployeID', (req, res) => {
+    const EmployeID = req.params.EmployeID;
+    db.query("DELETE FROM employee WHERE EmployeeID = ?", EmployeID, (err, result) => {
         if (err) {
             console.log(err);
         }
@@ -121,13 +122,13 @@ app.delete('/deleteemployee/:EmployeeID', (req, res) => {
             res.send(result);
         }
     })
-    console.log('Delete success');
+    console.log('Delete Emp success');
 })
 
 //details empolyee
-app.get('/empolyee/detail/:EmployeeID', (req, res) => {
-    const EmployeeID = req.params.EmployeeID;
-    db.query("SELECT * FROM employee WHERE EmployeeID = ? ;", [EmployeeID], (err, result) => {
+app.get('/empolyee/detail/:Employeeid', (req, res) => {
+    const Employeeid = req.params.Employeeid;
+    db.query("SELECT * FROM employee WHERE EmployeeID = ? ;", [Employeeid], (err, result) => {
         if (err) {
             console.log(err);
         }
@@ -223,7 +224,7 @@ app.post('/createnews', (req, res) => {
 //Delete news
 app.delete('/deletenews/:NewsNo', (req, res) => {
     const NewsNo = req.params.NewsNo;
-    db.query("DELETE FROM news WHERE NewsNo = ?", NewsNo, (err, result) => {
+    db.query("DELETE FROM news WHERE NewsNo = ?", [NewsNo], (err, result) => {
         if (err) {
             console.log(err);
         }
@@ -254,8 +255,8 @@ app.put("/news/edit/:NowsNo", (req, res) => {
     const UpdateDate = req.body.UpdateDate;
     const UpdateBy = req.body.UpdateBy;
 
-    db.query("UPDATE news SET  NewsDate = ? , TopicNews = ? , NewsDetail = ? , CreateBy = ? , UpdateDate = ? , UpdateBy = ? WHERE NewsNo = ?",
-        [NewsDate, TopicNews, NewsDetail, CreateBy, UpdateDate, UpdateBy, NewsNo], (err, result) => {
+    db.query("UPDATE news SET  NewsDate = ? , TopicNews = ? , NewsDetail = ?  , UpdateDate = ? , UpdateBy = ? WHERE NewsNo = ?",
+        [NewsDate, TopicNews, NewsDetail, UpdateDate, UpdateBy, NewsNo],(err, result) => {
             if (err) {
                 console.log(err);
             }
@@ -263,7 +264,7 @@ app.put("/news/edit/:NowsNo", (req, res) => {
                 res.send("Values Updated");
             }
         })
-    console.log('Update success');
+    console.log('Update news success');
 })
 
 

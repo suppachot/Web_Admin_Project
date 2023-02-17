@@ -70,7 +70,7 @@ function CreateNews() {
                   <div className="col-lg-12">
                     <div className="form-group">
                       <label>NewsDate</label>
-                      <input required value={NewsDate} onMouseDown={e => valchange(true)} type="date" onChange={e => setNewsDate(e.target.value)} className="form-control"></input>
+                      <input required value={NewsDate} type="date" onChange={e => setNewsDate(e.target.value)} className="form-control"></input>
                       {NewsDate.length == 0 && validation && <span className="text-danger">Enter the date</span>}
                     </div>
                   </div>
@@ -86,7 +86,7 @@ function CreateNews() {
                   <div className="col-lg-12">
                     <div className="form-group">
                       <label>NewsDetail</label>
-                      <input value={NewsDetail} type="text" onChange={e => setNewsDetail(e.target.value)} className="form-control"></input>
+                      <textarea value={NewsDetail} type="text"  onChange={e => setNewsDetail(e.target.value)} className="form-control"></textarea>
                     </div>
                   </div>
 

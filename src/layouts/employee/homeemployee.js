@@ -96,30 +96,30 @@ function HomeEmployee() {
             selector: row => row.RoleName,
             width: '150px'
         },
-        {
-            id: 'createdate',
-            name: 'CreateDate',
-            selector: row => row.CreateDate,
-            width: '250px'
-        },
-        {
-            id: 'createby',
-            name: 'CreateBy',
-            selector: row => row.CreateBy,
-            width: '150px'
-        },
-        {
-            id: 'updatedate',
-            name: 'UpdateDate',
-            selector: row => row.UpdateDate,
-            width: '250px'
-        },
-        {
-            id: 'updateby',
-            name: 'UpdateBy',
-            selector: row => row.UpdateBy,
-            width: '150px'
-        },
+        // {
+        //     id: 'createdate',
+        //     name: 'CreateDate',
+        //     selector: row => row.CreateDate,
+        //     width: '250px'
+        // },
+        // {
+        //     id: 'createby',
+        //     name: 'CreateBy',
+        //     selector: row => row.CreateBy,
+        //     width: '150px'
+        // },
+        // {
+        //     id: 'updatedate',
+        //     name: 'UpdateDate',
+        //     selector: row => row.UpdateDate,
+        //     width: '250px'
+        // },
+        // {
+        //     id: 'updateby',
+        //     name: 'UpdateBy',
+        //     selector: row => row.UpdateBy,
+        //     width: '150px'
+        // },
         {
             name: 'Action',
             selector: row =>
