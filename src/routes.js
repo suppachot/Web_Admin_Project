@@ -34,7 +34,8 @@ import Department from "layouts/department";
 //Role
 
 //Title
-
+import HomeTitle from "layouts/title/hometitle";
+import AddTitle from "layouts/title/addtitle";
 
 //news
 import News from "layouts/news/news";
@@ -52,6 +53,7 @@ import SignUp from "layouts/login/sign-up";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import { ImportExport, MeetingRoom } from "@mui/icons-material";
+import { PeopleAltIcon } from '@mui/icons-material/PeopleAlt';
 
 
 
@@ -68,7 +70,7 @@ const routes = [
     type: "collapse",
     name: "Employee",
     key: "employee",
-    icon: <Icon fontSize="small"></Icon>,
+    icon: <Icon fontSize="small">groups</Icon>,
     route: "/employee",
     component: <HomeEmployee />, 
   },
@@ -82,9 +84,17 @@ const routes = [
   },
   {
     type: "collapse",
+    name: "Title",
+    key: "Title",
+    icon: <Icon fontSize="small"></Icon>,
+    route: "/title",
+    component: <HomeTitle />,  
+  },
+  {
+    type: "collapse",
     name: "Meetingroom",
     key: "Meeting-room",
-    icon: <Icon fontSize="small"></Icon>,
+    icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/meetingroom",
     component: <Meetingroom />,  
   },
@@ -92,7 +102,7 @@ const routes = [
     type: "collapse",
     name: "News",
     key: "news",
-    icon: <Icon fontSize="small"></Icon>,
+    icon: <Icon fontSize="small">feed</Icon>,
     route: "/news",
     component: <News />,  
   },
@@ -100,7 +110,7 @@ const routes = [
     type: "collapse",
     name: "Checkin",
     key: "checkin",
-    icon: <Icon fontSize="small"></Icon>,
+    icon: <Icon fontSize="small">how_to_reg</Icon>,
     route: "/checkin",
     component: <Checkin />,  
   },
@@ -108,7 +118,7 @@ const routes = [
     type: "collapse",
     name: "Checkout",
     key: "checkout",
-    icon: <Icon fontSize="small"></Icon>,
+    icon: <Icon fontSize="small">how_to_reg</Icon>,
     route: "/checkout",
     component: <Checkout />,  
   },
@@ -121,10 +131,28 @@ const routes = [
     component: <SignIn />, 
   },
   {
+    name: "addtitle",
+    key: "addtitle",
+    route: "/addTitle",
+    component: <AddTitle />,
+  },
+  {
     name: "addempoytest",
     key: "notifications",
     route: "/addEmpolyee",
     component: <AddEmployee />,
+  },
+  {
+    key: "detailsemployee",
+    icon: <Icon fontSize="small"></Icon>,
+    route: "/empolyee/detail/:EmployeeID",
+    component: <DetailEmpolyee />,  
+  },
+  {
+    key: "editemployee",
+    icon: <Icon fontSize="small"></Icon>,
+    route: "/empolyee/edit/:EmployeeID",
+    component: <EditEmp />,  
   },
   {
     key: "createnews",
@@ -138,18 +166,6 @@ const routes = [
     icon: <Icon fontSize="small"></Icon>,
     route: "/news/edit/:NewsNo",
     component: <EditsNews />,  
-  },
-  {
-    key: "detailsemployee",
-    icon: <Icon fontSize="small"></Icon>,
-    route: "/empolyee/detail/:EmployeeID",
-    component: <DetailEmpolyee />,  
-  },
-  {
-    key: "editemployee",
-    icon: <Icon fontSize="small"></Icon>,
-    route: "/empolyee/edit/:EmployeeID",
-    component: <EditEmp />,  
   },
   {
     key: "detailsenews",

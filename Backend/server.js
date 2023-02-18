@@ -57,7 +57,7 @@ app.get('/account/user_app', (req, res) => {
 
 //title db
 app.get('/title', (req, res) => {
-    db.query("SELECT * FROM  title", (err, result) => {
+    db.query("SELECT * FROM  title ORDER BY `TitleID` ASC ;", (err, result) => {
         if (err) {
             console.log(err);
         }
@@ -65,6 +65,41 @@ app.get('/title', (req, res) => {
             res.send(result);
         }
     })
+})
+// create Title
+app.post('/title/add', (req, res) => {
+    const TitleID = req.body.TitleID;
+    const TitleName = req.body.TitleName;
+    const CreateDate = req.body.CreateDate;
+    const CreateBy = req.body.CreateBy;
+    const UpdateDate = req.body.UpdateDate;
+    const UpdateBy = req.body.UpdateBy;
+
+    db.query("INSERT INTO title (TitleID, TitleName ,CreateDate,CreateBy,UpdateDate,UpdateBy) VALUES(?,?,now(),?,now(),?);",
+        [TitleID, TitleName,CreateDate,CreateBy,UpdateDate,UpdateBy],
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                res.send("Values Title inserted");
+            }
+        }
+    );
+    console.log('Insert Title success');
+})
+// deleate title  
+app.delete('/deletetitle/:TitleID', (req, res) => {
+    const TitleID = req.params.TitleID;
+    db.query("DELETE FROM title WHERE TitleID = ?", TitleID, (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.send(result);
+        }
+    })
+    console.log('Delete Title success');
 })
 //employee db
 app.get('/employee', (req, res) => {
@@ -115,7 +150,7 @@ app.post('/employee/add', (req, res) => {
             }
         }
     );
-    console.log('Insert success');
+    console.log('Insert Emp success');
 })
 //Update employe
 app.put("/empolyee/edit/:EmployeeID", (req, res) => {
