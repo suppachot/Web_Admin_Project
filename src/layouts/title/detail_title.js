@@ -13,16 +13,16 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 
-function DetailNews() {
+function DetailTitle() {
 
-    const { NewsNo } = useParams();
-    const [newsdata, newsdatachange] = useState(null);
+    const { TitleID } = useParams();
+    const [titledata, titledatachange] = useState(null);
 
     useEffect(() => {
-        fetch("http://localhost:5000/news/detail/" + NewsNo)
+        fetch("http://localhost:5000/title/detail/" + TitleID)
             .then(res => res.json())
             .then((resp) => {
-                newsdatachange(resp);
+                titledatachange(resp);
             }).catch((err) => {
                 console.log(err.message);
             })
@@ -40,20 +40,17 @@ function DetailNews() {
                         <h2>News Detail</h2>
                     </div>
                     <div className="card-body"></div>
-                    {newsdata && newsdata.map(val => (
+                    {titledata && titledata.map(val => (
                         <div style={{textAlign: "left" , paddingLeft: "80px"}}>
-                            <h2>TopicNews : <b>{val.TopicNews}</b> ({val.NewsNo},{val.NewsDate})</h2>
+                            <h2>TopicNews : <b>{val.TitleID}</b></h2>
                             <h4>Detail list</h4>
-                            <h6>NewsDetail : {val.NewsDetail}</h6>
-                            <input
-                                value={val.NewsDetail}
-                            >
-                            </input>
+                            <h6>Detail : {val.TitleName}</h6>
+                            <h6>Detail : {val.CreateDate}</h6>
                             <h6>CreateBy : {val.CreateBy}</h6>
                             <h6>UpdateDate : {val.UpdateDate}</h6>
                             <h6>UpdateBy : {val.UpdateBy}</h6>
                             <br></br>
-                            <Link className="btn btn-danger" to="/news" >Back to Listing</Link>
+                            <Link className="btn btn-danger" to="/title" >Back to Title</Link>
 
                         </div>
                     ))}
@@ -65,4 +62,4 @@ function DetailNews() {
     );
 }
 
-export default DetailNews;
+export default DetailTitle;

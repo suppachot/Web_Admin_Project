@@ -75,7 +75,7 @@ app.post('/title/add', (req, res) => {
     const UpdateDate = req.body.UpdateDate;
     const UpdateBy = req.body.UpdateBy;
 
-    db.query("INSERT INTO title (TitleID, TitleName ,CreateDate,CreateBy,UpdateDate,UpdateBy) VALUES(?,?,now(),?,now(),?);",
+    db.query("INSERT INTO title (TitleID, TitleName ,CreateDate,CreateBy,UpdateDate,UpdateBy) VALUES(?,?,?,?,?,?);",
         [TitleID, TitleName,CreateDate,CreateBy,UpdateDate,UpdateBy],
         (err, result) => {
             if (err) {
@@ -87,6 +87,19 @@ app.post('/title/add', (req, res) => {
         }
     );
     console.log('Insert Title success');
+})
+
+//details title
+app.get('/title/detail/:TitleID', (req, res) => {
+    const TitleID = req.params.TitleID;
+    db.query("SELECT * FROM title WHERE TitleID = ? ;", [TitleID], (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.send(result);
+        }
+    })
 })
 // deleate title  
 app.delete('/deletetitle/:TitleID', (req, res) => {
@@ -219,6 +232,54 @@ app.get('/department', (req, res) => {
         }
     })
 })
+// create department
+app.post('/department/add', (req, res) => {
+    const DepartmentID = req.body.DepartmentID;
+    const DepartmentName = req.body.DepartmentName;
+    const CreateDate = req.body.CreateDate;
+    const CreateBy = req.body.CreateBy;
+    const UpdateDate = req.body.UpdateDate;
+    const UpdateBy = req.body.UpdateBy;
+
+    db.query("INSERT INTO department (DepartmentID, DepartmentName ,CreateDate,CreateBy,UpdateDate,UpdateBy) VALUES(?,?,?,?,?,?);",
+        [DepartmentID, DepartmentName,CreateDate,CreateBy,UpdateDate,UpdateBy],
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                res.send("Values Department inserted");
+            }
+        }
+    );
+    console.log('Insert Department success');
+})
+
+//details department
+app.get('/department/detail/:DepartmentID', (req, res) => {
+    const DepartmentID = req.params.DepartmentID;
+    db.query("SELECT * FROM department WHERE DepartmentID = ? ;", [DepartmentID], (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.send(result);
+        }
+    })
+})
+// deleate department  
+app.delete('/deletedepartment/:DepartmentID', (req, res) => {
+    const DepartmentID = req.params.DepartmentID;
+    db.query("DELETE FROM department WHERE DepartmentID = ?", DepartmentID, (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.send(result);
+        }
+    })
+    console.log('Delete Department success');
+})
 
 //role db
 app.get('/role', (req, res) => {
@@ -230,6 +291,54 @@ app.get('/role', (req, res) => {
             res.send(result);
         }
     })
+})
+// create role
+app.post('/role/add', (req, res) => {
+    const RoleID = req.body.RoleID;
+    const RoleName = req.body.RoleName;
+    const CreateDate = req.body.CreateDate;
+    const CreateBy = req.body.CreateBy;
+    const UpdateDate = req.body.UpdateDate;
+    const UpdateBy = req.body.UpdateBy;
+
+    db.query("INSERT INTO role (RoleID, RoleName ,CreateDate,CreateBy,UpdateDate,UpdateBy) VALUES(?,?,?,?,?,?);",
+        [RoleID, RoleName,CreateDate,CreateBy,UpdateDate,UpdateBy],
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                res.send("Values Role inserted");
+            }
+        }
+    );
+    console.log('Insert Role success');
+})
+
+//details role
+app.get('/role/detail/:RoleID', (req, res) => {
+    const RoleID = req.params.RoleID;
+    db.query("SELECT * FROM role WHERE RoleID = ? ;", [RoleID], (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.send(result);
+        }
+    })
+})
+// deleate role  
+app.delete('/deleterole/:RoleID', (req, res) => {
+    const RoleID = req.params.RoleID;
+    db.query("DELETE FROM role WHERE RoleID = ?", RoleID, (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.send(result);
+        }
+    })
+    console.log('Delete role success');
 })
 //meeting_approve
 app.get('/meeting_approve', (req, res) => {

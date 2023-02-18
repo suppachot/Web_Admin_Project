@@ -13,16 +13,16 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 
-function DetailNews() {
+function DetailRole() {
 
-    const { NewsNo } = useParams();
-    const [newsdata, newsdatachange] = useState(null);
+    const { RoleID } = useParams();
+    const [roledata,roledatachange] = useState(null);
 
     useEffect(() => {
-        fetch("http://localhost:5000/news/detail/" + NewsNo)
+        fetch("http://localhost:5000/role/detail/" + RoleID)
             .then(res => res.json())
             .then((resp) => {
-                newsdatachange(resp);
+                roledatachange(resp);
             }).catch((err) => {
                 console.log(err.message);
             })
@@ -37,23 +37,19 @@ function DetailNews() {
 
                 <div className="card row mb-3" style={{ "textAlign": "center" }}>
                     <div className="card-title">
-                        <h2>News Detail</h2>
+                        <h2>Role Detail</h2>
                     </div>
                     <div className="card-body"></div>
-                    {newsdata && newsdata.map(val => (
+                    {roledata && roledata.map(val => (
                         <div style={{textAlign: "left" , paddingLeft: "80px"}}>
-                            <h2>TopicNews : <b>{val.TopicNews}</b> ({val.NewsNo},{val.NewsDate})</h2>
-                            <h4>Detail list</h4>
-                            <h6>NewsDetail : {val.NewsDetail}</h6>
-                            <input
-                                value={val.NewsDetail}
-                            >
-                            </input>
+                            <h2>RoleID : <b>{val.RoleID}</b></h2>
+                            <h6>RoleName : {val.RoleName}</h6>
+                            <h6>CreateDate : {val.CreateDate}</h6>
                             <h6>CreateBy : {val.CreateBy}</h6>
                             <h6>UpdateDate : {val.UpdateDate}</h6>
                             <h6>UpdateBy : {val.UpdateBy}</h6>
                             <br></br>
-                            <Link className="btn btn-danger" to="/news" >Back to Listing</Link>
+                            <Link className="btn btn-danger" to="/department" >Back to Title</Link>
 
                         </div>
                     ))}
@@ -65,4 +61,4 @@ function DetailNews() {
     );
 }
 
-export default DetailNews;
+export default DetailRole;
