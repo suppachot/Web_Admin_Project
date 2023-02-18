@@ -30,12 +30,17 @@ import HomeEmployee from "layouts/employee/homeemployee";
 import DetailEmpolyee from "layouts/employee/detailemployee";
 import EditEmp from "layouts/employee/editemployee";
 //Department
-import Department from "layouts/department";
+import Department from "layouts/department/department";
+import AddDepartment from "layouts/department/add_department";
+import DetailDepartment from "layouts/department/detail_department";
 //Role
-
+import Role from "layouts/role/role";
+import DetailRole from "layouts/role/detail_role";
+import AddRole from "layouts/role/add_role";
 //Title
 import HomeTitle from "layouts/title/hometitle";
 import AddTitle from "layouts/title/addtitle";
+import DetailTitle from "layouts/title/detail_title";
 
 //news
 import News from "layouts/news/news";
@@ -81,6 +86,14 @@ const routes = [
     icon: <Icon fontSize="small"></Icon>,
     route: "/department",
     component: <Department />,  
+  },
+  {
+    type: "collapse",
+    name: "Role",
+    key: "role",
+    icon: <Icon fontSize="small"></Icon>,
+    route: "/role",
+    component: <Role />,  
   },
   {
     type: "collapse",
@@ -137,7 +150,13 @@ const routes = [
     component: <AddTitle />,
   },
   {
-    name: "addempoytest",
+    key: "detailtitle",
+    icon: <Icon fontSize="small"></Icon>,
+    route: "/title/detail/:TitleID",
+    component: <DetailTitle />,  
+  },
+  {
+    name: "addemployee",
     key: "notifications",
     route: "/addEmpolyee",
     component: <AddEmployee />,
@@ -154,6 +173,33 @@ const routes = [
     route: "/empolyee/edit/:EmployeeID",
     component: <EditEmp />,  
   },
+
+  {
+    key: "adddepartment",
+    icon: <Icon fontSize="small"></Icon>,
+    route: "/addDepartment",
+    component: <AddDepartment />,
+  },
+  {
+    key: "detaildepartment",
+    icon: <Icon fontSize="small"></Icon>,
+    route: "/department/detail/:DepartmentID",
+    component: <DetailDepartment />,
+  },
+
+  {
+    key: "addrole",
+    icon: <Icon fontSize="small"></Icon>,
+    route: "/addRole",
+    component: <AddRole />,
+  },
+  {
+    key: "detailrole",
+    icon: <Icon fontSize="small"></Icon>,
+    route: "/role/detail/:RoleID",
+    component: <DetailRole />,
+  },
+
   {
     key: "createnews",
     icon: <Icon fontSize="small"></Icon>,

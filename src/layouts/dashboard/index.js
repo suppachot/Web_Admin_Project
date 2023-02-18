@@ -67,7 +67,7 @@ function Dashboard() {
               {acountdata && acountdata.map(val => (
                 <ComplexStatisticsCard
                   color="success"
-                  icon="weekend"
+                  icon="recent_actors"
                   title={
                     <>
                       <h1>จำนวนผู้ใช้ระบบ</h1>
@@ -85,7 +85,7 @@ function Dashboard() {
             <MDBox mb={1.5}>
               {count_employeedata && count_employeedata.map(val => (
                 <ComplexStatisticsCard
-                  icon="leaderboard"
+                  icon="supervisor_account"
                   title={
                     <>
                       <h1>Employee</h1>
@@ -104,7 +104,7 @@ function Dashboard() {
               {count_admindata && count_admindata.map(val => (
                 <ComplexStatisticsCard
                   color="primary"
-                  icon="person_add"
+                  icon="manage_accounts"
                   title={
                     <>
                       <h1>Admin</h1>

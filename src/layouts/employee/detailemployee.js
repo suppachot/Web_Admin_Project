@@ -11,11 +11,14 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import AddEmployee from './addemployee';
+import { margin } from "@mui/system";
+import { padding } from '@mui/system';
 
 
 function DetailEmpolyee() {
 
-    const {EmployeeID} = useParams();
+    const { EmployeeID } = useParams();
     const [employeedata, employeedatachange] = useState(null);
 
     useEffect(() => {
@@ -37,28 +40,32 @@ function DetailEmpolyee() {
 
                 <div className="card row mb-3" style={{ "textAlign": "center" }}>
                     <div className="card-title">
+                        <br></br>
                         <h2>Employee Detail</h2>
                     </div>
-                    <div className="card-body"></div>
-                   { employeedata && employeedata.map(val => (
-                        <div>
-                            <h2>EmployeeID : <b>{val.EmployeeID}</b></h2>
-                            <h4>Detail list</h4>
-                            <h6>Name : {val.TitleName}  {val.FirstName}  {val.LastName}</h6>
-                            <h6>PhoneNumber: {val.PhoneNumber}</h6>
-                            <h6>Email : {val.Email}</h6>
-                            <h6>Department : {val.DepartmentName}</h6>
-                            <h6>Role : {val.RoleName}</h6>
-                            <h6>CreateDate : {val.CreateDate}</h6>
-                            <h6>CreateBy : {val.CreateBy}</h6>
-                            <h6>UpdateDate : {val.UpdateDate}</h6>
-                            <h6>UpdateBy : {val.UpdateBy}</h6>
+                    <div className="card-body" ></div>
+                    {employeedata && employeedata.map(val => (
+                        <div style={{textAlign: "left" , paddingLeft: "80px"}}>
+                            <h3>EmployeeID : <b>{val.EmployeeID}</b></h3>
+                            <h5 >
+                                Name       : {val.TitleName}  {val.FirstName}  {val.LastName} <br></br>
+                                PhoneNumber: {val.PhoneNumber} <br></br>
+                                Email      : {val.Email}<br></br>
+                                Department : {val.DepartmentName}<br></br>
+                                Role       : {val.RoleName}<br></br>
+                                CreateDate : {val.CreateDate}<br></br>
+                                CreateBy   : {val.CreateBy}<br></br>
+                                UpdateDate : {val.UpdateDate}<br></br>
+                                UpdateBy   : {val.UpdateBy}<br></br>
+                            </h5>
                             <br></br>
-                            <Link className="btn btn-danger" to="/employee" >Back to Listing</Link>
+                           
 
                         </div>
                     ))}
+                     <Link className="btn btn-danger" to="/employee" >Back to Employee</Link>
                 </div>
+
             </div>
 
         </DashboardLayout>

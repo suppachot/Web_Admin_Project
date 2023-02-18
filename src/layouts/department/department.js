@@ -14,6 +14,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Axios from "axios";
 import { useState, useEffect } from "react";
 import DataTable from 'react-data-table-component';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 
@@ -22,9 +23,27 @@ function Department() {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
-  const [totalRows, setTotalRows] = useState(0);
-	const [perPage, setPerPage] = useState(10);
 
+  const [departmentdata, departmentdatachange] = useState(null);
+  const navigate = useNavigate();
+
+  const LoadDetail = (DepartmentID) => {
+    navigate("/department/detail/" + DepartmentID);
+  }
+  const LoadEdit = (DepartmentID) => {
+    navigate("/department/edit/" + DepartmentID);
+  }
+  const Removefunction = (DepartmentID) => {
+    if (window.confirm('Do you want to remove?')) {
+      Axios.delete("http://localhost:5000/deletedepartment/" + DepartmentID, {
+      }).then((res) => {
+        alert('Removed successfully.')
+        window.location.reload();
+      }).catch((err) => {
+        console.log(err.message)
+      })
+    }
+  }
 
   const columns = [
     {
@@ -56,10 +75,23 @@ function Department() {
       name: 'UpdateBy',
       selector: row => row.UpdateBy,
       width: '150px'
+    },
+    {
+      name: 'Action',
+      selector: row =>
+
+        <div class="btn-group" role="group" aria-label="Basic example">
+
+          <button className="btn btn-primary" onClick={(clickHandler) => { LoadDetail(row.DepartmentID) }} >Detail</button>
+          <button className="btn btn-warning" onClick={() => { LoadEdit(row.DepartmentID) }} >Edit</button>
+          <button className="btn btn-danger" onClick={() => { Removefunction(row.DepartmentID) }} >Delete</button>
+
+        </div>
+
     }
   ];
 
-  
+
   useEffect(() => {
     fetch("http://localhost:5000/department")
       .then(res => res.json())
@@ -72,9 +104,13 @@ function Department() {
           setIsLoaded(true);
           setError(error);
         }
-      )
+      ).then((resp) => {
+        departmentdatachange(resp);
+      }).catch((err) => {
+        console.log(err.message);
+      })
   }, [])
-  
+
   if (error) {
     return <div>Error: {error.message}</div>;
   } else if (!isLoaded) {
@@ -83,10 +119,19 @@ function Department() {
     return (
       <DashboardLayout>
         <DashboardNavbar />
-        <DataTable
-          columns={columns}
-          data={items}
-        />
+        <div className="LayoutContainer">
+                    <div className="card-body">
+                        <div className="btn">
+                            <Link to="/addDepartment" className="btn btn-success">Add New</Link>
+                        </div>
+
+                        <DataTable
+                            columns={columns}
+                            data={items}
+                        />
+
+                    </div>
+                </div>
 
       </DashboardLayout>
     );

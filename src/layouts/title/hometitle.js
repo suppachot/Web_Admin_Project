@@ -29,10 +29,10 @@ function HomeTitle() {
     const navigate = useNavigate();
     
     const LoadDetail = (TitleID) => {
-        navigate("/empolyee/detail/" + TitleID);
+        navigate("/title/detail/" + TitleID);
     }
     const LoadEdit = (TitleID) => {
-        navigate("/empolyee/edit/" + TitleID);
+        navigate("/title/edit/" + TitleID);
     }
     const Removefunction = (TitleID) => {
         if (window.confirm('Do you want to remove?')) {
@@ -48,6 +48,12 @@ function HomeTitle() {
 
     const columns = [
         {
+            id: 'titleID',
+            name: 'TitleID',
+            selector: row => row.TitleID,
+            width: '100px'
+        },
+        {
             id: 'title',
             name: 'Title',
             selector: row => row.TitleName,
@@ -57,13 +63,13 @@ function HomeTitle() {
             id: 'titleName',
             name: 'TitleName',
             selector: row => row.TitleName,
-            width: '200px'
+            width: '100px'
         },
         {
             id: 'createdate',
             name: 'CreateDate',
             selector: row => row.CreateDate,
-            width: '250px'
+            width: '200px'
         },
         {
             id: 'createby',
@@ -75,7 +81,7 @@ function HomeTitle() {
             id: 'updatedate',
             name: 'UpdateDate',
             selector: row => row.UpdateDate,
-            width: '250px'
+            width: '200px'
         },
         {
             id: 'updateby',
@@ -94,8 +100,9 @@ function HomeTitle() {
                     <button className="btn btn-danger" onClick={() => { Removefunction(row.TitleID) }} >Delete</button>
 
                 </div>
-
+            
         }
+
     ];
    
     useEffect(() => {
@@ -111,7 +118,7 @@ function HomeTitle() {
                     setError(error);
                 }
             ).then((resp) => {
-                employeedatachange(resp);
+                titledatachange(resp);
             }).catch((err) => {
                 console.log(err.message);
             })
@@ -135,6 +142,7 @@ function HomeTitle() {
                         <DataTable
                             columns={columns}
                             data={items}
+                           
                         />
 
                     </div>
