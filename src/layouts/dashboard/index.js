@@ -57,62 +57,68 @@ function Dashboard() {
     })
   }, [])
 
-   return (
+  return (
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox py={3}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={4}>
             <MDBox mb={1.5}>
-            {acountdata && acountdata.map(val =>(
-              <ComplexStatisticsCard
-                color="dark"
-                icon="weekend"
-                title={ 
-                  <>
-                   <h1>จำนวนผู้ใช้ระบบ</h1>
-                  </>
-                }
-                count={val.Use_App}
-              />
+              {acountdata && acountdata.map(val => (
+                <ComplexStatisticsCard
+                  color="success"
+                  icon="weekend"
+                  title={
+                    <>
+                      <h1>จำนวนผู้ใช้ระบบ</h1>
+                    </>
+                  }
+                  count={
+                    <h1>{val.Use_App}</h1>
+                  }
+                />
               ))}
             </MDBox>
           </Grid>
-         
+
           <Grid item xs={12} md={6} lg={4}>
             <MDBox mb={1.5}>
-            {count_employeedata && count_employeedata.map(val =>(
-              <ComplexStatisticsCard
-                icon="leaderboard"
-                title={ 
-                  <>
-                   <h1>พนักงาน</h1>
-                  </>
-                }
-                count={val.Employee}
-              />
-            ))}
-            </MDBox>
-          </Grid>
-         
-          <Grid item xs={12} md={6} lg={4}>
-            <MDBox mb={1.5}>
-            {count_admindata && count_admindata.map(val =>(
-              <ComplexStatisticsCard
-                color="primary"
-                icon="person_add"
-                title={ 
-                  <>
-                   <h1>Admin</h1>
-                  </>
-                }
-                count={val.Admin}
-              />
+              {count_employeedata && count_employeedata.map(val => (
+                <ComplexStatisticsCard
+                  icon="leaderboard"
+                  title={
+                    <>
+                      <h1>Employee</h1>
+                    </>
+                  }
+                  count={
+                    <h1>{val.Employee}</h1>
+                  }
+                />
               ))}
             </MDBox>
           </Grid>
-        
-          
+
+          <Grid item xs={12} md={6} lg={4}>
+            <MDBox mb={1.5}>
+              {count_admindata && count_admindata.map(val => (
+                <ComplexStatisticsCard
+                  color="primary"
+                  icon="person_add"
+                  title={
+                    <>
+                      <h1>Admin</h1>
+                    </>
+                  }
+                  count={
+                    <h1>{val.Admin}</h1>
+                  }
+                />
+              ))}
+            </MDBox>
+          </Grid>
+
+
 
         </Grid>
 
@@ -123,9 +129,9 @@ function Dashboard() {
                 <ReportsBarChart
                   chart={reportsBarChartData}
                   color="info"
-                  title={ 
+                  title={
                     <>
-                     <h1><center>เข้างาน</center></h1>
+                      <h1><center>เข้างาน</center></h1>
                     </>
                   }
                   description={
@@ -141,9 +147,9 @@ function Dashboard() {
                 <ReportsLineChart
                   chart={sales}
                   color="success"
-                  title={ 
+                  title={
                     <>
-                     <h1><center>ออกงาน</center></h1>
+                      <h1><center>ออกงาน</center></h1>
                     </>
                   }
                   description={
@@ -153,7 +159,7 @@ function Dashboard() {
                   }
                 />
               </MDBox>
-            </Grid>    
+            </Grid>
           </Grid>
         </MDBox>
         <MDBox>
