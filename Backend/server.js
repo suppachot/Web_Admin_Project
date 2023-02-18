@@ -20,6 +20,40 @@ db.connect((err) => {
         console.log('MySql succes connected...');
     }
 });
+// ------------dashboard-----------
+// count admin
+app.get('/employee/admin_count', (req, res) => {
+    db.query("SELECT COUNT(`EmployeeID`) AS Admin FROM employee WHERE `RoleName`='Administrator'", (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.send(result);
+        }
+    })
+})
+// count employee
+app.get('/employee/emp_count', (req, res) => {
+    db.query("SELECT COUNT(`EmployeeID`) AS Employee FROM employee WHERE `RoleName`='Employee';", (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.send(result);
+        }
+    })
+})
+// count employee user_app
+app.get('/account/user_app', (req, res) => {
+    db.query("SELECT COUNT(`AccountID`) AS Use_App FROM account WHERE `AccountID`;", (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.send(result);
+        }
+    })
+})
 
 //title db
 app.get('/title', (req, res) => {
