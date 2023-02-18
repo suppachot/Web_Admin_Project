@@ -18,11 +18,45 @@ import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatist
 import reportsBarChartData from "layouts/dashboard/data/reportsBarChartData";
 import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
 import { style } from "@mui/system/Stack/createStack";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Axios } from "axios";
 
 
 function Dashboard() {
   const { sales, tasks } = reportsLineChartData;
-  
+  const [count_admindata, count_adminchange] = useState(null);
+  const [count_employeedata, count_employeechange] = useState(null);
+  const [acountdata, acountdatachange] = useState(null);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/account/user_app").then((res) => {
+      return res.json();
+    }).then((resp) => {
+      acountdatachange(resp);
+    }).catch((err) => {
+      console.log(err.message);
+    })
+  }, [])
+  useEffect(() => {
+    fetch("http://localhost:5000/employee/emp_count").then((res) => {
+      return res.json();
+    }).then((resp) => {
+      count_employeechange(resp);
+    }).catch((err) => {
+      console.log(err.message);
+    })
+  }, [])
+  useEffect(() => {
+    fetch("http://localhost:5000/employee/admin_count").then((res) => {
+      return res.json();
+    }).then((resp) => {
+      count_adminchange(resp);
+    }).catch((err) => {
+      console.log(err.message);
+    })
+  }, [])
+
    return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -30,6 +64,7 @@ function Dashboard() {
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={4}>
             <MDBox mb={1.5}>
+            {acountdata && acountdata.map(val =>(
               <ComplexStatisticsCard
                 color="dark"
                 icon="weekend"
@@ -38,12 +73,15 @@ function Dashboard() {
                    <h1>จำนวนผู้ใช้ระบบ</h1>
                   </>
                 }
-                count="2"
+                count={val.Use_App}
               />
+              ))}
             </MDBox>
           </Grid>
+         
           <Grid item xs={12} md={6} lg={4}>
             <MDBox mb={1.5}>
+            {count_employeedata && count_employeedata.map(val =>(
               <ComplexStatisticsCard
                 icon="leaderboard"
                 title={ 
@@ -51,12 +89,15 @@ function Dashboard() {
                    <h1>พนักงาน</h1>
                   </>
                 }
-                count="45"
+                count={val.Employee}
               />
+            ))}
             </MDBox>
           </Grid>
+         
           <Grid item xs={12} md={6} lg={4}>
             <MDBox mb={1.5}>
+            {count_admindata && count_admindata.map(val =>(
               <ComplexStatisticsCard
                 color="primary"
                 icon="person_add"
@@ -65,11 +106,16 @@ function Dashboard() {
                    <h1>Admin</h1>
                   </>
                 }
-                count="2"
+                count={val.Admin}
               />
+              ))}
             </MDBox>
           </Grid>
+        
+          
+
         </Grid>
+
         <MDBox mt={4.5}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={8} lg={6}>
