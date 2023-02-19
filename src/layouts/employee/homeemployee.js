@@ -5,6 +5,7 @@ import Card from "@mui/material/Card";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
+import MDBadge from "components/MDBadge";
 import MDTypography from "components/MDTypography";
 
 // Material Dashboard 2 React example components
@@ -27,7 +28,7 @@ function HomeEmployee() {
 
     const [employeedata, employeedatachange] = useState(null);
     const navigate = useNavigate();
-    
+
     const LoadDetail = (EmployeeID) => {
         navigate("/empolyee/detail/" + EmployeeID);
     }
@@ -93,8 +94,12 @@ function HomeEmployee() {
         {
             id: 'role',
             name: 'Role',
-            selector: row => row.RoleName,
-            width: '150px'
+            width: '150px',
+            selector: row =>
+                <div> 
+                        <MDBadge badgeContent={row.RoleName} color="success" variant="gradient" size="sm" />
+                   
+                </div>
         },
         // {
         //     id: 'createdate',
@@ -123,7 +128,7 @@ function HomeEmployee() {
         {
             name: 'Action',
             selector: row =>
-            
+
                 <div class="btn-group" role="group" aria-label="Basic example">
 
                     <button className="btn btn-primary" onClick={(clickHandler) => { LoadDetail(row.EmployeeID) }} >Detail</button>
@@ -134,7 +139,7 @@ function HomeEmployee() {
 
         }
     ];
-   
+
     useEffect(() => {
         fetch("http://localhost:5000/employee")
             .then(res => res.json())

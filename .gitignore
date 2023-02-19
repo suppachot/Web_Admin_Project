@@ -27,3 +27,4 @@ yarn.lock
 commit.sh
 src/layouts/news/detailnews.js
 src/layouts/news/1
+src/layouts/employee/homeemployee.js

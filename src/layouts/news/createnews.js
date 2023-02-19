@@ -35,9 +35,9 @@ function CreateNews() {
   const handlesubmit = (e) => {
     e.preventDefault();
     Axios.post("http://localhost:5000/createnews", {
-      NewsNo:NewsNo,
+      NewsNo: NewsNo,
       NewsDate: NewsDate,
-      TopicNews:TopicNews,
+      TopicNews: TopicNews,
       NewsDetail: NewsDetail,
       CreateBy: CreateBy,
       UpdateDate: UpdateDate,
@@ -70,7 +70,13 @@ function CreateNews() {
                   <div className="col-lg-12">
                     <div className="form-group">
                       <label>NewsDate</label>
-                      <input required value={NewsDate} type="date" onChange={e => setNewsDate(e.target.value)} className="form-control"></input>
+                      <input
+                        required value={NewsDate}
+                        type="date"
+                        onChange={e => setNewsDate(e.target.value)}
+                        className="form-control">
+
+                      </input>
                       {NewsDate.length == 0 && validation && <span className="text-danger">Enter the date</span>}
                     </div>
                   </div>
@@ -86,7 +92,7 @@ function CreateNews() {
                   <div className="col-lg-12">
                     <div className="form-group">
                       <label>NewsDetail</label>
-                      <textarea value={NewsDetail} type="text"  onChange={e => setNewsDetail(e.target.value)} className="form-control"></textarea>
+                      <textarea value={NewsDetail} type="text" onChange={e => setNewsDetail(e.target.value)} className="form-control"></textarea>
                     </div>
                   </div>
 

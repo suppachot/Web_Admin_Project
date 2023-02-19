@@ -399,6 +399,18 @@ app.post('/createnews', (req, res) => {
     );
     console.log('Insert success');
 })
+//edit details news
+app.get('/news/editdetail/:NewsNo', (req, res) => {
+    const NewsNo = req.params.NewsNo;
+    db.query("SELECT * FROM  news WHERE NewsNo = ? ;", [NewsNo], (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.send(result);
+        }
+    })
+})
 //Delete news
 app.delete('/deletenews/:NewsNo', (req, res) => {
     const NewsNo = req.params.NewsNo;
@@ -413,6 +425,7 @@ app.delete('/deletenews/:NewsNo', (req, res) => {
     console.log('Delete success');
 })
 //Update news
+
 // app.get('/news/edit/:newsno', (req, res) => {
 //     const newsno = req.params.newsno;
 //     db.query("SELECT * FROM  news WHERE NewsNo = ? ;", [newsno], (err, result) => {
@@ -424,7 +437,8 @@ app.delete('/deletenews/:NewsNo', (req, res) => {
 //         }
 //     })
 // })
-app.put("/news/edit/:NowsNo", (req, res) => {
+app.put("/news/edit/:newsNo", (req, res) => {
+  //  const newsid = req.params.newsid;
     const NewsNo = req.body.NewsNo;
     const NewsDate = req.body.NewsDate;
     const TopicNews = req.body.TopicNews;
@@ -433,8 +447,16 @@ app.put("/news/edit/:NowsNo", (req, res) => {
     const UpdateDate = req.body.UpdateDate;
     const UpdateBy = req.body.UpdateBy;
 
-    db.query("UPDATE news SET  NewsDate = ? , TopicNews = ? , NewsDetail = ?  , UpdateDate = ? , UpdateBy = ? WHERE NewsNo = ?",
-        [NewsDate, TopicNews, NewsDetail, UpdateDate, UpdateBy, NewsNo],(err, result) => {
+    // const NewsNo = req.body.NewsNo;
+    // const new_NewsDate = req.body.new_NewsDate;
+    // const new_TopicNews = req.body.new_TopicNews;
+    // const new_NewsDetail = req.body.new_NewsDetail;
+    // const CreateBy = req.body.CreateBy;
+    // const new_UpdateDate = req.body.new_UpdateDate;
+    // const new_UpdateBy = req.body.new_UpdateBy;
+
+    db.query("UPDATE news SET  NewsDate = ? , TopicNews = ? ,CreateBy =?, NewsDetail = ?  , UpdateDate = ? , UpdateBy = ? WHERE NewsNo = ?",
+        [NewsDate, TopicNews, NewsDetail,CreateBy, UpdateDate, UpdateBy, NewsNo],(err, result) => {
             if (err) {
                 console.log(err);
             }
@@ -443,6 +465,17 @@ app.put("/news/edit/:NowsNo", (req, res) => {
             }
         })
     console.log('Update news success');
+
+    // db.query("UPDATE news SET  NewsDate = ? , TopicNews = ? , NewsDetail = ? , CreateBy=? , UpdateDate = ? , UpdateBy = ? WHERE NewsNo = ?",
+    //     [new_NewsDate, new_TopicNews, new_NewsDetail, CreateBy, new_UpdateDate,new_UpdateBy, NewsNo],(err, result) => {
+    //         if (err) {
+    //             console.log(err);
+    //         }
+    //         else {
+    //             res.send("Values Updated");
+    //         }
+    //     })
+    // console.log('Update news success');
 })
 
 
