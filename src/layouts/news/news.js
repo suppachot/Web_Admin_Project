@@ -24,6 +24,9 @@ function News() {
   const LoadEdit = (NewsNo) => {
     navigate("/news/edit/" + NewsNo);
   }
+  const LoadEdit2 = (NewsNo) => {
+    navigate("/news/edit2/" + NewsNo);
+  }
   const Removefunction = (NewsNo) => {
     if (window.confirm('Do you want to remove?')) {
       Axios.delete("http://localhost:5000/deletenews/" + NewsNo, {
@@ -83,6 +86,7 @@ function News() {
                       <td><a onClick={() => {LoadEdit(item.NewsNo) }} className="btn btn-success">Edit</a>
                         <a onClick={() => { Removefunction(item.NewsNo) }} className="btn btn-danger">Remove</a>
                         <a onClick={() => { LoadDetail(item.NewsNo) }} className="btn btn-primary">Details</a>
+                        <a onClick={() => {LoadEdit2(item.NewsNo) }} className="btn btn-success">Edit2</a>
                       </td>
                     </tr>
                   ))

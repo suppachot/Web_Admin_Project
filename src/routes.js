@@ -29,6 +29,8 @@ import AddEmployee from "layouts/employee/addemployee";
 import HomeEmployee from "layouts/employee/homeemployee";
 import DetailEmpolyee from "layouts/employee/detailemployee";
 import EditEmp from "layouts/employee/editemployee";
+
+import ExportEmp from "layouts/employee/exportemp";
 //Department
 import Department from "layouts/department/department";
 import AddDepartment from "layouts/department/add_department";
@@ -47,6 +49,7 @@ import News from "layouts/news/news";
 import CreateNews from "layouts/news/createnews";
 import DetailNews from "layouts/news/detailnews";
 import EditsNews from "layouts/news/editnews";
+import Edit from "layouts/news/edit2";
 
 import Checkin from "layouts/checkin";
 import Checkout from "layouts/checkout";
@@ -162,6 +165,12 @@ const routes = [
     component: <AddEmployee />,
   },
   {
+    name: "ecportemployee",
+    key: "ecportemployee",
+    route: "/export-Empolyee",
+    component: <ExportEmp />,
+  },
+  {
     key: "detailsemployee",
     icon: <Icon fontSize="small"></Icon>,
     route: "/empolyee/detail/:EmployeeID",
@@ -212,6 +221,13 @@ const routes = [
     icon: <Icon fontSize="small"></Icon>,
     route: "/news/edit/:NewsNo",
     component: <EditsNews />,  
+  },
+  {
+    name: "edit2",
+    key: "news",
+    icon: <Icon fontSize="small"></Icon>,
+    route: "/news/edit2/:newsNo",
+    component: <Edit />,  
   },
   {
     key: "detailsenews",
