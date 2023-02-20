@@ -63,7 +63,11 @@ function CreateNews() {
                   <div className="col-lg-12">
                     <div className="form-group">
                       <label>NewsNo</label>
-                      <input required value={NewsNo} type="text" onChange={e => setNewsNo(e.target.value)} className="form-control"></input>
+                      <input
+                        required value={NewsNo}
+                        type="text"
+                        onChange={e => setNewsNo(e.target.value)}
+                        className="form-control"></input>
                     </div>
                   </div>
 
@@ -84,7 +88,12 @@ function CreateNews() {
                   <div className="col-lg-12">
                     <div className="form-group">
                       <label>TopicNews</label>
-                      <input required value={TopicNews} onMouseDown={e => valchange(true)} type="text" onChange={e => setTopicNews(e.target.value)} className="form-control"></input>
+                      <input required value={TopicNews}
+                        onMouseDown={e => valchange(true)} type="text"
+                        onChange={e => setTopicNews(e.target.value)}
+                        className="form-control">
+
+                      </input>
                       {TopicNews.length == 0 && validation && <span className="text-danger">Enter the topic news</span>}
                     </div>
                   </div>
@@ -92,28 +101,46 @@ function CreateNews() {
                   <div className="col-lg-12">
                     <div className="form-group">
                       <label>NewsDetail</label>
-                      <textarea value={NewsDetail} type="text" onChange={e => setNewsDetail(e.target.value)} className="form-control"></textarea>
+                      <textarea value={NewsDetail}
+                        type="text"
+                        onChange={e => setNewsDetail(e.target.value)}
+                        className="form-control"></textarea>
                     </div>
                   </div>
 
                   <div className="col-lg-12">
                     <div className="form-group">
                       <label>CreateBy</label>
-                      <input value={CreateBy} type="text" onChange={e => setCreateBy(e.target.value)} className="form-control"></input>
+                      <input value={CreateBy}
+                        type="text"
+                        onChange={e => setCreateBy(e.target.value)}
+                        className="form-control">
+
+                      </input>
                     </div>
                   </div>
 
                   <div className="col-lg-12">
                     <div className="form-group">
                       <label>UpdateDate</label>
-                      <input value={UpdateDate} type="datetime-local" onChange={e => setUpdateDate(e.target.value)} className="form-control"></input>
+                      <input value={UpdateDate}
+                        type="datetime-local"
+                        onChange={e => setUpdateDate(e.target.value)}
+                        className="form-control">
+
+                      </input>
                     </div>
                   </div>
 
                   <div className="col-lg-12">
                     <div className="form-group">
                       <label>UpdateBy</label>
-                      <input value={UpdateBy} type="text" onChange={e => setUpdateBy(e.target.value)} className="form-control"></input>
+                      <input value={UpdateBy}
+                        type="text"
+                        onChange={e => setUpdateBy(e.target.value)}
+                        className="form-control">
+
+                      </input>
                     </div>
                   </div>
 
