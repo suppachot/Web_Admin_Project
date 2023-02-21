@@ -1,5 +1,6 @@
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import React, { useState } from "react";
 
 // const excelJS = require('exceljs');
 // const exportEmp = async (req, res) => {
@@ -35,12 +36,52 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 //         console.log(error.message);
 //     }
 // }
-    function ExportEmp() {
-        return (
-            <DashboardLayout>
-                <DashboardNavbar />
-                hello
-            </DashboardLayout>
-        );
-    }
-    export default ExportEmp;
+
+function ExportEmp() {
+    const [file, setFile] = useState();
+
+    const fileReader = new FileReader();
+
+    const handleOnChange = (e) => {
+        setFile(e.target.files[0]);
+    };
+
+    const handleOnSubmit = (e) => {
+        e.preventDefault();
+
+        if (file) {
+            fileReader.onload = function (event) {
+                const csvOutput = event.target.result;
+            };
+
+            fileReader.readAsText(file);
+        }
+    };
+    return (
+        <DashboardLayout>
+            <DashboardNavbar />
+            <div style={{ textAlign: "center" }}>
+                <h1>REACTJS CSV IMPORT EXAMPLE </h1>
+                <form>
+                    <div className="btn">
+                        <input
+                            type={"file"}
+                            id={"csvFileInput"}
+                            accept={".csv"}
+                            onChange={handleOnChange}
+                        />
+                        <button
+                            className="btn btn-primary"
+                            onClick={(e) => {
+                                handleOnSubmit(e);
+                            }}
+                        >
+                            IMPORT CSV
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </DashboardLayout>
+    );
+}
+export default ExportEmp;

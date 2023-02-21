@@ -10,25 +10,13 @@ import MDTypography from "components/MDTypography";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { Axios } from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import  Axios  from "axios";
+import { useParams } from 'react-router-dom';
 
 
 function EditEmp() {
   const { employeeID } = useParams();
-  const [employeeList, setEmployeeList] = useState([]);
-
-  useEffect(() => {
-    fetch("http://localhost:5000//empolyee/edit//"+employeeID).then((res) => {
-      return res.json();
-    }).then((resp) => {
-      setEmployeeList(resp);
-    }).catch((err) => {
-      console.log(err.message);
-    })
-  }, [])
-
-
   const [EmployeeID, setEmployeeID] = useState("");
   const [TitleName, setTitleName] = useState("");
   const [FirstName, setFirstName] = useState("");
@@ -43,8 +31,23 @@ function EditEmp() {
   const [UpdateBy, setUpdateBy] = useState("");
   const [validation, valchange] = useState(false);
 
-
   const navigate = useNavigate();
+
+  const [employeedata, employeedatachange] = useState(null);
+  const getEmp = () => {
+    Axios.get('http://localhost:5000/employee/' + employeeID).then((response) => {
+      employeedatachange(response.data);
+    });
+  }
+  useEffect(() => {
+    fetch("http://localhost:5000/employee/" + employeeID).then((res) => {
+      return res.json();
+    }).then((resp) => {
+      employeedatachange(resp);
+    }).catch((err) => {
+      console.log(err.message);
+    })
+  }, [])
 
   const handlesubmit = (e) => {
     e.preventDefault();
@@ -61,27 +64,10 @@ function EditEmp() {
       CreateBy: CreateBy,
       UpdateDate: UpdateDate,
       UpdateBy: UpdateBy
-    // }).then(() => {
-    //   setEmployeeList([
-    //     ...employeeList,
-    //     {
-    //      // EmployeeID: employeeID,
-    //       TitleName: TitleName,
-    //       FirstName: FirstName,
-    //       LastName: LastName,
-    //       PhoneNumber: PhoneNumber,
-    //       Email: Email,
-    //       DepartmentName: DepartmentName,
-    //       RoleName: RoleName,
-    //       CreateDate: CreateDate,
-    //       CreateBy: CreateBy,
-    //       UpdateDate: UpdateDate,
-    //       UpdateBy: UpdateBy
-    //     }
-    //   ])
+
     }).then((res) => {
       alert('Saved successfully.')
-      navigate('/news/');
+      navigate('/employee');
     }).catch((err) => {
       console.log(err.message)
     })
@@ -104,7 +90,7 @@ function EditEmp() {
                       <input required value={EmployeeID}
                         type="text"
                         id='EmployeeID'
-                       // disabled="disabled"
+                        // disabled="disabled"
                         onChange={e => setEmployeeID(e.target.value)}
                         className="form-control">
                       </input>
@@ -208,7 +194,7 @@ function EditEmp() {
                       <label>CreateBy</label>
                       <input value={CreateBy} type="text"
                         id='CreateBy'
-                       // disabled="disabled"
+                        // disabled="disabled"
                         onChange={e => setCreateBy(e.target.value)}
                         className="form-control"></input>
                     </div>
@@ -228,7 +214,8 @@ function EditEmp() {
                   <div className="col-lg-12">
                     <div className="form-group">
                       <label>UpdateBy</label>
-                      <input value={UpdateBy} type="text"
+                      <input value={UpdateBy}
+                        type="text"
                         id='UpdateBy'
                         onChange={e => setUpdateBy(e.target.value)}
                         className="form-control">

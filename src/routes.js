@@ -173,13 +173,13 @@ const routes = [
   {
     key: "detailsemployee",
     icon: <Icon fontSize="small"></Icon>,
-    route: "/empolyee/detail/:EmployeeID",
+    route: "/employee/detail/:EmployeeID",
     component: <DetailEmpolyee />,  
   },
   {
     key: "editemployee",
     icon: <Icon fontSize="small"></Icon>,
-    route: "/empolyee/edit/:EmployeeID",
+    route: "/employee/edit/:employeeID",
     component: <EditEmp />,  
   },
 

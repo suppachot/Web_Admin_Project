@@ -21,6 +21,30 @@ import { CSVLink, CSVDownload } from "react-csv";
 
 
 function HomeEmployee() {
+    //import csv
+    const [file, setFile] = useState(null);
+
+    const handleFileInput = (event) => {
+        setFile(event.target.files[0]);
+    };
+
+    const handleUpload = async () => {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        try {
+            const res = await fetch("http://localhost:5000/api/uploadcsv", {
+                method: "POST",
+                body: formData,
+            });
+
+            const data = await res.json();
+            console.log(data);
+        } catch (error) {
+            console.error({ message: error.message });
+        }
+    };
+    //--------------------------------------------------//
 
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -30,10 +54,10 @@ function HomeEmployee() {
     const navigate = useNavigate();
 
     const LoadDetail = (EmployeeID) => {
-        navigate("/empolyee/detail/" + EmployeeID);
+        navigate("/employee/detail/" + EmployeeID);
     }
-    const LoadEdit = (employeeID) => {
-        navigate("/empolyee/edit/" + employeeID);
+    const LoadEdit = (EmployeeID) => {
+        navigate("/employee/edit/" + EmployeeID);
     }
     const Removefunction = (EmployeeID) => {
         if (window.confirm('Do you want to remove?')) {
@@ -145,7 +169,7 @@ function HomeEmployee() {
 
                 <div class="btn-group" role="group" aria-label="Basic example">
 
-                    <button className="btn btn-primary" onClick={(clickHandler) => { LoadDetail(row.EmployeeID) }} >Detail</button>
+                    <button className="btn btn-primary" onClick={() => { LoadDetail(row.EmployeeID) }} >Detail</button>
                     <button className="btn btn-warning" onClick={() => { LoadEdit(row.EmployeeID) }} >Edit</button>
                     <button className="btn btn-danger" onClick={() => { Removefunction(row.EmployeeID) }} >Delete</button>
 
@@ -191,17 +215,36 @@ function HomeEmployee() {
                         <div className="btn">
                             <Link to="/addEmpolyee" className="btn btn-success">Add New</Link>
                         </div>
+
                         <div className="btn">
                             <Link to="/export-Empolyee" className="btn btn-success">Export.CSV</Link>
                         </div>
+
                         <CSVLink
                             data={items}
-                             headers={headers}
+                            headers={headers}
                             filename={"Employee_T.K.S.csv"}
                             className="btn btn-primary"
                         >
                             Export .CSV
                         </CSVLink>
+                        <from>
+
+
+                            <div className="btn">
+                                <input
+                                    type="file"
+                                    accept={".csv"}
+                                    onChange={handleFileInput}
+                                />
+                                <button
+                                    className="btn btn-success"
+                                    onClick={handleUpload}
+                                >
+                                    Upload
+                                </button>
+                            </div>
+                        </from>
                         <DataTable
                             title="Employee List"
                             columns={columns}
