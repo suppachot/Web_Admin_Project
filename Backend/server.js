@@ -166,9 +166,9 @@ app.post('/employee/add', (req, res) => {
     console.log('Insert Emp success');
 })
 //Update employe
-app.put("/empolyee/edit/:EmployeeID", (req, res) => {
-    const Employeeid = req.body.Employeeid;
-    const EmployeeID = req.body.EmployeeID;
+app.put("/empolyee/edit/:employeeID", (req, res) => {
+    //const Employeeid = req.body.Employeeid;
+    const employeeID = req.body.employeeID;
     const TitleName = req.body.TitleName;
     const FirstName = req.body.FirstName;
     const LastName = req.body.LastName;
@@ -182,7 +182,7 @@ app.put("/empolyee/edit/:EmployeeID", (req, res) => {
     const UpdateBy = req.body.UpdateBy;
 
     db.query("UPDATE employee SET TitleName=? , FirstName = ? , LastName = ? , PhoneNumber = ? , Email = ? , DepartmentName = ? , RoleName = ? ,CreateDate = ? ,CreateBy = ?,UpdateDate = ?,UpdateBy = ?  WHERE EmployeeID = ?",
-        [TitleName, FirstName, LastName, PhoneNumber, Email, DepartmentName, RoleName,CreateDate,CreateBy,UpdateDate,UpdateBy,EmployeeID], (err, result) => {
+        [TitleName, FirstName, LastName, PhoneNumber, Email, DepartmentName, RoleName,CreateDate,CreateBy,UpdateDate,UpdateBy,employeeID], (err, result) => {
             if (err) {
                 console.log(err);
             }
@@ -426,18 +426,27 @@ app.delete('/deletenews/:NewsNo', (req, res) => {
 })
 //Update news
 
-// app.get('/news/edit/:newsno', (req, res) => {
-//     const newsno = req.params.newsno;
-//     db.query("SELECT * FROM  news WHERE NewsNo = ? ;", [newsno], (err, result) => {
-//         if (err) {
-//             console.log(err);
-//         }
-//         else {
-//             res.send(result);
-//         }
-//     })
-// })
-app.put("/news/edit/:newsNo", (req, res) => {
+app.put('/news/edit2/:newsNo', (req, res) => {
+    const newsNo = req.params.newsNo;
+    const NewsDate = req.body.NewsDate;
+    const TopicNews = req.body.TopicNews;
+    const NewsDetail = req.body.NewsDetail;
+    const CreateBy = req.body.CreateBy;
+    const UpdateDate = req.body.UpdateDate;
+    const UpdateBy = req.body.UpdateBy;
+    db.query("UPDATE news SET  NewsDate = ? , TopicNews = ?, NewsDetail = ?  ,CreateBy =? , UpdateDate = ? , UpdateBy = ? WHERE NewsNo = ?",
+        [NewsDate, TopicNews, NewsDetail,CreateBy, UpdateDate, UpdateBy, newsNo],(err, result) => {
+        if (err) {
+            console.log(err);
+        }
+        else {   
+            res.send(result);
+        }
+    })
+    console.log('Update news2 success');
+})
+
+app.put("/news/edit/:NewsNo", (req, res) => {
   //  const newsid = req.params.newsid;
     const NewsNo = req.body.NewsNo;
     const NewsDate = req.body.NewsDate;
@@ -455,7 +464,7 @@ app.put("/news/edit/:newsNo", (req, res) => {
     // const new_UpdateDate = req.body.new_UpdateDate;
     // const new_UpdateBy = req.body.new_UpdateBy;
 
-    db.query("UPDATE news SET  NewsDate = ? , TopicNews = ? ,CreateBy =?, NewsDetail = ?  , UpdateDate = ? , UpdateBy = ? WHERE NewsNo = ?",
+    db.query("UPDATE news SET  NewsDate = ? , TopicNews = ?, NewsDetail = ?  ,CreateBy =? , UpdateDate = ? , UpdateBy = ? WHERE NewsNo = ?",
         [NewsDate, TopicNews, NewsDetail,CreateBy, UpdateDate, UpdateBy, NewsNo],(err, result) => {
             if (err) {
                 console.log(err);
@@ -518,3 +527,40 @@ app.listen('5000', () => {
     console.log('Server is runing o n port 5000');
 })
 
+const excelJS = require('exceljs');
+//const exceljs = excelJS();
+//exceljs.get("/export-Empolyee")
+
+const exportEmp = async (req, res) => {
+    try {
+        const workbook = new excelJS.Workbook();
+        const worksheet = workbook.addWorksheet("My Employees");
+
+        worksheet.columns = [
+            { header: "EmployeeID", key: "employeeid" },
+            { header: "TitleName", key: "titlename" },
+            { header: "FirstName", key: "firstName" },
+            { header: "LastName", key: "lastName" },
+            { header: "PhoneNumber", key: "phonenumber" },
+            { header: "Email", key: "email" },
+            { header: "DepartmentName", key: "department" },
+            { header: "RoleName", key: "role" },
+            { header: "CreateDate", key: "createdate" },
+            { header: "CreateBy", key: "createby" },
+            { header: "UpdateDate", key: "updatedate" },
+            { header: "UpdateBy", key: "updateby" }
+        ];
+        res.setHeader(
+            "Content-Type",
+            "application/vnd.openxmlfomats-officedocument.spreadsheatml.sheet"
+        );
+        res.setHeader(
+            "Content-Disposition", `attachment; filename=Emp.csv`
+        );
+        return workbook.csv.write(res).then(() => {
+            res.status(200);
+        });
+    } catch (error) {
+        console.log(error.message);
+    }
+}

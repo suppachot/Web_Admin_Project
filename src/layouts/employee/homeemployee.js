@@ -17,11 +17,11 @@ import { useState, useEffect } from "react";
 import DataTable from 'react-data-table-component';
 import { Button } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
-
+import { CSVLink, CSVDownload } from "react-csv";
 
 
 function HomeEmployee() {
-
+    
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
@@ -30,10 +30,10 @@ function HomeEmployee() {
     const navigate = useNavigate();
 
     const LoadDetail = (EmployeeID) => {
-        navigate("/empolyee/detail/" + EmployeeID);
+        navigate("/employee/detail/" + EmployeeID);
     }
     const LoadEdit = (EmployeeID) => {
-        navigate("/empolyee/edit/" + EmployeeID);
+        navigate("/employee/edit/" + EmployeeID);
     }
     const Removefunction = (EmployeeID) => {
         if (window.confirm('Do you want to remove?')) {
@@ -46,6 +46,20 @@ function HomeEmployee() {
             })
         }
     }
+    const headers = [
+        { label: "EmployeeID", key: "employeeid" },
+        { label: "TitleName", key: "titlename" },
+        { label: "FirstName", key: "firstName" },
+        { label: "LastName", key: "lastName" },
+        { label: "PhoneNumber", key: "phonenumber" },
+        { label: "Email", key: "email" },
+        { label: "DepartmentName", key: "department" },
+        { label: "RoleName", key: "role" },
+        { label: "CreateDate", key: "createdate" },
+        { label: "CreateBy", key: "createby" },
+        { label: "UpdateDate", key: "updatedate" },
+        { label: "UpdateBy", key: "updateby" }
+    ];
 
     const columns = [
         {
@@ -96,9 +110,9 @@ function HomeEmployee() {
             name: 'Role',
             width: '150px',
             selector: row =>
-                <div> 
-                        <MDBadge badgeContent={row.RoleName} color="success" variant="gradient" size="sm" />
-                   
+                <div>
+                    <MDBadge badgeContent={row.RoleName} color="success" variant="gradient" size="sm" />
+
                 </div>
         },
         // {
@@ -131,7 +145,7 @@ function HomeEmployee() {
 
                 <div class="btn-group" role="group" aria-label="Basic example">
 
-                    <button className="btn btn-primary" onClick={(clickHandler) => { LoadDetail(row.EmployeeID) }} >Detail</button>
+                    <button className="btn btn-primary" onClick={() => { LoadDetail(row.EmployeeID) }} >Detail</button>
                     <button className="btn btn-warning" onClick={() => { LoadEdit(row.EmployeeID) }} >Edit</button>
                     <button className="btn btn-danger" onClick={() => { Removefunction(row.EmployeeID) }} >Delete</button>
 
@@ -143,6 +157,9 @@ function HomeEmployee() {
     useEffect(() => {
         fetch("http://localhost:5000/employee")
             .then(res => res.json())
+            // .then((resJson) => {
+            //     const data = JSON.parse(resJson);
+            // })
             .then(
                 (result) => {
                     setIsLoaded(true);
@@ -165,6 +182,7 @@ function HomeEmployee() {
     } else if (!isLoaded) {
         return <div>Loading...</div>;
     } else {
+
         return (
             <DashboardLayout>
                 <DashboardNavbar />
@@ -174,9 +192,24 @@ function HomeEmployee() {
                             <Link to="/addEmpolyee" className="btn btn-success">Add New</Link>
                         </div>
 
+                        <div className="btn">
+                            <Link to="/export-Empolyee" className="btn btn-success">Export.CSV</Link>
+                        </div>
+
+                        <CSVLink
+                            data={items}
+                            headers={headers}
+                            filename={"Employee_T.K.S.csv"}
+                            className="btn btn-primary"
+                        >
+                            Export .CSV
+                        </CSVLink>
+                    
                         <DataTable
+                            title="Employee List"
                             columns={columns}
                             data={items}
+
                         />
 
                     </div>
