@@ -3,8 +3,23 @@ const app = express();
 const mysql = require('mysql');
 const cors = require('cors');
 
+const multer = require('multer')
+const fs = require('fs')
+const bodyparser = require('body-parser')
+const path = require('path')
+const csv = require('fast-csv')
+
+
 app.use(cors());
 app.use(express.json());
+
+app.use(express.static('./public'))
+app.use(bodyparser.json())
+app.use(
+    bodyparser.urlencoded({
+        extended: true,
+    }),
+)
 
 const db = mysql.createConnection({
     user: "root",
@@ -76,7 +91,7 @@ app.post('/title/add', (req, res) => {
     const UpdateBy = req.body.UpdateBy;
 
     db.query("INSERT INTO title (TitleID, TitleName ,CreateDate,CreateBy,UpdateDate,UpdateBy) VALUES(?,?,?,?,?,?);",
-        [TitleID, TitleName,CreateDate,CreateBy,UpdateDate,UpdateBy],
+        [TitleID, TitleName, CreateDate, CreateBy, UpdateDate, UpdateBy],
         (err, result) => {
             if (err) {
                 console.log(err);
@@ -152,8 +167,8 @@ app.post('/employee/add', (req, res) => {
     const UpdateDate = req.body.UpdateDate;
     const UpdateBy = req.body.UpdateBy;
 
-    db.query("INSERT INTO employee (EmployeeID, TitleName, FirstName , LastName, PhoneNumber, Email, DepartmentName, RoleName,CreateDate,CreateBy,UpdateDate,UpdateBy) VALUES(?,?,?,?,?,?,?,?,now(),?,now(),?);",
-        [EmployeeID, TitleName, FirstName, LastName, PhoneNumber, Email, DepartmentName, RoleName ,CreateDate,CreateBy,UpdateDate,UpdateBy],
+    db.query("INSERT INTO employee (EmployeeID, TitleName, FirstName , LastName, PhoneNumber, Email, DepartmentName, RoleName,CreateDate,CreateBy,UpdateDate,UpdateBy) VALUES(?,?,?,?,?,?,?,?,?,?,?,?);",
+        [EmployeeID, TitleName, FirstName, LastName, PhoneNumber, Email, DepartmentName, RoleName, CreateDate, CreateBy, UpdateDate, UpdateBy],
         (err, result) => {
             if (err) {
                 console.log(err);
@@ -166,9 +181,9 @@ app.post('/employee/add', (req, res) => {
     console.log('Insert Emp success');
 })
 //Update employe
-app.put("/empolyee/edit/:employeeID", (req, res) => {
-    //const Employeeid = req.body.Employeeid;
-    const employeeID = req.body.employeeID;
+app.put('/employee/edit/:employeeID', (req, res) => {
+    const employeeID = req.params.employeeID;
+    const EmployeeID = req.body.EmployeeID;
     const TitleName = req.body.TitleName;
     const FirstName = req.body.FirstName;
     const LastName = req.body.LastName;
@@ -190,7 +205,7 @@ app.put("/empolyee/edit/:employeeID", (req, res) => {
                 res.send("Values Updated");
             }
         })
-    console.log('Update Emp success');
+    console.log('Update emp2 success');
 })
 
 // deleate empoyee  
@@ -208,7 +223,7 @@ app.delete('/deleteemployee/:EmployeID', (req, res) => {
 })
 
 //details empolyee
-app.get('/empolyee/detail/:Employeeid', (req, res) => {
+app.get('/employee/detail/:Employeeid', (req, res) => {
     const Employeeid = req.params.Employeeid;
     db.query("SELECT * FROM employee WHERE EmployeeID = ? ;", [Employeeid], (err, result) => {
         if (err) {
@@ -242,7 +257,7 @@ app.post('/department/add', (req, res) => {
     const UpdateBy = req.body.UpdateBy;
 
     db.query("INSERT INTO department (DepartmentID, DepartmentName ,CreateDate,CreateBy,UpdateDate,UpdateBy) VALUES(?,?,?,?,?,?);",
-        [DepartmentID, DepartmentName,CreateDate,CreateBy,UpdateDate,UpdateBy],
+        [DepartmentID, DepartmentName, CreateDate, CreateBy, UpdateDate, UpdateBy],
         (err, result) => {
             if (err) {
                 console.log(err);
@@ -302,7 +317,7 @@ app.post('/role/add', (req, res) => {
     const UpdateBy = req.body.UpdateBy;
 
     db.query("INSERT INTO role (RoleID, RoleName ,CreateDate,CreateBy,UpdateDate,UpdateBy) VALUES(?,?,?,?,?,?);",
-        [RoleID, RoleName,CreateDate,CreateBy,UpdateDate,UpdateBy],
+        [RoleID, RoleName, CreateDate, CreateBy, UpdateDate, UpdateBy],
         (err, result) => {
             if (err) {
                 console.log(err);
@@ -426,27 +441,18 @@ app.delete('/deletenews/:NewsNo', (req, res) => {
 })
 //Update news
 
-app.put('/news/edit2/:newsNo', (req, res) => {
-    const newsNo = req.params.newsNo;
-    const NewsDate = req.body.NewsDate;
-    const TopicNews = req.body.TopicNews;
-    const NewsDetail = req.body.NewsDetail;
-    const CreateBy = req.body.CreateBy;
-    const UpdateDate = req.body.UpdateDate;
-    const UpdateBy = req.body.UpdateBy;
-    db.query("UPDATE news SET  NewsDate = ? , TopicNews = ?, NewsDetail = ?  ,CreateBy =? , UpdateDate = ? , UpdateBy = ? WHERE NewsNo = ?",
-        [NewsDate, TopicNews, NewsDetail,CreateBy, UpdateDate, UpdateBy, newsNo],(err, result) => {
-        if (err) {
-            console.log(err);
-        }
-        else {   
-            res.send(result);
-        }
-    })
-    console.log('Update news2 success');
-})
-
-app.put("/news/edit/:NewsNo", (req, res) => {
+// app.get('/news/edit/:newsno', (req, res) => {
+//     const newsno = req.params.newsno;
+//     db.query("SELECT * FROM  news WHERE NewsNo = ? ;", [newsno], (err, result) => {
+//         if (err) {
+//             console.log(err);
+//         }
+//         else {
+//             res.send(result);
+//         }
+//     })
+// })
+app.put("/news/edit/:newsNo", (req, res) => {
   //  const newsid = req.params.newsid;
     const NewsNo = req.body.NewsNo;
     const NewsDate = req.body.NewsDate;
@@ -464,7 +470,7 @@ app.put("/news/edit/:NewsNo", (req, res) => {
     // const new_UpdateDate = req.body.new_UpdateDate;
     // const new_UpdateBy = req.body.new_UpdateBy;
 
-    db.query("UPDATE news SET  NewsDate = ? , TopicNews = ?, NewsDetail = ?  ,CreateBy =? , UpdateDate = ? , UpdateBy = ? WHERE NewsNo = ?",
+    db.query("UPDATE news SET  NewsDate = ? , TopicNews = ? ,CreateBy =?, NewsDetail = ?  , UpdateDate = ? , UpdateBy = ? WHERE NewsNo = ?",
         [NewsDate, TopicNews, NewsDetail,CreateBy, UpdateDate, UpdateBy, NewsNo],(err, result) => {
             if (err) {
                 console.log(err);
@@ -527,6 +533,7 @@ app.listen('5000', () => {
     console.log('Server is runing o n port 5000');
 })
 
+// export.csv
 const excelJS = require('exceljs');
 //const exceljs = excelJS();
 //exceljs.get("/export-Empolyee")
@@ -564,3 +571,7 @@ const exportEmp = async (req, res) => {
         console.log(error.message);
     }
 }
+//----------------------------------
+
+
+

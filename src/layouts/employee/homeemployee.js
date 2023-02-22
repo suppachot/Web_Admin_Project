@@ -21,7 +21,7 @@ import { CSVLink, CSVDownload } from "react-csv";
 
 
 function HomeEmployee() {
-    
+
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
@@ -191,7 +191,6 @@ function HomeEmployee() {
                         <div className="btn">
                             <Link to="/addEmpolyee" className="btn btn-success">Add New</Link>
                         </div>
-
                         <div className="btn">
                             <Link to="/export-Empolyee" className="btn btn-success">Export.CSV</Link>
                         </div>
@@ -204,7 +203,7 @@ function HomeEmployee() {
                         >
                             Export .CSV
                         </CSVLink>
-                    
+                        
                         <DataTable
                             title="Employee List"
                             columns={columns}
