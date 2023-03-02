@@ -3,23 +3,8 @@ const app = express();
 const mysql = require('mysql');
 const cors = require('cors');
 
-const multer = require('multer')
-const fs = require('fs')
-const bodyparser = require('body-parser')
-const path = require('path')
-const csv = require('fast-csv')
-
-
 app.use(cors());
 app.use(express.json());
-
-app.use(express.static('./public'))
-app.use(bodyparser.json())
-app.use(
-    bodyparser.urlencoded({
-        extended: true,
-    }),
-)
 
 const db = mysql.createConnection({
     user: "root",
@@ -208,6 +193,19 @@ app.put('/employee/edit/:employeeID', (req, res) => {
     console.log('Update emp2 success');
 })
 
+//get Employee for edit employee
+app.get('/getemployee/:employeeID', (req, res) => {
+    const employeeID = req.params.employeeID;
+    db.query("SELECT * FROM  employee WHERE EmployeeID = ? ;", [employeeID], (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.send(result);
+        }
+    })
+})
+
 // deleate empoyee  
 app.delete('/deleteemployee/:EmployeID', (req, res) => {
     const EmployeID = req.params.EmployeID;
@@ -233,6 +231,8 @@ app.get('/employee/detail/:Employeeid', (req, res) => {
             res.send(result);
         }
     })
+    // console.log('De Emp success');
+    // console.log(res.data);
 })
 
 
@@ -452,9 +452,8 @@ app.delete('/deletenews/:NewsNo', (req, res) => {
 //         }
 //     })
 // })
-app.put("/news/edit/:newsNo", (req, res) => {
-  //  const newsid = req.params.newsid;
-    const NewsNo = req.body.NewsNo;
+app.put("/news/edit2/:newsNo", (req, res) => {
+    const newsNo = req.params.newsNo;
     const NewsDate = req.body.NewsDate;
     const TopicNews = req.body.TopicNews;
     const NewsDetail = req.body.NewsDetail;
@@ -462,24 +461,16 @@ app.put("/news/edit/:newsNo", (req, res) => {
     const UpdateDate = req.body.UpdateDate;
     const UpdateBy = req.body.UpdateBy;
 
-    // const NewsNo = req.body.NewsNo;
-    // const new_NewsDate = req.body.new_NewsDate;
-    // const new_TopicNews = req.body.new_TopicNews;
-    // const new_NewsDetail = req.body.new_NewsDetail;
-    // const CreateBy = req.body.CreateBy;
-    // const new_UpdateDate = req.body.new_UpdateDate;
-    // const new_UpdateBy = req.body.new_UpdateBy;
-
-    db.query("UPDATE news SET  NewsDate = ? , TopicNews = ? ,CreateBy =?, NewsDetail = ?  , UpdateDate = ? , UpdateBy = ? WHERE NewsNo = ?",
-        [NewsDate, TopicNews, NewsDetail,CreateBy, UpdateDate, UpdateBy, NewsNo],(err, result) => {
-            if (err) {
-                console.log(err);
-            }
-            else {
-                res.send("Values Updated");
-            }
-        })
-    console.log('Update news success');
+    db.query("UPDATE news SET  NewsDate = ? , TopicNews = ?, NewsDetail = ?  ,CreateBy =? , UpdateDate = ? , UpdateBy = ? WHERE NewsNo = ?",
+    [NewsDate, TopicNews, NewsDetail, CreateBy, UpdateDate, UpdateBy, newsNo], (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.send("Values Updated");
+        }
+    })
+console.log('Update news success');
 
     // db.query("UPDATE news SET  NewsDate = ? , TopicNews = ? , NewsDetail = ? , CreateBy=? , UpdateDate = ? , UpdateBy = ? WHERE NewsNo = ?",
     //     [new_NewsDate, new_TopicNews, new_NewsDetail, CreateBy, new_UpdateDate,new_UpdateBy, NewsNo],(err, result) => {
@@ -532,6 +523,7 @@ app.get('/checkout', (req, res) => {
 app.listen('5000', () => {
     console.log('Server is runing o n port 5000');
 })
+
 
 // export.csv
 const excelJS = require('exceljs');

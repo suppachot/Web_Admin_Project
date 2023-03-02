@@ -45,10 +45,6 @@ function DetailNews() {
                             <h2>TopicNews : <b>{val.TopicNews}</b> ({val.NewsNo},{val.NewsDate})</h2>
                             <h4>Detail list</h4>
                             <h6>NewsDetail : {val.NewsDetail}</h6>
-                            <input
-                                value={val.NewsDetail}
-                            >
-                            </input>
                             <h6>CreateBy : {val.CreateBy}</h6>
                             <h6>UpdateDate : {val.UpdateDate}</h6>
                             <h6>UpdateBy : {val.UpdateBy}</h6>

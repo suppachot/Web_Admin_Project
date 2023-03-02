@@ -63,6 +63,8 @@ function DetailEmpolyee() {
 
                         </div>
                     ))}
+
+                    
                      <Link className="btn btn-danger" to="/employee" >Back to Employee</Link>
                 </div>
 
