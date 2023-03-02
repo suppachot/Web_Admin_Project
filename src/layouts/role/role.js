@@ -49,7 +49,7 @@ function Role() {
     {
       name: 'RoleID',
       selector: row => row.RoleID,
-      width: '100px'
+      width: '150px'
     },
     {
       name: 'RoleName',
@@ -64,7 +64,7 @@ function Role() {
     {
       name: 'CreateBy',
       selector: row => row.CreateBy,
-      width: '100px'
+      width: '150px'
     },
     {
       name: 'UpdateDate',
@@ -74,7 +74,7 @@ function Role() {
     {
       name: 'UpdateBy',
       selector: row => row.UpdateBy,
-      width: '100px'
+      width: '150px'
     },
     {
       name: 'Action',
@@ -128,6 +128,14 @@ function Role() {
                         <DataTable
                             columns={columns}
                             data={items}
+                            highlightOnHover
+                            pagination
+                            paginationPerPage={5}
+                            paginationRowsPerPageOptions={[5, 15, 25, 50]}
+                            paginationComponentOptions={{
+                              rowsPerPageText: 'Records per page:',
+                              rangeSeparatorText: 'out of',
+                            }}
                         />
 
                     </div>

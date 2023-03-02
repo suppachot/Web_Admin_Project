@@ -81,6 +81,14 @@ function Checkout() {
         <DataTable
           columns={columns}
           data={items}
+          highlightOnHover
+          pagination
+          paginationPerPage={5}
+          paginationRowsPerPageOptions={[5, 15, 25, 50]}
+          paginationComponentOptions={{
+            rowsPerPageText: 'Records per page:',
+            rangeSeparatorText: 'out of',
+          }}
         />
       </DashboardLayout>
     );

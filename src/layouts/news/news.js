@@ -11,9 +11,14 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Axios } from "axios";
+import  Axios  from "axios";
+import DataTable from 'react-data-table-component';
 
 function News() {
+
+  const [error, setError] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [items, setItems] = useState([]);
 
   const [newsdata, newsdatachange] = useState(null);
   const navigate = useNavigate();
@@ -38,66 +43,115 @@ function News() {
       })
     }
   }
+  const columns = [
+    {
+      id: 'newsNo',
+      name: 'NewsNo',
+      selector: row => row.NewsNo,
+      width: '100px'
+    },
+    {
+      id: 'newsDate',
+      name: 'NewsDate',
+      selector: row => row.NewsDate,
+      width: '250px'
+    },
+    {
+      id: 'topicNews',
+      name: 'TopicNews',
+      selector: row => row.TopicNews,
+      width: '300px'
+    },
+    {
+        id: 'createby',
+        name: 'CreateBy',
+        selector: row => row.CreateBy,
+        width: '150px'
+    },
+    {
+        id: 'updatedate',
+        name: 'UpdateDate',
+        selector: row => row.UpdateDate,
+        width: '250px'
+    },
+    {
+        id: 'updateby',
+        name: 'UpdateBy',
+        selector: row => row.UpdateBy,
+        width: '150px'
+    },
+    {
+      name: 'Action',
+      selector: row =>
+
+        <div class="btn-group" role="group" aria-label="Basic example">
+
+          <button className="btn btn-primary" onClick={() => { LoadDetail(row.NewsNo) }} >Detail</button>
+          <button className="btn btn-warning" onClick={() => { LoadEdit2(row.NewsNo) }} >Edit</button>
+          <button className="btn btn-danger" onClick={() => { Removefunction(row.NewsNo) }} >Delete</button>
+
+        </div>
+
+    }
+  ];
+
   useEffect(() => {
-    fetch("http://localhost:5000/news").then((res) => {
-      return res.json();
-    }).then((resp) => {
-      newsdatachange(resp);
-    }).catch((err) => {
-      console.log(err.message);
-    })
+    fetch("http://localhost:5000/news")
+      .then(res => res.json())
+      // .then((resJson) => {
+      //     const data = JSON.parse(resJson);
+      // })
+      .then(
+        (result) => {
+          setIsLoaded(true);
+          setItems(result);
+        },
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      ).then((resp) => {
+        newsdatachange(resp);
+      }).catch((err) => {
+        console.log(err.message);
+      })
   }, [])
 
-  return (
-    <DashboardLayout>
-      <DashboardNavbar />
-      <div className="LayoutContainer">
-        <div className="card">
-          <div className="card-title text-center">
-            <h2>News</h2>
-          </div>
-          <div className="card-body">
-            <div className="btn">
-              <Link to="/createnews" className="btn btn-success">Add New</Link>
-            </div>
-            <table className="table table-bordered">
-              <thead className="bg-dark text-white text-center">
-                <tr>
-                  <td>NewsNo</td>
-                  <td>NewsDate</td>
-                  <td>TopicNews</td>
-                  <td>NewsDetail</td>
-                  <td>CreateBy</td>
-                  <td>UpdateDate</td>
-                  <td>UpdateBy</td>
-                  <td>Action</td>
-                </tr>
-              </thead>
-              <tbody>
-                {newsdata &&newsdata.map(item => (
-                    <tr key={item.NewsNo}>
-                      <td>{item.NewsNo}</td>
-                      <td>{item.NewsDate}</td>
-                      <td>{item.TopicNews}</td>
-                      <td>{item.NewsDetail}</td>
-                      <td>{item.CreateBy}</td>
-                      <td>{item.UpdateDate}</td>
-                      <td>{item.UpdateBy}</td>
-                      <td><a onClick={() => {LoadEdit(item.NewsNo) }} className="btn btn-success">Edit</a>
-                        <a onClick={() => { Removefunction(item.NewsNo) }} className="btn btn-danger">Remove</a>
-                        <a onClick={() => { LoadDetail(item.NewsNo) }} className="btn btn-primary">Details</a>
-                        <a onClick={() => {LoadEdit2(item.NewsNo) }} className="btn btn-success">Edit2</a>
-                      </td>
-                    </tr>
-                  ))
-                }
-              </tbody>
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  } else if (!isLoaded) {
+    return <div>Loading...</div>;
+  } else {
+    return (
+      <DashboardLayout>
+        <DashboardNavbar />
+        <div className="LayoutContainer">
 
-            </table>
+          <div className="card-body" >
+            <div className="card-body" >
+              <div className="btn" >
+                <Link to="/addEmpolyee" className="btn btn-success">Add New</Link>
+              </div>
+            </div>
+            <DataTable
+              title="News"
+              columns={columns}
+              data={items}
+              highlightOnHover
+              pagination
+              paginationPerPage={5}
+              paginationRowsPerPageOptions={[5, 15, 25, 50]}
+              paginationComponentOptions={{
+                rowsPerPageText: 'Records per page:',
+                rangeSeparatorText: 'out of',
+              }}
+
+            />
+
           </div>
         </div>
-      </div>
-    </DashboardLayout>
-  );
+      </DashboardLayout>
+    );
+  }
 }
 export default News;

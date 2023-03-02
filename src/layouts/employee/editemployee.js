@@ -35,19 +35,42 @@ function EditEmp() {
 
   const [employeedata, employeedatachange] = useState(null);
   const getEmp = () => {
-    Axios.get('http://localhost:5000/employee/' + employeeID).then((response) => {
+    Axios.get('http://localhost:5000/getemployee/' + employeeID).then((response) => {
       employeedatachange(response.data);
     });
   }
-  useEffect(() => {
-    fetch("http://localhost:5000/employee/" + employeeID).then((res) => {
-      return res.json();
-    }).then((resp) => {
-      employeedatachange(resp);
-    }).catch((err) => {
-      console.log(err.message);
-    })
-  }, [])
+
+  // useEffect(() => {
+  //   fetch("http://localhost:5000/employee/" + employeeID).then((res) => {
+  //     return res.json();
+  //   }).then((resp) => {
+  //     employeedatachange(resp);
+  //   }).catch((err) => {
+  //     console.log(err.message);
+  //   })
+  // }, [])
+
+  // const getEmployees = (values) => {
+  //   //console.log(values);
+  //     Axios.get(`http://localhost:5000/getemployee/${values.employeeID}`).then((response) => {
+  //       console.log(response.data);
+  //       employeedatachange(response.data);
+  //       const defaultValue = {
+  //     TitleName: response.data.TitleName,
+  //     FirstName: response.data.FirstName,
+  //     LastName: response.data.LastName,
+  //     PhoneNumber: response.data.PhoneNumber,
+  //     Email: response.data.Email,
+  //     DepartmentName: response.data.DepartmentName,
+  //     RoleName: response.data.RoleName,
+  //     CreateDate: response.data.CreateDate,
+  //     CreateBy: response.data.CreateBy,
+  //     UpdateDate: response.data.UpdateDate,
+  //     UpdateBy: response.data.UpdateBy
+  //       }
+  //     })
+
+  // }
 
   const handlesubmit = (e) => {
     e.preventDefault();
@@ -72,6 +95,7 @@ function EditEmp() {
       console.log(err.message)
     })
   }
+
 
   return (
     <DashboardLayout>

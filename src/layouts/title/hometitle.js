@@ -27,7 +27,7 @@ function HomeTitle() {
 
     const [titledata, titledatachange] = useState(null);
     const navigate = useNavigate();
-    
+
     const LoadDetail = (TitleID) => {
         navigate("/title/detail/" + TitleID);
     }
@@ -51,25 +51,19 @@ function HomeTitle() {
             id: 'titleID',
             name: 'TitleID',
             selector: row => row.TitleID,
-            width: '100px'
+            width: '150px'
         },
         {
             id: 'title',
             name: 'Title',
             selector: row => row.TitleName,
-            width: '100px'
-        },
-        {
-            id: 'titleName',
-            name: 'TitleName',
-            selector: row => row.TitleName,
-            width: '100px'
+            width: '150px'
         },
         {
             id: 'createdate',
             name: 'CreateDate',
             selector: row => row.CreateDate,
-            width: '200px'
+            width: '250px'
         },
         {
             id: 'createby',
@@ -81,7 +75,7 @@ function HomeTitle() {
             id: 'updatedate',
             name: 'UpdateDate',
             selector: row => row.UpdateDate,
-            width: '200px'
+            width: '250px'
         },
         {
             id: 'updateby',
@@ -92,7 +86,7 @@ function HomeTitle() {
         {
             name: 'Action',
             selector: row =>
-            
+
                 <div class="btn-group" role="group" aria-label="Basic example">
 
                     <button className="btn btn-primary" onClick={(clickHandler) => { LoadDetail(row.TitleID) }} >Detail</button>
@@ -100,11 +94,11 @@ function HomeTitle() {
                     <button className="btn btn-danger" onClick={() => { Removefunction(row.TitleID) }} >Delete</button>
 
                 </div>
-            
+
         }
 
     ];
-   
+
     useEffect(() => {
         fetch("http://localhost:5000/title")
             .then(res => res.json())
@@ -140,9 +134,18 @@ function HomeTitle() {
                         </div>
 
                         <DataTable
-                            columns={columns}
-                            data={items}
-                           
+   
+                          columns={columns}
+                          data={items}
+                          highlightOnHover
+                          pagination
+                          paginationPerPage={5}
+                          paginationRowsPerPageOptions={[5, 15, 25, 50]}
+                          paginationComponentOptions={{
+                            rowsPerPageText: 'Records per page:',
+                            rangeSeparatorText: 'out of',
+                          }}
+
                         />
 
                     </div>

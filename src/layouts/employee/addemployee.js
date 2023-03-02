@@ -13,6 +13,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { select } from 'assets/theme-dark/components/form/select';
 
 function AddEmployee() {
   // เก็บบันทึกค่าลง state
@@ -55,24 +56,24 @@ function AddEmployee() {
       CreateBy: CreateBy,
       UpdateDate: UpdateDate,
       UpdateBy: UpdateBy
-      }).then(() => {
-        setEmployeeList([
-          ...employeeList,
-          {
-            EmployeeID: employeeID,
-            TitleName: TitleName,
-            FirstName: FirstName,
-            LastName: LastName,
-            PhoneNumber: PhoneNumber,
-            Email: Email,
-            DepartmentName: DepartmentName,
-            RoleName: RoleName,
-            CreateDate: CreateDate,
-            CreateBy: CreateBy,
-            UpdateDate: UpdateDate,
-            UpdateBy: UpdateBy
-          }
-        ])
+    }).then(() => {
+      setEmployeeList([
+        ...employeeList,
+        {
+          EmployeeID: employeeID,
+          TitleName: TitleName,
+          FirstName: FirstName,
+          LastName: LastName,
+          PhoneNumber: PhoneNumber,
+          Email: Email,
+          DepartmentName: DepartmentName,
+          RoleName: RoleName,
+          CreateDate: CreateDate,
+          CreateBy: CreateBy,
+          UpdateDate: UpdateDate,
+          UpdateBy: UpdateBy
+        }
+      ])
     }).then((res) => {
       alert('Saved successfully.')
       navigate('/employee');
@@ -106,6 +107,18 @@ function AddEmployee() {
                   <div className="col-lg-12">
                     <div className="form-group">
                       <label>TitleName</label>
+                      {/* <select
+                        placeholder="select title"
+                        id='TitleName'
+                        onChange={e => setTitleName(e.target.value)}
+                        className="form-control"
+                        >
+                        <option value=""></option>
+                        <option value={TitleName}>นาย</option>
+                        <option value={TitleName}>นาง</option>
+                        <option value={TitleName}>นางสาว</option>
+                      </select> */}
+                    
                       <input required value={TitleName}
                         type="text"
                         id='TitleName'
@@ -162,7 +175,19 @@ function AddEmployee() {
 
                   <div className="col-lg-12">
                     <div className="form-group">
-                      <label>DepartmentName</label>
+                      <label>Department</label>
+                      {/* <select
+                        placeholder="select Department"
+                        id='DepartmentName'
+                        onChange={e => setDepartmentName(e.target.value)}
+                        className="form-control">
+                      >
+                        <option value="" placeholder="select Department"></option>
+                        <option value={DepartmentName}>ฝ่ายบุคคล</option>
+                        <option value={DepartmentName}>ฝ่ายบัญชี</option>
+                        <option value={DepartmentName}>ฝ่ายพนักงานทั่วไป</option>
+                      </select> */}
+
                       <input value={DepartmentName} type="text"
                         id='DepartmentName'
                         onChange={e => setDepartmentName(e.target.value)}
@@ -173,7 +198,17 @@ function AddEmployee() {
 
                   <div className="col-lg-12">
                     <div className="form-group">
-                      <label>RoleName</label>
+                      <label>Role</label>
+                      {/* <select
+                        placeholder="select Role"
+                        id='RoleName'
+                        onChange={e => setRoleName(e.target.value)}
+                        className="form-control">
+                      >
+                        <option value="" placeholder="select Role"></option>
+                        <option value={RoleName}>Administrator</option>
+                        <option value={RoleName}>Employee</option>
+                      </select> */}
                       <input value={RoleName} type="text"
                         id='RoleName'
                         onChange={e => setRoleName(e.target.value)}
@@ -239,8 +274,8 @@ function AddEmployee() {
             </div>
           </form>
         </div>
-      </div>
-    </DashboardLayout>
+      </div >
+    </DashboardLayout >
   );
 }
 export default AddEmployee;

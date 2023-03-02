@@ -3,23 +3,8 @@ const app = express();
 const mysql = require('mysql');
 const cors = require('cors');
 
-const multer = require('multer')
-const fs = require('fs')
-const bodyparser = require('body-parser')
-const path = require('path')
-const csv = require('fast-csv')
-
-
 app.use(cors());
 app.use(express.json());
-
-app.use(express.static('./public'))
-app.use(bodyparser.json())
-app.use(
-    bodyparser.urlencoded({
-        extended: true,
-    }),
-)
 
 const db = mysql.createConnection({
     user: "root",
@@ -183,6 +168,7 @@ app.post('/employee/add', (req, res) => {
 //Update employe
 app.put('/employee/edit/:employeeID', (req, res) => {
     const employeeID = req.params.employeeID;
+    const EmployeeID = req.body.EmployeeID;
     const TitleName = req.body.TitleName;
     const FirstName = req.body.FirstName;
     const LastName = req.body.LastName;
@@ -196,7 +182,7 @@ app.put('/employee/edit/:employeeID', (req, res) => {
     const UpdateBy = req.body.UpdateBy;
 
     db.query("UPDATE employee SET TitleName=? , FirstName = ? , LastName = ? , PhoneNumber = ? , Email = ? , DepartmentName = ? , RoleName = ? ,CreateDate = ? ,CreateBy = ?,UpdateDate = ?,UpdateBy = ?  WHERE EmployeeID = ?",
-        [TitleName, FirstName, LastName, PhoneNumber, Email, DepartmentName, RoleName, CreateDate, CreateBy, UpdateDate, UpdateBy, employeeID], (err, result) => {
+        [TitleName, FirstName, LastName, PhoneNumber, Email, DepartmentName, RoleName,CreateDate,CreateBy,UpdateDate,UpdateBy,employeeID], (err, result) => {
             if (err) {
                 console.log(err);
             }
@@ -205,6 +191,19 @@ app.put('/employee/edit/:employeeID', (req, res) => {
             }
         })
     console.log('Update emp2 success');
+})
+
+//get Employee for edit employee
+app.get('/getemployee/:employeeID', (req, res) => {
+    const employeeID = req.params.employeeID;
+    db.query("SELECT * FROM  employee WHERE EmployeeID = ? ;", [employeeID], (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.send(result);
+        }
+    })
 })
 
 // deleate empoyee  
@@ -232,6 +231,8 @@ app.get('/employee/detail/:Employeeid', (req, res) => {
             res.send(result);
         }
     })
+    // console.log('De Emp success');
+    // console.log(res.data);
 })
 
 
@@ -440,7 +441,18 @@ app.delete('/deletenews/:NewsNo', (req, res) => {
 })
 //Update news
 
-app.put('/news/edit2/:newsNo', (req, res) => {
+// app.get('/news/edit/:newsno', (req, res) => {
+//     const newsno = req.params.newsno;
+//     db.query("SELECT * FROM  news WHERE NewsNo = ? ;", [newsno], (err, result) => {
+//         if (err) {
+//             console.log(err);
+//         }
+//         else {
+//             res.send(result);
+//         }
+//     })
+// })
+app.put("/news/edit2/:newsNo", (req, res) => {
     const newsNo = req.params.newsNo;
     const NewsDate = req.body.NewsDate;
     const TopicNews = req.body.TopicNews;
@@ -448,46 +460,17 @@ app.put('/news/edit2/:newsNo', (req, res) => {
     const CreateBy = req.body.CreateBy;
     const UpdateDate = req.body.UpdateDate;
     const UpdateBy = req.body.UpdateBy;
-    db.query("UPDATE news SET  NewsDate = ? , TopicNews = ?, NewsDetail = ?  ,CreateBy =? , UpdateDate = ? , UpdateBy = ? WHERE NewsNo = ?",
-        [NewsDate, TopicNews, NewsDetail, CreateBy, UpdateDate, UpdateBy, newsNo], (err, result) => {
-            if (err) {
-                console.log(err);
-            }
-            else {
-                res.send(result);
-            }
-        })
-    console.log('Update news2 success');
-})
-
-app.put("/news/edit/:NewsNo", (req, res) => {
-    //  const newsid = req.params.newsid;
-    const NewsNo = req.body.NewsNo;
-    const NewsDate = req.body.NewsDate;
-    const TopicNews = req.body.TopicNews;
-    const NewsDetail = req.body.NewsDetail;
-    const CreateBy = req.body.CreateBy;
-    const UpdateDate = req.body.UpdateDate;
-    const UpdateBy = req.body.UpdateBy;
-
-    // const NewsNo = req.body.NewsNo;
-    // const new_NewsDate = req.body.new_NewsDate;
-    // const new_TopicNews = req.body.new_TopicNews;
-    // const new_NewsDetail = req.body.new_NewsDetail;
-    // const CreateBy = req.body.CreateBy;
-    // const new_UpdateDate = req.body.new_UpdateDate;
-    // const new_UpdateBy = req.body.new_UpdateBy;
 
     db.query("UPDATE news SET  NewsDate = ? , TopicNews = ?, NewsDetail = ?  ,CreateBy =? , UpdateDate = ? , UpdateBy = ? WHERE NewsNo = ?",
-        [NewsDate, TopicNews, NewsDetail, CreateBy, UpdateDate, UpdateBy, NewsNo], (err, result) => {
-            if (err) {
-                console.log(err);
-            }
-            else {
-                res.send("Values Updated");
-            }
-        })
-    console.log('Update news success');
+    [NewsDate, TopicNews, NewsDetail, CreateBy, UpdateDate, UpdateBy, newsNo], (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.send("Values Updated");
+        }
+    })
+console.log('Update news success');
 
     // db.query("UPDATE news SET  NewsDate = ? , TopicNews = ? , NewsDetail = ? , CreateBy=? , UpdateDate = ? , UpdateBy = ? WHERE NewsNo = ?",
     //     [new_NewsDate, new_TopicNews, new_NewsDetail, CreateBy, new_UpdateDate,new_UpdateBy, NewsNo],(err, result) => {
@@ -541,6 +524,7 @@ app.listen('5000', () => {
     console.log('Server is runing o n port 5000');
 })
 
+
 // export.csv
 const excelJS = require('exceljs');
 //const exceljs = excelJS();
@@ -581,58 +565,5 @@ const exportEmp = async (req, res) => {
 }
 //----------------------------------
 
-//import .csv
 
-
-var storage = multer.diskStorage({
-    destination: (req, file, callBack) => {
-        callBack(null, './uploads/')
-    },
-    filename: (req, file, callBack) => {
-        callBack(
-            null,
-            file.fieldname + '-' + Date.now() + path.extname(file.originalname),
-        )
-    },
-})
-var upload = multer({
-    storage: storage,
-})
-app.get('/', (req, res) => {
-    //res.sendFile(__dirname + '/index.html');
-    res.sendFile( __dirname + "../public/" + "index.html" );
-})
-app.post('/api/uploadcsv', upload.single('uploadcsv'), (req, res) => {
-    csvToDb(__dirname + '/uploads/' + req.file.filename)
-    res.json({
-        msg: 'File successfully inserted!',
-        file: req.file,
-    })
-})
-function csvToDb(csvUrl) {
-    let stream = fs.createReadStream(csvUrl)
-    let collectionCsv = []
-    let csvFileStream = csv
-        .parse()
-        .on('data', function (data) {
-            collectionCsv.push(data)
-        })
-        .on('end', function () {
-            collectionCsv.shift()
-            db.connect((error) => {
-                if (error) {
-                    console.error(error)
-                } else {
-                    let query = 'INSERT INTO employee (EmployeeID, TitleName, FirstName , LastName, PhoneNumber, Email, DepartmentName, RoleName,CreateDate,CreateBy,UpdateDate,UpdateBy) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)'
-                    db.query(query, [collectionCsv], (error, res) => {
-                        console.log(error || res)
-                    })
-                }
-            })
-            fs.unlinkSync(csvUrl)
-        })
-    stream.pipe(csvFileStream)
-}
-
-//-----------------------------------//
 
