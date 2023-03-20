@@ -14,6 +14,7 @@ import Axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { select } from 'assets/theme-dark/components/form/select';
+import Select from 'react-select'
 
 function AddEmployee() {
   // เก็บบันทึกค่าลง state
@@ -41,45 +42,90 @@ function AddEmployee() {
   }
 
   // ส่งข้อมูล 
+  // const handlesubmit = (e) => {
+  //   e.preventDefault();
+  //   Axios.post('http://localhost:5000/employee/add', {
+  //     EmployeeID: employeeID,
+  //     TitleName: TitleName,
+  //     FirstName: FirstName,
+  //     LastName: LastName,
+  //     PhoneNumber: PhoneNumber,
+  //     Email: Email,
+  //     DepartmentName: DepartmentName,
+  //     RoleName: RoleName,
+  //     CreateDate: CreateDate,
+  //     CreateBy: CreateBy,
+  //     UpdateDate: UpdateDate,
+  //     UpdateBy: UpdateBy
+  //   }).then(() => {
+  //     setEmployeeList([
+  //       ...employeeList,
+  //       {
+  //         EmployeeID: employeeID,
+  //         TitleName: TitleName,
+  //         FirstName: FirstName,
+  //         LastName: LastName,
+  //         PhoneNumber: PhoneNumber,
+  //         Email: Email,
+  //         DepartmentName: DepartmentName,
+  //         RoleName: RoleName,
+  //         CreateDate: CreateDate,
+  //         CreateBy: CreateBy,
+  //         UpdateDate: UpdateDate,
+  //         UpdateBy: UpdateBy
+  //       }
+  //     ])
+  //   }).then((res) => {
+  //     alert('Saved successfully.')
+  //     navigate('/employee'); 
+  //   }).catch((err) => {
+  //     console.log(err.message)
+  //   })
+  //   console.log("message")
+  // }
+
   const handlesubmit = (e) => {
     e.preventDefault();
-    Axios.post('http://localhost:5000/employee/add', {
-      EmployeeID: employeeID,
-      TitleName: TitleName,
-      FirstName: FirstName,
-      LastName: LastName,
-      PhoneNumber: PhoneNumber,
-      Email: Email,
-      DepartmentName: DepartmentName,
-      RoleName: RoleName,
-      CreateDate: CreateDate,
-      CreateBy: CreateBy,
-      UpdateDate: UpdateDate,
-      UpdateBy: UpdateBy
-    }).then(() => {
-      setEmployeeList([
-        ...employeeList,
-        {
-          EmployeeID: employeeID,
-          TitleName: TitleName,
-          FirstName: FirstName,
-          LastName: LastName,
-          PhoneNumber: PhoneNumber,
-          Email: Email,
-          DepartmentName: DepartmentName,
-          RoleName: RoleName,
-          CreateDate: CreateDate,
-          CreateBy: CreateBy,
-          UpdateDate: UpdateDate,
-          UpdateBy: UpdateBy
-        }
-      ])
-    }).then((res) => {
-      alert('Saved successfully.')
-      navigate('/employee');
-    }).catch((err) => {
-      console.log(err.message)
-    })
+
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      "EmployeeID": employeeID,
+      "TitleName": TitleName,
+      "FirstName": FirstName,
+      "LastName": LastName,
+      "PhoneNumber": PhoneNumber,
+      "Email": Email,
+      "DepartmentName": DepartmentName,
+      "RoleName": RoleName,
+      "CreateDate": CreateDate,
+      "CreateBy": CreateBy,
+      "UpdateDate": UpdateDate,
+      "UpdateBy": UpdateBy
+    });
+
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
+
+    fetch("http://localhost:5000/employee/add", requestOptions)
+      .then(response => response.json())
+      .then(result =>{ 
+        alert('Saved successfully.')
+        navigate('/employee'); 
+      })
+      // .then(result =>{ 
+      //   alert('Saved successfully.')
+      //   if(result['protocol41'] === 'true'){
+      //     window.location.href ='/employee'
+      //    // navigate('/employee'); 
+      //   }
+      // })
+      .catch(error => console.log('error', error));
   }
 
   return (
@@ -87,6 +133,7 @@ function AddEmployee() {
       <DashboardNavbar />
       <div className="row">
         <div className="offset-lg-3 col-lg-6">
+          
           <form className="container" onSubmit={handlesubmit}>
             <div className="card" style={{ "textAlign": "left" }}>
               <div className="card-body">
@@ -107,24 +154,25 @@ function AddEmployee() {
                   <div className="col-lg-12">
                     <div className="form-group">
                       <label>TitleName</label>
-                      {/* <select
+                      <select
                         placeholder="select title"
                         id='TitleName'
+                        value={TitleName}
                         onChange={e => setTitleName(e.target.value)}
-                        className="form-control"
-                        >
+                        className="form-select"
+                      >
                         <option value=""></option>
-                        <option value={TitleName}>นาย</option>
-                        <option value={TitleName}>นาง</option>
-                        <option value={TitleName}>นางสาว</option>
-                      </select> */}
-                    
-                      <input required value={TitleName}
+                        <option value="นาย">นาย</option>
+                        <option value="นาง">นาง</option>
+                        <option value="นางสาว">นางสาว</option>
+                      </select>
+
+                      {/* <input required value={TitleName}
                         type="text"
                         id='TitleName'
                         onChange={e => setTitleName(e.target.value)}
                         className="form-control">
-                      </input>
+                      </input> */}
                     </div>
                   </div>
 
@@ -176,44 +224,47 @@ function AddEmployee() {
                   <div className="col-lg-12">
                     <div className="form-group">
                       <label>Department</label>
-                      {/* <select
+                      <select
                         placeholder="select Department"
                         id='DepartmentName'
+                        value={DepartmentName}
                         onChange={e => setDepartmentName(e.target.value)}
-                        className="form-control">
+                        className="form-select"
                       >
                         <option value="" placeholder="select Department"></option>
-                        <option value={DepartmentName}>ฝ่ายบุคคล</option>
-                        <option value={DepartmentName}>ฝ่ายบัญชี</option>
-                        <option value={DepartmentName}>ฝ่ายพนักงานทั่วไป</option>
-                      </select> */}
+                        <option value="ฝ่ายบุคคล">ฝ่ายบุคคล</option>
+                        <option value="ฝ่ายบัญชี">ฝ่ายบัญชี</option>
+                        <option value="พนักงานทั่วไป">พนักงานทั่วไป</option>
+                      </select>
 
-                      <input value={DepartmentName} type="text"
+                      {/* <input value={DepartmentName} type="text"
                         id='DepartmentName'
                         onChange={e => setDepartmentName(e.target.value)}
                         className="form-control">
-                      </input>
+                      </input> */}
                     </div>
                   </div>
 
                   <div className="col-lg-12">
                     <div className="form-group">
                       <label>Role</label>
-                      {/* <select
-                        placeholder="select Role"
+                      <select
                         id='RoleName'
+                        placeholder="select Role"
+                        value={RoleName}
                         onChange={e => setRoleName(e.target.value)}
-                        className="form-control">
+                        className="form-select"
                       >
-                        <option value="" placeholder="select Role"></option>
-                        <option value={RoleName}>Administrator</option>
-                        <option value={RoleName}>Employee</option>
-                      </select> */}
+                        <option selected>select Role</option>
+                        <option value="Administrator">Administrator</option>
+                        <option value="Employee">Employee</option>
+                      </select>
+                      {/*                       
                       <input value={RoleName} type="text"
                         id='RoleName'
                         onChange={e => setRoleName(e.target.value)}
                         className="form-control">
-                      </input>
+                      </input> */}
                     </div>
                   </div>
 

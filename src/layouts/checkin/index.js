@@ -14,6 +14,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Axios from "axios";
 import { useState, useEffect } from "react";
 import DataTable from 'react-data-table-component';
+import moment from "moment/moment";
 
 function Checkin() {
 
@@ -21,6 +22,30 @@ function Checkin() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
 
+  //--------filter 1--------------//
+  // const [filteredData, setFilteredData] = useState(items);
+  // const handleFilter = (searchTerm) => {
+  //   const filteredResults = items.filter((item) => {
+  //     return item.EmployeeID.toLowerCase().includes(searchTerm.toLowerCase());
+  //   });
+  //   setFilteredData(filteredResults);
+  // };
+
+
+  const [filterText, setFilterText] = useState('');
+  const filteredData = items.filter((item) =>
+    item.EmployeeID.toLowerCase().includes(filterText.toLowerCase())
+  );
+
+  const handleFilter = (e) => {
+    setFilterText(e.target.value);
+  };
+
+  const handleClearFilter = () => {
+    setFilterText('');
+  };
+
+  //-------------------------//
   const columns = [
     {
       name: 'TransactionID',
@@ -34,7 +59,7 @@ function Checkin() {
     },
     {
       name: 'CheckInDate',
-      selector: row => row.CheckInDate,
+      selector: row => row.CheckInDate.toString().split('T')[0],
       width: '250px'
     },
     {
@@ -78,9 +103,33 @@ function Checkin() {
     return (
       <DashboardLayout>
         <DashboardNavbar />
+        <div className="card-body col-lg-2" >
+          {/* <input type="text"
+              className="form-control"
+              placeholder="Employee ID"
+              onChange={(event) => handleFilter(event.target.value)}
+            >
+            </input> */}
+
+          <input type="text"
+            className="form-control"
+            placeholder="Employee ID"
+            value={filterText}
+            onChange={handleFilter}
+          >
+          </input>
+          <button
+            className="btn btn-danger"
+            onClick={handleClearFilter}
+          >
+            Clear Filter
+          </button>
+        </div>
+
         <DataTable
           columns={columns}
-          data={items}
+          //data={items}
+          data={filteredData}
           highlightOnHover
           pagination
           paginationPerPage={5}

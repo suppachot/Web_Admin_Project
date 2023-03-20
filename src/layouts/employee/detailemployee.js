@@ -14,6 +14,7 @@ import { Link, useParams } from "react-router-dom";
 import AddEmployee from './addemployee';
 import { margin } from "@mui/system";
 import { padding } from '@mui/system';
+import moment from "moment/moment";
 
 
 function DetailEmpolyee() {
@@ -53,13 +54,14 @@ function DetailEmpolyee() {
                                 Email      : {val.Email}<br></br>
                                 Department : {val.DepartmentName}<br></br>
                                 Role       : {val.RoleName}<br></br>
-                                CreateDate : {val.CreateDate}<br></br>
+                                CreateDate : {moment(val.CreateDate).format('YYYY-MM-DD HH:mm:ss A')}<br></br>
                                 CreateBy   : {val.CreateBy}<br></br>
-                                UpdateDate : {val.UpdateDate}<br></br>
+                                UpdateDate : {moment(val.UpdateDate).format('DD-MM-YYYY HH:mm:ss A')}<br></br>
                                 UpdateBy   : {val.UpdateBy}<br></br>
                             </h5>
                             <br></br>
-                           
+
+                         
 
                         </div>
                     ))}

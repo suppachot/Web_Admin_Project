@@ -38,8 +38,18 @@ import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "co
 // Images logo
 import brandWhite from "assets/images/TKS.png";
 import brandDark from "assets/images/TKS.png";
+import Basic from "layouts/login/sign-in";
+import SignIn from "layouts/login/sign-in";
+
 
 export default function App() {
+
+  const token = localStorage.getItem("accessToKen");
+
+  // if(!token){
+  //   return <Basic/>
+  // }
+
   const [controller, dispatch] = useMaterialUIController();
   const {
     miniSidenav,
@@ -133,7 +143,7 @@ export default function App() {
     </MDBox>
   );
 
-  return  (
+  return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />
       {layout === "dashboard" && (
@@ -152,6 +162,7 @@ export default function App() {
       )}
       {layout === "vr" && <Configurator />}
       <Routes>
+        <Route path="/login/sign-in" element={<SignIn />} />
         {getRoutes(routes)}
         <Route path="*" element={<Navigate to="/dashboard" />} />
       </Routes>

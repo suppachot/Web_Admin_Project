@@ -7,10 +7,11 @@ app.use(cors());
 app.use(express.json());
 
 const db = mysql.createConnection({
-    user: "root",
     host: "localhost",
+    user: "root",
     password: "",
-    database: "databaseproject"
+    database: "databaseproject",
+    port: "3306"
 });
 
 db.connect((err) => {
@@ -20,6 +21,24 @@ db.connect((err) => {
         console.log('MySql succes connected...');
     }
 });
+
+//--import
+// const insertData = (data) => {
+//     const query = 'INSERT INTO employee SET ?';
+//     data.forEach((row) => {
+//       connection.query(query, row, (error, results) => {
+//         if (error) throw error;
+//         console.log('Data inserted:', results);
+//       });
+//     });
+//   };
+  
+//   if (csvData) {
+//     insertData(csvData);
+//   }
+  
+//   db.end();
+
 // ------------dashboard-----------
 // count admin
 app.get('/employee/admin_count', (req, res) => {
@@ -159,11 +178,14 @@ app.post('/employee/add', (req, res) => {
                 console.log(err);
             }
             else {
-                res.send("Values Emp inserted");
+                //res.send("Values Emp inserted");
+                res.send(result);
+               // console.log(result);
             }
         }
     );
     console.log('Insert Emp success');
+
 })
 //Update employe
 app.put('/employee/edit/:employeeID', (req, res) => {
@@ -187,7 +209,8 @@ app.put('/employee/edit/:employeeID', (req, res) => {
                 console.log(err);
             }
             else {
-                res.send("Values Updated");
+               // res.send("Values Updated");
+                res.send(result);
             }
         })
     console.log('Update emp2 success');
@@ -204,6 +227,7 @@ app.get('/getemployee/:employeeID', (req, res) => {
             res.send(result);
         }
     })
+    console.log('Yes');
 })
 
 // deleate empoyee  
@@ -243,7 +267,7 @@ app.get('/department', (req, res) => {
             console.log(err);
         }
         else {
-            res.send(result);
+            res.send(result); 
         }
     })
 })
