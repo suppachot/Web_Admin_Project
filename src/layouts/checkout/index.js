@@ -34,7 +34,7 @@ function Checkout() {
     },
     {
       name: 'CheckOutDate',
-      selector: row => row.CheckOutDate,
+      selector: row => row.CheckOutDate.toString().split('T')[0],
       width: '250px'
     },
     {

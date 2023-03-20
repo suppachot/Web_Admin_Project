@@ -11,8 +11,9 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import  Axios  from "axios";
+import Axios from "axios";
 import DataTable from 'react-data-table-component';
+import moment from "moment/moment";
 
 function News() {
 
@@ -53,8 +54,8 @@ function News() {
     {
       id: 'newsDate',
       name: 'NewsDate',
-      selector: row => row.NewsDate,
-      width: '250px'
+      selector: row => row.NewsDate.toString('th-TH').split('T')[0],
+      width: '200px'
     },
     {
       id: 'topicNews',
@@ -63,22 +64,29 @@ function News() {
       width: '300px'
     },
     {
-        id: 'createby',
-        name: 'CreateBy',
-        selector: row => row.CreateBy,
-        width: '150px'
+      id: 'createby',
+      name: 'CreateBy',
+      selector: row => row.CreateBy,
+      width: '150px'
     },
     {
-        id: 'updatedate',
-        name: 'UpdateDate',
-        selector: row => row.UpdateDate,
-        width: '250px'
+      id: 'updatedate',
+      name: 'UpdateDate',
+      selector: 'date',
+      format: row => moment(row.UpdateDate).format('DD-MM-YYYY HH:mm:ss A'),
+      width: '250px'
     },
+    // {
+    //   id: 'updatedate',
+    //   name: 'UpdateDate',
+    //   selector: row => new Date(row.UpdateDate).toLocaleTimeString(),
+    //   width: '250px'
+    // },
     {
-        id: 'updateby',
-        name: 'UpdateBy',
-        selector: row => row.UpdateBy,
-        width: '150px'
+      id: 'updateby',
+      name: 'UpdateBy',
+      selector: row => row.UpdateBy,
+      width: '150px'
     },
     {
       name: 'Action',

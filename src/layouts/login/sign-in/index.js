@@ -2,7 +2,7 @@
 import { useState } from "react";
 
 // react-router-dom components
-import { Link } from "react-router-dom";
+import { Link , useNavigate} from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -21,10 +21,28 @@ import BasicLayout from "layouts/login/components/BasicLayout";
 // Images backgrond
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 
+
+
 function Basic() {
   const [rememberMe, setRememberMe] = useState(false);
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  
+  const handleLogin = () => {
+    // perform login validation here
+    // if successful, redirect to dashboard page
+    navigate("/dashboard" );
+  };
+
+  const handleSubmit  = async e =>{
+    e.preventDefault();
+  }
+ 
 
   return (
     <BasicLayout image={bgImage}>
@@ -48,10 +66,10 @@ function Basic() {
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
-              <MDInput type="email" label="Email" fullWidth />
+              <MDInput type="email" label="Email" value={username} onChange={(e) => setUsername(e.target.value)}  fullWidth />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput type="password" label="Password" fullWidth />
+              <MDInput type="password" label="Password" value={password} onChange={(e) => setPassword(e.target.value)}  fullWidth />
             </MDBox>
             <MDBox display="flex" alignItems="center" ml={-1}>
               <Switch checked={rememberMe} onChange={handleSetRememberMe} />
@@ -68,8 +86,9 @@ function Basic() {
             <MDBox mt={4} mb={1}>
               <MDButton variant="gradient" 
                 color="info" fullWidth   
-                component={Link}
-                to="dashboard"
+                // component={Link}
+                // to="dashboard"
+                onClick={handleLogin}
               >
                 sign in
               </MDButton>

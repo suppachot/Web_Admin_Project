@@ -14,6 +14,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Axios from "axios";
 import { useState, useEffect } from "react";
 import DataTable from 'react-data-table-component';
+import moment from "moment/moment";
 import { Link, useNavigate } from 'react-router-dom';
 
 
@@ -58,7 +59,7 @@ function Department() {
     },
     {
       name: 'CreateDate',
-      selector: row => row.CreateDate,
+      selector: row => moment(row.CreateDate).format('DD-MM-YYYY HH:mm:ss A'),
       width: '250px'
     },
     {
@@ -68,7 +69,7 @@ function Department() {
     },
     {
       name: 'UpdateDate',
-      selector: row => row.UpdateDate,
+      selector: row => moment(row.UpdateDate).format('DD-MM-YYYY HH:mm:ss A'),
       width: '250px'
     },
     {
