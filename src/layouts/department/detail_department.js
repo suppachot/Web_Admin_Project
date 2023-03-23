@@ -11,7 +11,7 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-
+import moment from "moment/moment";
 
 function DetailDepartment() {
 
@@ -42,20 +42,20 @@ function DetailDepartment() {
                     </div>
                     <div className="card-body"></div>
                     {departmentdata && departmentdata.map(val => (
-                        <div style={{textAlign: "left" , paddingLeft: "80px"}}>
+                        <div style={{ textAlign: "left", paddingLeft: "80px" }}>
                             <h2>DepartmentID : <b>{val.DepartmentID}</b></h2>
                             <h4>Detail list</h4>
                             <h6>DepartmentName : {val.DepartmentName}</h6>
-                            <h6>CreateDate : {val.CreateDate}</h6>
+                            <h6>CreateDate : {moment(val.CreateDate).format('DD-MM-YYYY HH:mm:ss A')}</h6>
                             <h6>CreateBy : {val.CreateBy}</h6>
-                            <h6>UpdateDate : {val.UpdateDate}</h6>
+                            <h6>UpdateDate : {moment(val.UpdateDate).format('DD-MM-YYYY HH:mm:ss A')}</h6>
                             <h6>UpdateBy : {val.UpdateBy}</h6>
                             <br></br>
-                            <Link className="btn btn-danger" to="/department" >Back to Title</Link>
+
 
                         </div>
                     ))}
-
+                    <Link className="btn btn-danger" to="/department" >Back to Title</Link>
                 </div>
             </div>
 

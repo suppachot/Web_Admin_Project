@@ -44,12 +44,6 @@ import SignIn from "layouts/login/sign-in";
 
 export default function App() {
 
-  const token = localStorage.getItem("accessToKen");
-
-  // if(!token){
-  //   return <Basic/>
-  // }
-
   const [controller, dispatch] = useMaterialUIController();
   const {
     miniSidenav,
@@ -121,25 +115,25 @@ export default function App() {
 
   const configsButton = (
     <MDBox
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      width="3.25rem"
-      height="3.25rem"
-      bgColor="white"
-      shadow="sm"
-      borderRadius="50%"
-      position="fixed"
-      right="2rem"
-      bottom="2rem"
-      zIndex={99}
-      color="dark"
-      sx={{ cursor: "pointer" }}
-      onClick={handleConfiguratorOpen}
+      // display="flex"
+      // justifyContent="center"
+      // alignItems="center"
+      // width="3.25rem"
+      // height="3.25rem"
+      // bgColor="white"
+      // shadow="sm"
+      // borderRadius="50%"
+      // position="fixed"
+      // right="2rem"
+      // bottom="2rem"
+      // zIndex={99}
+      // color="dark"
+      // sx={{ cursor: "pointer" }}
+      //onClick={handleConfiguratorOpen}
     >
-      <Icon fontSize="small" color="inherit">
+      {/* <Icon fontSize="small" color="inherit">
         settings
-      </Icon>
+      </Icon> */}
     </MDBox>
   );
 
@@ -162,9 +156,11 @@ export default function App() {
       )}
       {layout === "vr" && <Configurator />}
       <Routes>
-        <Route path="/login/sign-in" element={<SignIn />} />
+        
         {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/dashboard" />} />
+        
+        <Route path="*" element={<Navigate to="/login/sign-in" />} />
+
       </Routes>
     </ThemeProvider>
   );

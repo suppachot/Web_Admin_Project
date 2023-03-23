@@ -5,6 +5,7 @@ import Card from "@mui/material/Card";
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
+import { Box } from "@mui/material";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -151,13 +152,18 @@ function CreateNews() {
                     </div>
                   </div> */}
 
-                  <div className="col-lg-12">
-                    <div className="form-group ">
-                      <br></br>
-                      <Link to="/news" className="btn btn-danger">Back</Link>
-                      <button className="btn btn-success" type="submit">Save</button>
-                    </div>
-                  </div>
+                  <Box display="flex">
+                    <Box sx={{ flexGrow: 4 }}>
+                      <div className="card-body col-lg-4" >
+                        <Link to="/news" className="btn btn-danger">Back</Link>
+                      </div>
+                    </Box>
+                    <Box>
+                      <div className="card-body col-lg-4" >
+                        <button className="btn btn-success" type="submit">Save</button>
+                      </div>
+                    </Box>
+                  </Box>
                 </div>
               </div>
             </div>

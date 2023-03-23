@@ -4,6 +4,8 @@ import MDBadge from "components/MDBadge";
 import React, { useState } from "react";
 import Papa from 'papaparse';
 import DataTable from 'react-data-table-component';
+import { Axios } from "axios";
+import axios from "axios";
 
 function parseCsv(file) {
     return new Promise((resolve, reject) => {
@@ -20,47 +22,36 @@ function parseCsv(file) {
 }
 
 
-
 function ExportEmp() {
-    const [file, setFile] = useState();
-
-    const fileReader = new FileReader();
-
-    const handleOnChange = (e) => {
+    // 23-3-66 (1)
+    const [file, setFile] = useState(null);
+    const handleFileChange = (e) => {
         setFile(e.target.files[0]);
     };
 
-    const handleOnSubmit = (e) => {
-        e.preventDefault();
+    const handleUpload = () => {
+        if (!file) return;
 
-        if (file) {
-            fileReader.onload = function (event) {
-                const csvOutput = event.target.result;
-            };
-
-            fileReader.readAsText(file);
-        }
+        Papa.parse(file, {
+            header: true,
+            complete: (results) => {
+                axios.post("http://localhost:5000/api/import", results.data)
+                    .then(() => alert("Data imported successfully!"))
+                    .catch((err) => console.error(err));
+            },
+        });
+       
     };
-    //----------------------------------------
+
+
+    //-------import มาแสดงเฉยๆ---------------------------------
     const [data, setData] = useState([]);
+
     const handleFileUpload = async (event) => {
         const file = event.target.files[0];
         const parsedData = await parseCsv(file);
         setData(parsedData);
     };
-
-    // const columns = [
-    //     { name: 'EmployeeID ', selector: 'EmployeeID' },
-    //     { name: 'TitleName', selector: 'TitleName' },
-    //     { name: 'TitleName', selector: 'TitleName' },
-    //     { name: 'PhoneNumber', selector: 'PhoneNumber' },
-    //     { name: 'DepartmentName', selector: 'DepartmentName' },
-    //     { name: 'RoleName', selector: 'RoleName' },
-    //     { name: 'CreateDate', selector: 'CreateDate' },
-    //     { name: 'CreateBy', selector: 'CreateBy' },
-    //     { name: 'UpdateDate', selector: 'UpdateDate' },
-    //     { name: 'UpdateBy', selector: 'UpdateBy' },
-    // ];
 
     const columns = [
         {
@@ -168,7 +159,7 @@ function ExportEmp() {
             <DashboardNavbar />
             <div style={{ textAlign: "center" }}>
                 <h1>REACTJS CSV IMPORT EXAMPLE </h1>
-                <form>
+                <form  onSubmit={handleUpload}> 
                     {/* <div className="btn">
                         <input
                             type={"file"}
@@ -208,33 +199,12 @@ function ExportEmp() {
                         >
                             IMPORT CSV
                         </button> */}
+                        <input type="file" accept=".csv" onChange={handleFileChange} />
+                        <button type="submit">Upload</button>
                     </div>
                 </form>
             </div>
-{/* 
-            <div>
-                <input type="file" onChange={handleUpload} />
-                {csvData && (
-                    <table>
-                        <thead>
-                            <tr>
-                                {Object.keys(csvData[0]).map((key) => (
-                                    <th key={key}>{key}</th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {csvData.map((row, index) => (
-                                <tr key={index}>
-                                    {Object.values(row).map((value, index) => (
-                                        <td key={index}>{value}</td>
-                                    ))}
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                )}
-            </div> */}
+
 
         </DashboardLayout>
     );

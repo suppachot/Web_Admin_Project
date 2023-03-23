@@ -36,14 +36,17 @@ import ExportEmp from "layouts/employee/exportemp";
 import Department from "layouts/department/department";
 import AddDepartment from "layouts/department/add_department";
 import DetailDepartment from "layouts/department/detail_department";
+import EditDepartment from "layouts/department/add_department";
 //Role
 import Role from "layouts/role/role";
 import DetailRole from "layouts/role/detail_role";
 import AddRole from "layouts/role/add_role";
+import EditRole from "layouts/role/edit_role";
 //Title
 import HomeTitle from "layouts/title/hometitle";
 import AddTitle from "layouts/title/addtitle";
 import DetailTitle from "layouts/title/detail_title";
+import EditTitle from "layouts/title/edit_title";
 
 //news
 import News from "layouts/news/news";
@@ -52,6 +55,7 @@ import DetailNews from "layouts/news/detailnews";
 import EditsNews from "layouts/news/editnews";
 import Edit from "layouts/news/edit2";
 
+import Meeting from "layouts/meetingroom/meeting";
 import Checkin from "layouts/checkin";
 import Checkout from "layouts/checkout";
 import SignIn from "layouts/login/sign-in";
@@ -116,7 +120,7 @@ const routes = [
     key: "Meeting-room",
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/meetingroom",
-    component: <Meetingroom />,  
+    component: <Meeting />,  
   },
   {
     type: "collapse",
@@ -150,13 +154,13 @@ const routes = [
     route: "/login/sign-in",
     component: <SignIn />, 
   },
-  {
-    type: "collapse",
-    name: "homeR",
-    key: "homeR",
-    route: "/homeR",
-    component: <HomeR />, 
-  },
+  // {
+  //   type: "collapse",
+  //   name: "homeR",
+  //   key: "homeR",
+  //   route: "/homeR",
+  //   component: <SignUp />, 
+  // },
   {
     name: "Login",
     key: "Login",
@@ -174,6 +178,12 @@ const routes = [
     icon: <Icon fontSize="small"></Icon>,
     route: "/title/detail/:TitleID",
     component: <DetailTitle />,  
+  },
+  {
+    key: "edittile",
+    icon: <Icon fontSize="small"></Icon>,
+    route: "/title/edit/:employeeID",
+    component: <EditTitle />,  
   },
   {
     name: "addemployee",
@@ -212,6 +222,12 @@ const routes = [
     route: "/department/detail/:DepartmentID",
     component: <DetailDepartment />,
   },
+  {
+    key: "editdepartment",
+    icon: <Icon fontSize="small"></Icon>,
+    route: "/department/edit/:employeeID",
+    component: <EditDepartment />,  
+  },
 
   {
     key: "addrole",
@@ -224,6 +240,12 @@ const routes = [
     icon: <Icon fontSize="small"></Icon>,
     route: "/role/detail/:RoleID",
     component: <DetailRole />,
+  },
+  {
+    key: "editrole",
+    icon: <Icon fontSize="small"></Icon>,
+    route: "/role/edit/:employeeID",
+    component: <EditRole />,  
   },
 
   {

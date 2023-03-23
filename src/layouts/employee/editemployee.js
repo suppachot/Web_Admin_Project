@@ -5,6 +5,7 @@ import Card from "@mui/material/Card";
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
+import Box from "@mui/material/Box";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -25,88 +26,37 @@ function EditEmp() {
   const [employeedata, setemployeedata] = useState([]);
 
 
-  //   const Read = () => {
-  //     const [data, setData] = useState([])
-  //     function getData() {
-  //       Axios.get("http://localhost:5000/employee/" + employeeID)
-  //         .then((res) => {
-  //           console.log(res.data);
-  //           setData(res.data);
-  //         });
-  //     }
-  //     useEffect(()=>{
-  //       getData();
-  //     },[data]);
-  //  }
+  
 
-  //---------------------------------------------------------------------------------//
-
-
-
-  //--------------------------------------------------------------------------------*//
-
+  //------------ปจ-----------------------------------------//
   // useEffect(() => {
-  //   fetch("http://localhost:5000/getemployee/" + employeeID).then((res) => {
-  //     return res.json();
-  //   }).then((resp) => {
-  //     employeedatachange(resp.employeedata);
-  //   }).catch((err) => {
-  //     console.log(err.message);
-  //   })
-  // }, [])
+  //   var requestOptions = {
+  //     method: 'GET',
+  //     redirect: 'follow'
+  //   };
 
-  // useEffect(() => {
-  //   fetch("http://localhost:5000/getemployee/" + employeeID).then((req) => {
-  //     return req.json();
-  //   }).then((result) => {
-  //     if(result['status']=='ok'){
-  //       setEmployeeID(result['EmployeeID']);
-  //       setTitleName(result.TitleName);
-  //       setFirstName(result.FirstName);
-  //       setLastName(result.LastName);
-  //       setPhoneNumber(result.PhoneNumber);
-  //       setEmail(result.Email);
-  //       setDepartmentName(result.DepartmentName);
-  //       setRoleName(result.RoleName);
-  //       // setCreateDate(resp.CreateDate);
-  //       // setCreateBy(resp.CreateBy);
-  //       // setUpdateDate(resp.UpdateDate);
-  //       // setUpdateBy(resp.UpdateBy);
-  //     }
-  //   }).catch((err) => {
-  //     console.log(err.message);
-  //   })
-  // }, [employeeID]);
-
-  //-----------------------------------------------------//
-
-  useEffect(() => {
-    var requestOptions = {
-      method: 'GET',
-      redirect: 'follow'
-    };
-
-    fetch("http://localhost:5000/getemployee/" + employeeID, requestOptions)
-      .then(response => response.json())
-      .then(employeedata => setemployeedata(employeedata))
-      .then(result => {
-        if (result['Status Code'] === '200 OK') {
-          setEmployeeID(result['EmployeeID'])
-          setTitleName(result['TitleName'])
-          setFirstName(result['FirstName'])
-          setLastName(result['LastName'])
-          setPhoneNumber(result['PhoneNumber'])
-          setEmail(result['Email'])
-          setDepartmentName(result['DepartmentName'])
-          setRoleName(result['RoleName'])
-          setCreateDate(result['CreateDate'])
-          setCreateBy(result['CreateBy'])
-          setUpdateDate(result['UpdateDate'])
-          setUpdateBy(result['UpdateBy'])
-        }
-      })
-      .catch(error => console.log('error', error));
-  }, [employeeID])
+  //   fetch("http://localhost:5000/getemployee/" + employeeID, requestOptions)
+  //     .then(response => response.json())
+  //     .then(employeedata => setemployeedata(employeedata))
+  //     .then(result => {
+  //       if (result['Status Code'] === '200 OK') {
+  //         setEmployeeID(result['EmployeeID'])
+  //         setTitleName(result['TitleName'])
+  //         setFirstName(result['FirstName'])
+  //         setLastName(result['LastName'])
+  //         setPhoneNumber(result['PhoneNumber'])
+  //         setEmail(result['Email'])
+  //         setDepartmentName(result['DepartmentName'])
+  //         setRoleName(result['RoleName'])
+  //         setCreateDate(result['CreateDate'])
+  //         setCreateBy(result['CreateBy'])
+  //         setUpdateDate(result['UpdateDate'])
+  //         setUpdateBy(result['UpdateBy'])
+  //       }
+  //     })
+  //     .catch(error => console.log('error', error));
+  // }, [employeeID])
+//***********************************/********************-----
 
   const [EmployeeID, setEmployeeID] = useState("");
   const [TitleName, setTitleName] = useState("");
@@ -118,34 +68,32 @@ function EditEmp() {
   const [RoleName, setRoleName] = useState("");
   const [CreateDate, setCreateDate] = useState("");
   const [CreateBy, setCreateBy] = useState("");
-  const [UpdateDate, setUpdateDate] = useState("");
+  const [UpdateDate, setUpdateDate] = useState(new Date());
   const [UpdateBy, setUpdateBy] = useState("");
 
   const [validation, valchange] = useState(false);
 
   const navigate = useNavigate();
 
-  // const getEmployees = (values) => {
-  //   //console.log(values);
-  //     Axios.get(`http://localhost:5000/getemployee/${values.employeeID}`).then((response) => {
-  //       console.log(response.data);
-  //       employeedatachange(response.data);
-  //       const defaultValue = {
-  //     TitleName: response.data.TitleName,
-  //     FirstName: response.data.FirstName,
-  //     LastName: response.data.LastName,
-  //     PhoneNumber: response.data.PhoneNumber,
-  //     Email: response.data.Email,
-  //     DepartmentName: response.data.DepartmentName,
-  //     RoleName: response.data.RoleName,
-  //     CreateDate: response.data.CreateDate,
-  //     CreateBy: response.data.CreateBy,
-  //     UpdateDate: response.data.UpdateDate,
-  //     UpdateBy: response.data.UpdateBy
-  //       }
-  //     })
+  const getEmployeeID = async () => {
+    const response = await Axios.get('http://localhost:5000/getemployee/'+employeeID);
+    console.log(response);
+    setEmployeeID(response.data[0].EmployeeID);
+    setTitleName(response.data[0].TitleName);
+    setFirstName(response.data[0].FirstName);
+    setLastName(response.data[0].LastName);
+    setPhoneNumber(response.data[0].PhoneNumber);
+    setEmail(response.data[0].Email);
+    setDepartmentName(response.data[0].DepartmentName);
+    setCreateDate(response.data[0].CreateDate);
+    setCreateBy(response.data[0].CreateBy);
+    setUpdateDate(response.data[0].UpdateDate(new Date()));
+    setUpdateBy(response.data[0].UpdateBy);
+  };
 
-  // }
+  useEffect(() => {
+    getEmployeeID();
+  }, []);
 
   const handlesubmit = (e) => {
     e.preventDefault();
@@ -170,30 +118,6 @@ function EditEmp() {
       console.log(err.message)
     })
   }
-
-  
-  
-
-    //-----------test ----------------//
-    // const handlesubmit1=(e)=>{
-    //   e.preventDefault();
-    //   const empdata={EmployeeID,TitleName,LastName,PhoneNumber,Email,DepartmentName,RoleName,CreateDate,CreateBy,UpdateDate,UpdateBy};
-
-    //   fetch("http://localhost:5000/employee/edit/" + EmployeeID,{
-    //     method:"PUT",
-    //     headers:{"content-type":"application/json"},
-    //     body:JSON.stringify(empdata)
-    //   }).then((res)=>{
-    //     alert('Saved successfully.')
-    //     navigate('/employee');
-    //   }).catch((err)=>{
-    //     console.log(err.message)
-    //   })
-
-    // }
-//---------------------------------------------------------------/
-
-
     return (
       <DashboardLayout>
         <DashboardNavbar />
@@ -212,7 +136,7 @@ function EditEmp() {
                         <input required value={EmployeeID}
                           type="text"
                           id='EmployeeID'
-                          // disabled="disabled"
+                          disabled="disabled"
                           onChange={e => setEmployeeID(e.target.value)}
                           className="form-control">
                         </input>
@@ -229,7 +153,7 @@ function EditEmp() {
                           onChange={e => setTitleName(e.target.value)}
                           className="form-select"
                         >
-                          <option value=""></option>
+                          <option value=""selected>select Title</option>
                           <option value="นาย">นาย</option>
                           <option value="นาง">นาง</option>
                           <option value="นางสาว">นางสาว</option>
@@ -299,7 +223,7 @@ function EditEmp() {
                           onChange={e => setDepartmentName(e.target.value)}
                           className="form-select"
                         >
-                          <option value="" placeholder="select Department"></option>
+                          <option value=" " placeholder="select Department" selected>select Department</option>
                           <option value="ฝ่ายบุคคล">ฝ่ายบุคคล</option>
                           <option value="ฝ่ายบัญชี">ฝ่ายบัญชี</option>
                           <option value="พนักงานทั่วไป">พนักงานทั่วไป</option>
@@ -323,7 +247,7 @@ function EditEmp() {
                           onChange={e => setRoleName(e.target.value)}
                           className="form-select"
                         >
-                          <option selected>select Role</option>
+                          <option value="" placeholder="select Role" selected>select Role</option>
                           <option value="Administrator">Administrator</option>
                           <option value="Employee">Employee</option>
                         </select>
@@ -354,7 +278,7 @@ function EditEmp() {
                         <label>CreateBy</label>
                         <input value={CreateBy} type="text"
                           id='CreateBy'
-                          // disabled="disabled"
+                          disabled="disabled"
                           onChange={e => setCreateBy(e.target.value)}
                           className="form-control"></input>
                       </div>
@@ -383,13 +307,18 @@ function EditEmp() {
                       </div>
                     </div>
 
-                    <div className="col-lg-12">
-                      <div className="form-group ">
-                        <br></br>
+                    <Box display="flex">
+                    <Box sx={{ flexGrow: 4 }}>
+                      <div className="card-body col-lg-4" >
                         <Link to="/employee" className="btn btn-danger">Back</Link>
+                      </div>
+                    </Box>
+                    <Box>
+                      <div className="card-body col-lg-4" >
                         <button className="btn btn-success" type="submit">Update</button>
                       </div>
-                    </div>
+                    </Box>
+                  </Box>
 
                   </div>
                 </div>

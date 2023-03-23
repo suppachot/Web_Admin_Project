@@ -6,6 +6,7 @@ import Card from "@mui/material/Card";
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
+import { Box } from "@mui/material";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -15,6 +16,7 @@ import Axios from "axios";
 import { useState, useEffect } from "react";
 import DataTable from 'react-data-table-component';
 import moment from "moment/moment";
+import Paper from "@mui/material/Paper";
 
 function Checkin() {
 
@@ -35,6 +37,7 @@ function Checkin() {
   const [filterText, setFilterText] = useState('');
   const filteredData = items.filter((item) =>
     item.EmployeeID.toLowerCase().includes(filterText.toLowerCase())
+
   );
 
   const handleFilter = (e) => {
@@ -59,7 +62,7 @@ function Checkin() {
     },
     {
       name: 'CheckInDate',
-      selector: row => row.CheckInDate.toString().split('T')[0],
+      selector: row => moment(row.CheckInDate).format('DD-MM-YYYY '),
       width: '250px'
     },
     {
@@ -103,42 +106,47 @@ function Checkin() {
     return (
       <DashboardLayout>
         <DashboardNavbar />
-        <div className="card-body col-lg-2" >
-          {/* <input type="text"
-              className="form-control"
-              placeholder="Employee ID"
-              onChange={(event) => handleFilter(event.target.value)}
-            >
-            </input> */}
+        <Box display="flex">
+          <Box sx={{ flexGrow: 2 }} >
+            <div class="input-group col-lg-4" >
+              <input type="text"
+                className="form-control"
+                placeholder="Search"
+                value={filterText}
+                onChange={handleFilter}
+              >
+              </input>
+              <button
+                className="btn btn-danger"
+                onClick={handleClearFilter}
+              >
+                Clear
+              </button>
+            </div>
 
-          <input type="text"
-            className="form-control"
-            placeholder="Employee ID"
-            value={filterText}
-            onChange={handleFilter}
-          >
-          </input>
-          <button
-            className="btn btn-danger"
-            onClick={handleClearFilter}
-          >
-            Clear Filter
-          </button>
-        </div>
+          </Box>
+        </Box>
 
-        <DataTable
-          columns={columns}
-          //data={items}
-          data={filteredData}
-          highlightOnHover
-          pagination
-          paginationPerPage={5}
-          paginationRowsPerPageOptions={[5, 15, 25, 50]}
-          paginationComponentOptions={{
-            rowsPerPageText: 'Records per page:',
-            rangeSeparatorText: 'out of',
-          }}
-        />
+        <Paper sx={{ p: 1 }} style={{ backgroundColor: '#F2F3F4' }}>
+          <div className="card-body" >
+
+            <DataTable
+              title="check-in"
+              columns={columns}
+              //data={items}
+              data={filteredData}
+              highlightOnHover
+              pagination
+              paginationPerPage={5}
+              paginationRowsPerPageOptions={[5, 15, 25, 50]}
+              paginationComponentOptions={{
+                rowsPerPageText: 'Records per page:',
+                rangeSeparatorText: 'out of',
+              }}
+            />
+          </div>
+
+        </Paper>
       </DashboardLayout>
     );
   }

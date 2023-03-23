@@ -13,6 +13,7 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 
 import Axios from "axios";
+import axios from "axios";
 import { useState, useEffect } from "react";
 import DataTable from 'react-data-table-component';
 import moment from "moment/moment";
@@ -37,6 +38,8 @@ import Button from "@mui/material/Button";
 import Paper from '@mui/material/Paper';
 import { message } from "antd";
 
+
+//(1)
 function parseCsv(file) {
     return new Promise((resolve, reject) => {
         Papa.parse(file, {
@@ -50,6 +53,20 @@ function parseCsv(file) {
         });
     });
 }
+// const customStyles = {
+//     headRow: {
+//         style: {
+//             backgroundColor: '#84BAF0',
+//             fontcolor:"white"
+//         }
+//     }
+//     ,headCells: {
+//         style: {
+//             color: 'white',
+//             fontWeight: 'bold'
+//         }
+//     }
+// };
 
 function HomeEmployee() {
 
@@ -96,18 +113,37 @@ function HomeEmployee() {
         }
     }
     //Import file------------------------------------------//
+    // แค่ดึงไฟล์มาอ่านในรูป Datatable ไม่ได้ลง db (1)****/
 
-
-    const handleFileUpload = async (event) => {
-        const file = event.target.files[0];
-        const parsedData = await parseCsv(file);
-        setItems(parsedData);
+    // const handleFileUpload = async (event) => {
+    //     const file = event.target.files[0];
+    //     const parsedData = await parseCsv(file);
+    //     setItems(parsedData);
+    // };
+    //********************************** */
+    function handleFileUpload1(event) {
+        const formData = new FormData();
+        formData.append('csvFile', event.target.files[0]);
+        axios.post('/api/upload', formData);
+    }
+    const [file, setFile] = useState(null);
+    const handleFileChange = (e) => {
+        setFile(e.target.files[0]);
     };
 
+    const handleUpload = () => {
+        if (!file) return;
 
+        Papa.parse(file, {
+            header: true,
+            complete: (results) => {
+                axios.post("http://localhost:5000/api/import", results.data)
+                    .then(() => alert("Data imported successfully!"))
+                    .catch((err) => console.error(err));
+            },
+        });
 
-
-
+    };
 
     //-----------------------------------------------------//
     //Export file-----------------------------------------//
@@ -182,31 +218,6 @@ function HomeEmployee() {
     const handleClearFilter = () => {
         setFilterText('');
     };
-    //v3------------------------------------------------**//
-    // const [EmployeeID, setEmployeeID] = useState("");
-    // const [FirstName, setFirstName] = useState("");
-    // const [LastName, setLastName] = useState("");
-    // const [DepartmentName, setDepartmentName] = useState("");
-
-
-    // const filterData = () => {
-    //     let filteredData = items.filter((item) => {
-    //         return (
-    //             item.EmployeeID.toLowerCase().includes(EmployeeID.toLowerCase()) &&
-    //             item.FirstName.toLowerCase().includes(FirstName.toLowerCase())
-    //         );
-    //     });
-    //     setItems(filteredData);
-    // };
-
-    // const clearFilter = () => {
-    //     setEmployeeID("");
-    //     setFirstName("");
-    //     setLastName("");
-    //     setDepartmentName("");
-    //     setItems(items);
-    // };
-    //--------------------------------------------------------------------//
 
     const columns = [
         {
@@ -262,7 +273,7 @@ function HomeEmployee() {
         {
             id: 'role',
             name: 'Role',
-            width: '150px',
+            width: '120px',
             sortable: true,
             selector: row =>
                 <div>
@@ -297,13 +308,16 @@ function HomeEmployee() {
 
         {
             name: 'Action',
-            width: '250px',
+            width: '220px',
             selector: row =>
                 <div class="btn-group" role="group" aria-label="Basic example">
 
                     <button className="btn btn-primary" onClick={() => { LoadDetail(row.EmployeeID) }}>Detail</button>
                     <button className="btn btn-warning" onClick={() => { LoadEdit(row.EmployeeID) }} >Edit</button>
                     <button className="btn btn-danger" onClick={() => { Removefunction(row.EmployeeID) }} >Delete</button>
+                    {/* <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" >
+                        modal
+                    </button> */}
 
                 </div>
 
@@ -371,8 +385,6 @@ function HomeEmployee() {
 
     ];
 
-
-
     useEffect(() => {
         fetch("http://localhost:5000/employee")
             .then(res => res.json())
@@ -403,130 +415,67 @@ function HomeEmployee() {
             <DashboardLayout>
                 <DashboardNavbar />
 
-
-                <Paper sx={{ p: 2 }}>
-                    <Box display="flex">
-                        <Box sx={{ flexGrow: 1 }}>
-                            {/* <Typography variant="h6" gutterBottom component="div" >
+                <div className="LayoutContainer">
+                    {/* <Box display="flex">
+                    <Box sx={{ flexGrow: 1 }}>
+                        {/* <Typography variant="h6" gutterBottom component="div" >
                                     Emplotees list
                                 </Typography> */}
-                        </Box>
-                        <Box>
-                            {/* <Button variant="contained">Create</Button> */}
-                            <Link to="/addEmpolyee" className="btn btn-success">Add New</Link>
-                        </Box>
+                    {/* </Box>
+                    <Box> */}
+                    {/* <Button variant="contained">Create</Button> */}
+                    {/* <Link to="/addEmpolyee" className="btn btn-success">Add New</Link>
                     </Box>
-                    {/* </Paper> */}
+                </Box> */}
 
-                    <div className="LayoutContainer">
 
-                        <div className="card-body" >
-                            <div className="card-body" >
+
+                    <div className="card-body" >
+
+                        <div class="input-group">
+                            <div className="btn">
                                 <div className="btn" >
-                                    <Link to="/addEmpolyee" className="btn btn-success">Add New</Link>
+                                    <Link to="/addEmpolyee" className="btn btn-success">Add Employees</Link>
                                 </div>
-                                <div className="btn">
+                                {/* <div className="btn">
                                     <Link to="/export-Empolyee" className="btn btn-success">Import.CSV</Link>
-                                </div>
-                                <div className="btn">
-                                    <input type="file" onChange={handleFileUpload} />
-                                </div>
+                                </div> */}
+                                <label for="customFile">import file .csv</label>
+                                <input type="file" accept=".csv" className="btn btn-large-green" onChange={handleFileChange} />
+                                <button className="btn btn-secondary" type="button" onClick={handleUpload}>Upload</button>
                             </div>
+                        </div>
 
-                            <Box display="flex">
-                                <Box sx={{ flexGrow: 2 }}>
-                                    
-                                        <div className="card-body col-lg-3" >
-                                            <input type="text"
-                                                className="form-control"
-                                                placeholder="Employee ID"
-                                                value={filterText}
-                                            onChange={handleFilter}
-                                            >
-                                            </input>
-                                        </div>
-                                   
-                                </Box>
-                                {/* <Box sx={{ flexGrow: 1 }}>
-                                <div className="card-body col-lg-5" >
+                        <Box display="flex">
+                            <Box sx={{ flexGrow: 2 }} >
+                                <div class="input-group col-lg-4" >
                                     <input type="text"
                                         className="form-control"
-                                        placeholder="Employee Name"
+                                        placeholder="Search"
                                         value={filterText}
                                         onChange={handleFilter}
                                     >
                                     </input>
-                                </div>
-                            </Box> */}
-                                <Box>
                                     <button
                                         className="btn btn-danger"
                                         onClick={handleClearFilter}
                                     >
-                                        Clear Filter
+                                        Clear
                                     </button>
-                                </Box>
+                                </div>
+
                             </Box>
-
-                            {/* 
-                            <Box display="flex">
-                                <Box sx={{ flexGrow: 2 }}>
-                                    <div className="card-body col-lg-3" >
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            value={EmployeeID}
-                                            onChange={(e) => setEmployeeID(e.target.value)}
-                                            placeholder="Employee ID"
-                                        />
-                                    </div>
-                                </Box>
-                                <Box sx={{ flexGrow: 1 }}>
-                                    <div className="card-body col-lg-3" >
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            value={FirstName}
-                                            onChange={(e) => setFirstName(e.target.value)}
-                                            placeholder="Employee Name"
-                                        />
-                                    </div>
-                                </Box>
-                                <Box sx={{ flexGrow: 2 }}>
-                                    <div className="card-body col-lg-3" >
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            value={LastName}
-                                            onChange={(e) => setLastName(e.target.value)}
-                                            placeholder="Employee Lastname"
-                                        />
-                                    </div>
-                                </Box>
-                                <Box sx={{ flexGrow: 1 }}>
-                                    <div className="card-body col-lg-3" >
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            value={DepartmentName}
-                                            onChange={(e) => setDepartmentName(e.target.value)}
-                                            placeholder="Department"
-                                        />
-                                    </div>
-                                </Box>
-                                <Box>
-                                    <button
-                                        className="btn btn-danger"
-                                        onClick={clearFilter}
-                                    >
-                                        Clear 
-                                    </button>
-                                </Box>
+                            {/* <Box>
+                                <button
+                                    className="btn btn-danger"
+                                    onClick={handleClearFilter}
+                                >
+                                    Clear
+                                </button>
                             </Box> */}
+                        </Box>
 
-
-
-                            {/* 
+                        {/* 
                         //---------------ธรรมดา-------------//
                         <div className="card-body col-lg-2" >
                             <input type="text"
@@ -546,34 +495,71 @@ function HomeEmployee() {
                         </div>
                         //------------------------------------// 
                         */}
-
-
-                            <DataTable
-                                title="Employee List"
-                                columns={columns}
-                                //data={items}
-                                data={filteredData}
-                                defaultSortField="EmployeeID"
-                                noDataMessage="No records found."
-                                highlightOnHover
-                                pagination
-                                paginationPerPage={5}
-                                paginationRowsPerPageOptions={[10, 15, 25, 50, 100]}
-                                paginationComponentOptions={{
-                                    rowsPerPageText: 'Records per page:',
-                                    rangeSeparatorText: 'out of',
-                                }}
-                                
-                            />
-
-                        </div>
-
-
-
-                        <Export onExport={() => downloadCSV(items)} />
                     </div>
+                </div>
 
+                <Paper sx={{ p: 1 }} style={{ backgroundColor: '#F2F3F4' }}>
+                    <div className="card-body" >
+                        < DataTable
+                            title="Employee List"
+                            columns={columns}
+                            //data={items}
+                            data={filteredData}
+                            //customStyles={customStyles} 
+                            defaultSortField="EmployeeID"
+                            noDataMessage="No records found."
+                            highlightOnHover
+                            pagination
+                            paginationPerPage={10}
+                            paginationRowsPerPageOptions={[10, 15, 25, 50, 100]}
+                            paginationComponentOptions={{
+                                rowsPerPageText: 'Records per page:',
+                                rangeSeparatorText: 'out of',
+
+                            }}
+                        />
+                    </div>
+                    <Export onExport={() => downloadCSV(items)} />
                 </Paper>
+
+
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                {items && items.map(val => (
+
+                                    <div style={{ textAlign: "left", paddingLeft: "80px" }}>
+                                        <h3>EmployeeID : <b>{val.EmployeeID}</b></h3>
+                                        <h5 >
+                                            Name       : {val.TitleName}  {val.FirstName}  {val.LastName} <br></br>
+                                            PhoneNumber: {val.PhoneNumber} <br></br>
+                                            Email      : {val.Email}<br></br>
+                                            Department : {val.DepartmentName}<br></br>
+                                            Role       : {val.RoleName}<br></br>
+                                            CreateDate : {moment(val.CreateDate).format('YYYY-MM-DD HH:mm:ss A')}<br></br>
+                                            CreateBy   : {val.CreateBy}<br></br>
+                                            UpdateDate : {moment(val.UpdateDate).format('DD-MM-YYYY HH:mm:ss A')}<br></br>
+                                            UpdateBy   : {val.UpdateBy}<br></br>
+                                        </h5>
+                                        <br></br>
+                                    </div>
+                                ))}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
             </DashboardLayout >
 
@@ -581,3 +567,4 @@ function HomeEmployee() {
     }
 }
 export default HomeEmployee;
+

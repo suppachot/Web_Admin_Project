@@ -2,6 +2,7 @@ import DataTable from 'react-data-table-component';
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
+import { Box } from '@mui/material';
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -88,12 +89,17 @@ function AddRole() {
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>RoleName</label>
-                                            <input required value={RoleName}
-                                                type="text"
+                                            <select
                                                 id='RoleName'
+                                                placeholder="select Role"
+                                                value={RoleName}
                                                 onChange={e => setRoleName(e.target.value)}
-                                                className="form-control">
-                                            </input>
+                                                className="form-select"
+                                            >
+                                                <option value=" " placeholder="select Role" selected>select Role</option>
+                                                <option value="Administrator">Administrator</option>
+                                                <option value="Employee">Employee</option>
+                                            </select>
                                         </div>
                                     </div>
 
@@ -142,13 +148,18 @@ function AddRole() {
                                         </div>
                                     </div>
 
-                                    <div className="col-lg-12">
-                                        <div className="form-group ">
-                                            <br></br>
-                                            <Link to="/role" className="btn btn-danger">Back</Link>
-                                            <button className="btn btn-success" type="submit">Save</button>
-                                        </div>
-                                    </div>
+                                    <Box display="flex">
+                                        <Box sx={{ flexGrow: 4 }}>
+                                            <div className="card-body col-lg-4" >
+                                                <Link to="/role" className="btn btn-danger">Back</Link>
+                                            </div>
+                                        </Box>
+                                        <Box>
+                                            <div className="card-body col-lg-4" >
+                                                <button className="btn btn-success" type="submit">Save</button>
+                                            </div>
+                                        </Box>
+                                    </Box>
                                 </div>
                             </div>
                         </div>
