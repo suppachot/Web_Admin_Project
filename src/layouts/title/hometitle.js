@@ -16,7 +16,8 @@ import { useState, useEffect } from "react";
 import DataTable from 'react-data-table-component';
 import { Button } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
-
+import { Paper } from "@mui/material";
+import moment from "moment/moment";
 
 
 function HomeTitle() {
@@ -62,7 +63,7 @@ function HomeTitle() {
         {
             id: 'createdate',
             name: 'CreateDate',
-            selector: row => row.CreateDate,
+            selector: row => moment(row.CreateDate).format('DD-MM-YYYY HH:mm:ss A'),
             width: '250px'
         },
         {
@@ -74,7 +75,7 @@ function HomeTitle() {
         {
             id: 'updatedate',
             name: 'UpdateDate',
-            selector: row => row.UpdateDate,
+            selector: row => moment(row.UpdateDate).format('DD-MM-YYYY HH:mm:ss A'),
             width: '250px'
         },
         {
@@ -133,21 +134,23 @@ function HomeTitle() {
                             <Link to="/addTitle" className="btn btn-success">Add New</Link>
                         </div>
 
-                        <DataTable
-   
-                          columns={columns}
-                          data={items}
-                          highlightOnHover
-                          pagination
-                          paginationPerPage={5}
-                          paginationRowsPerPageOptions={[5, 15, 25, 50]}
-                          paginationComponentOptions={{
-                            rowsPerPageText: 'Records per page:',
-                            rangeSeparatorText: 'out of',
-                          }}
-
-                        />
-
+                        <Paper sx={{ p: 1 }} style={{ backgroundColor: '#F2F3F4' }}>
+                            <div className="card-body" >
+                                <DataTable
+                                    title="Title"
+                                    columns={columns}
+                                    data={items}
+                                    highlightOnHover
+                                    pagination
+                                    paginationPerPage={5}
+                                    paginationRowsPerPageOptions={[5, 15, 25, 50]}
+                                    paginationComponentOptions={{
+                                        rowsPerPageText: 'Records per page:',
+                                        rangeSeparatorText: 'out of',
+                                    }}
+                                />
+                            </div>
+                        </Paper>
                     </div>
                 </div>
             </DashboardLayout>

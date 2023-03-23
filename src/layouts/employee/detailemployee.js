@@ -15,6 +15,8 @@ import AddEmployee from './addemployee';
 import { margin } from "@mui/system";
 import { padding } from '@mui/system';
 import moment from "moment/moment";
+import TextField from '@mui/material/TextField';
+import { Box } from "@mui/material";
 
 
 function DetailEmpolyee() {
@@ -46,28 +48,29 @@ function DetailEmpolyee() {
                     </div>
                     <div className="card-body" ></div>
                     {employeedata && employeedata.map(val => (
-                        <div style={{textAlign: "left" , paddingLeft: "80px"}}>
-                            <h3>EmployeeID : <b>{val.EmployeeID}</b></h3>
+                        <div style={{ textAlign: "left", paddingLeft: "80px" }}>
+                            <h4>EmployeeID : <b>{val.EmployeeID}</b></h4>
                             <h5 >
                                 Name       : {val.TitleName}  {val.FirstName}  {val.LastName} <br></br>
-                                PhoneNumber: {val.PhoneNumber} <br></br>
+                            
+                                Phone      : {val.PhoneNumber} <br></br>
                                 Email      : {val.Email}<br></br>
                                 Department : {val.DepartmentName}<br></br>
                                 Role       : {val.RoleName}<br></br>
-                                CreateDate : {moment(val.CreateDate).format('YYYY-MM-DD HH:mm:ss A')}<br></br>
+                                CreateDate : {moment(val.CreateDate).format('DD-MM-YYYY HH:mm:ss A')} <br></br>                                                  
                                 CreateBy   : {val.CreateBy}<br></br>
                                 UpdateDate : {moment(val.UpdateDate).format('DD-MM-YYYY HH:mm:ss A')}<br></br>
                                 UpdateBy   : {val.UpdateBy}<br></br>
                             </h5>
                             <br></br>
 
-                         
+
 
                         </div>
                     ))}
 
-                    
-                     <Link className="btn btn-danger" to="/employee" >Back to Employee</Link>
+
+                    <Link className="btn btn-danger" to="/employee" >Back to Employee</Link>
                 </div>
 
             </div>

@@ -14,6 +14,9 @@ import { Link, useNavigate } from "react-router-dom";
 import Axios from "axios";
 import DataTable from 'react-data-table-component';
 import moment from "moment/moment";
+import CreateNews from './createnews';
+import { Paper } from "@mui/material";
+
 
 function News() {
 
@@ -54,7 +57,7 @@ function News() {
     {
       id: 'newsDate',
       name: 'NewsDate',
-      selector: row => row.NewsDate.toString('th-TH').split('T')[0],
+      selector: row => moment(row.CreateDate).format('DD-MM-YYYY '),
       width: '200px'
     },
     {
@@ -135,26 +138,30 @@ function News() {
         <DashboardNavbar />
         <div className="LayoutContainer">
 
-          <div className="card-body" >
-            <div className="card-body" >
-              <div className="btn" >
-                <Link to="/addEmpolyee" className="btn btn-success">Add New</Link>
-              </div>
+        <div className="LayoutContainer">
+          <div className="card-body">
+            <div className="btn">
+              <Link to="/CreateNews" className="btn btn-success">Add New</Link>
             </div>
-            <DataTable
-              title="News"
-              columns={columns}
-              data={items}
-              highlightOnHover
-              pagination
-              paginationPerPage={5}
-              paginationRowsPerPageOptions={[5, 15, 25, 50]}
-              paginationComponentOptions={{
-                rowsPerPageText: 'Records per page:',
-                rangeSeparatorText: 'out of',
-              }}
+            </div>
 
-            />
+            <Paper sx={{ p: 1 }} style={{ backgroundColor: '#F2F3F4' }}>
+              <div className="card-body" >
+                <DataTable
+                  title="News"
+                  columns={columns}
+                  data={items}
+                  highlightOnHover
+                  pagination
+                  paginationPerPage={5}
+                  paginationRowsPerPageOptions={[5, 15, 25, 50]}
+                  paginationComponentOptions={{
+                    rowsPerPageText: 'Records per page:',
+                    rangeSeparatorText: 'out of',
+                  }}
+                />
+              </div>
+            </Paper>
 
           </div>
         </div>

@@ -11,6 +11,7 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import moment from "moment/moment";
 
 
 function DetailNews() {
@@ -37,22 +38,23 @@ function DetailNews() {
 
                 <div className="card row mb-3" style={{ "textAlign": "center" }}>
                     <div className="card-title">
+                        <br></br>
                         <h2>News Detail</h2>
                     </div>
                     <div className="card-body"></div>
                     {newsdata && newsdata.map(val => (
-                        <div style={{textAlign: "left" , paddingLeft: "80px"}}>
-                            <h2>TopicNews : <b>{val.TopicNews}</b> ({val.NewsNo},{val.NewsDate})</h2>
+                        <div style={{ textAlign: "left", paddingLeft: "80px" }}>
+                            <h2>TopicNews : <b>{val.TopicNews}</b> ({val.NewsNo},{moment(val.NewsDate).format('DD-MM-YYYY')})</h2>
                             <h4>Detail list</h4>
                             <h6>NewsDetail : {val.NewsDetail}</h6>
                             <h6>CreateBy : {val.CreateBy}</h6>
-                            <h6>UpdateDate : {val.UpdateDate}</h6>
+                            <h6>UpdateDate : {moment(val.UpdateDate).format('DD-MM-YYYY HH:mm:ss A')}</h6>
                             <h6>UpdateBy : {val.UpdateBy}</h6>
                             <br></br>
-                            <Link className="btn btn-danger" to="/news" >Back to Listing</Link>
 
                         </div>
                     ))}
+                    <Link className="btn btn-danger" to="/news" >Back to Listing</Link>
 
                 </div>
             </div>

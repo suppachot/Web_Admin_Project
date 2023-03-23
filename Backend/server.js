@@ -1,10 +1,23 @@
 const express = require('express')
 const app = express();
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const cors = require('cors');
+
+const jwt = require('jsonwebtoken');
+const bodyParser = require('body-parser');
+const bcrypt = require('bcryptjs');
+
+// const multer = require("multer");
+// const csvParser = require("csv-parser");
+// const fs = require("fs");
+// const csv = require('csv-parser');
+// const jsonParser = bodyParser.json()
+
 
 app.use(cors());
 app.use(express.json());
+//app.use(bodyParser.json());
+//app.use(bodyParser.urlencoded({ extended: true }));
 
 const db = mysql.createConnection({
     host: "localhost",
@@ -22,24 +35,121 @@ db.connect((err) => {
     }
 });
 
-//--import
-// const insertData = (data) => {
-//     const query = 'INSERT INTO employee SET ?';
-//     data.forEach((row) => {
-//       connection.query(query, row, (error, results) => {
-//         if (error) throw error;
-//         console.log('Data inserted:', results);
-//       });
-//     });
-//   };
-  
-//   if (csvData) {
-//     insertData(csvData);
-//   }
-  
-//   db.end();
 
-// ------------dashboard-----------
+//------------------------
+// app.post('/login/', (req, res) => {
+//     const EmployeeID = req.body.EmployeeID;
+//     const Pincode = req.body.Pincode;
+
+//     db.query("SELECT * FROM account WHERE  EmployeeID= ? AND Pincode= ?",[EmployeeID, Pincode],
+//         (err, result) => {
+//             if (err) {
+//                req.setEncoding({err:err});
+//             }
+//             else {
+//                 if(result.length > 0){
+//                     res.send(result);
+//                 }else{
+//                     res.send({message: "Wrong EmploeeId or Pincode"});
+//                 }
+//             }
+//         }
+//     );
+//     console.log('login success');
+// })
+
+// app.post('/login', (req, res) => {
+//     const { EmployeeID, Password } = req.body;
+//     db.query('SELECT * FROM account WHERE EmployeeID = ? ', [EmployeeID], (error, results) => {
+//       if (error) {
+//         res.status(500).send({ error: 'An error occurred' });
+//         return;
+//       }
+//       if (results.length === 0 || results[0].password !== password) {
+//         res.status(401).send({ error: 'Invalid username or password' });
+//         return;
+//       }
+//       const token = jwt.sign({ userId: results[0].id }, 'your-secret-key');
+//       res.send({ token });
+//     });
+//   });
+
+//   app.post('/login1', (req, res) => {
+//     const { EmployeeID, Password } = req.body;
+
+//     const sql = 'SELECT * FROM account WHERE EmployeeID = ? AND Password = ?';
+//     db.query(sql, [EmployeeID,Password], (err, result) => {
+//         if (err) {
+//             res.status(400).send({ error: err.message });
+//         } else if (result.length === 0) {
+//             res.status(401).send({ error: 'Invalid username or password' });
+//         } else {
+//             const user = result[0];
+//             if (bcrypt.compareSync(Password, user.Password)) {
+//                 const token = jwt.sign({ EmployeeID: user.EmployeeID }, 'secret-key');
+//                 res.status(200).send({ token });
+//             } else {
+//                 res.status(401).send({ error: 'Invalid username or password' });
+//             }
+//         }
+//     });
+// });
+
+// app.post('/login2', (req, res) => {
+//     const { EmployeeID, Password } = req.body;
+//     db.query(
+//       'SELECT * FROM account WHERE EmployeeID = ? AND Password = ?',
+//       [EmployeeID, Password],
+//       (error, results, fields) => {
+//         if (error) {
+//           console.error(error);
+//           res.status(500).send('Error logging in');
+//         } else if (results.length > 0) {
+//           const token = jwt.sign({ EmployeeID }, 'secret');
+//           res.send({ token });
+//         } else {
+//           res.status(401).send('Invalid login credentials');
+//         }
+//       }
+//     );
+//   });
+
+  app.post('/api1/login', (req, res) => {
+    const { EmployeeID, Pincode } = req.body;
+    db.query(
+      'SELECT * FROM account WHERE EmployeeID = ? AND Pincode = ?',
+      [EmployeeID, Pincode],
+      (err, results) => {
+        if (err) throw err;
+        if (results.length > 0) {
+          res.json({ login: true });
+        } else {
+          res.json({ login: false });
+        }
+      }
+    );
+  });
+
+app.post('/api/login', (req, res) => {
+    const { username, password } = req.body;
+    db.query(
+      'SELECT * FROM user WHERE username = ? AND password = ?',
+      [username, password],
+      (err, results) => {
+        if (err) throw err;
+        if (results.length > 0) {
+          res.json({ success: true });
+        } else {
+          res.json({ success: false });
+        }
+      }
+    );
+  });
+
+
+
+
+
 // count admin
 app.get('/employee/admin_count', (req, res) => {
     db.query("SELECT COUNT(`EmployeeID`) AS Admin FROM employee WHERE `RoleName`='Administrator'", (err, result) => {
@@ -73,6 +183,43 @@ app.get('/account/user_app', (req, res) => {
         }
     })
 })
+
+// ------------dashboard-----------//
+app.get('/api/dashboard/check-in', async (req, res) => {
+    const conn = await pool.getConnection();
+    const [rows] = await conn.query('SELECT DATE(NOW()) AS date, COUNT(`EmployeeID`) AS checkin FROM checkin WHERE date(`CheckInDate`)=curdate();');
+    conn.release();
+    res.json(rows);
+  });
+
+
+app.get('/dashboard/check-in', (req, res) => {
+   const query = 'SELECT DATE(NOW()) AS date, COUNT(`EmployeeID`) AS checkin FROM checkin WHERE date(`CheckInDate`)=curdate();';
+   // const query = 'SELECT `EmployeeID`,`TransactionID` FROM `checkin`;';
+    db.query(query, (error, results) => {
+      if (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error querying database' });
+      } else {
+        res.json(results);
+      }
+    });
+  });
+
+app.get('/dashboard/check-out', (req, res) => {
+    db.query("SELECT DATE(NOW()) AS date, COUNT(`EmployeeID`) AS checkout FROM checkout WHERE date(`CheckOutDate`)=curdate();", (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.send(result);
+        }
+    })
+    //console.log('dashboard check-out');
+})
+
+
+// ----------------------//
 
 //title db
 app.get('/title', (req, res) => {
@@ -156,6 +303,23 @@ app.get('/employee/:firstname', (req, res) => {
         }
     })
 })
+//import file Emp ( 23-3-66)
+app.post("/api/import", (req, res) => {
+    const data = req.body;
+  
+    const query = "INSERT INTO employee (EmployeeID, TitleName, FirstName , LastName, PhoneNumber, Email, DepartmentName, RoleName,CreateDate,CreateBy,UpdateDate,UpdateBy) VALUES ?";
+    const values = data.map((row) => [row.EmployeeID, row.TitleName, row.FirstName,row.LastName,row.PhoneNumber,row.Email,row.DepartmentName,row.RoleName,row.CreateDate,row.CreateBy,row.UpdateDate,row.UpdateBy]);
+  
+    db.query(query, [values], (err) => {
+      if (err) {
+        res.status(500).json({ error: err.message });
+      } else {
+        res.status(200).json({status:'ok', message: "Data imported successfully!" });
+      }
+    });
+    console.log('import File csv_Emp');
+  });
+
 // create Emp
 app.post('/employee/add', (req, res) => {
     const EmployeeID = req.body.EmployeeID;
@@ -174,14 +338,16 @@ app.post('/employee/add', (req, res) => {
     db.query("INSERT INTO employee (EmployeeID, TitleName, FirstName , LastName, PhoneNumber, Email, DepartmentName, RoleName,CreateDate,CreateBy,UpdateDate,UpdateBy) VALUES(?,?,?,?,?,?,?,?,?,?,?,?);",
         [EmployeeID, TitleName, FirstName, LastName, PhoneNumber, Email, DepartmentName, RoleName, CreateDate, CreateBy, UpdateDate, UpdateBy],
         (err, result) => {
-            if (err) {
+            if (err)  {
                 console.log(err);
+               // res.status(201).json({ message: 'Add User  successfully' ,status : 'ok'});
             }
             else {
                 //res.send("Values Emp inserted");
-                res.send(result);
+                res.json({ message: 'Add User  successfully' ,status : 'ok',result});
+               // res.send(result);
                // console.log(result);
-            }
+            }  
         }
     );
     console.log('Insert Emp success');
@@ -210,7 +376,8 @@ app.put('/employee/edit/:employeeID', (req, res) => {
             }
             else {
                // res.send("Values Updated");
-                res.send(result);
+               res.json({ message: 'Update User  successfully' ,status : 'ok',result});
+                //res.send(result);
             }
         })
     console.log('Update emp2 success');
@@ -224,10 +391,12 @@ app.get('/getemployee/:employeeID', (req, res) => {
             console.log(err);
         }
         else {
-            res.send(result);
+           res.send(result);
+          // res.json({ message: ' User  ' ,status : 'ok',result});
+           // res.json(result);
         }
     })
-    console.log('Yes');
+    console.log('edit page');
 })
 
 // deleate empoyee  
@@ -255,7 +424,7 @@ app.get('/employee/detail/:Employeeid', (req, res) => {
             res.send(result);
         }
     })
-    // console.log('De Emp success');
+     console.log('Detail Emp');
     // console.log(res.data);
 })
 
@@ -305,6 +474,21 @@ app.get('/department/detail/:DepartmentID', (req, res) => {
             res.send(result);
         }
     })
+})
+//get department  for edit department
+app.get('/getdepartment/:departmentID', (req, res) => {
+    const departmentID = req.params.departmentID;
+    db.query("SELECT * FROM  department WHERE DepartmentID = ? ;", [departmentID], (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+           res.send(result);
+          // res.json({ message: ' User  ' ,status : 'ok',result});
+           // res.json(result);
+        }
+    })
+    //console.log('edit page');
 })
 // deleate department  
 app.delete('/deletedepartment/:DepartmentID', (req, res) => {
@@ -547,47 +731,4 @@ app.get('/checkout', (req, res) => {
 app.listen('5000', () => {
     console.log('Server is runing o n port 5000');
 })
-
-
-// export.csv
-const excelJS = require('exceljs');
-//const exceljs = excelJS();
-//exceljs.get("/export-Empolyee")
-
-const exportEmp = async (req, res) => {
-    try {
-        const workbook = new excelJS.Workbook();
-        const worksheet = workbook.addWorksheet("My Employees");
-
-        worksheet.columns = [
-            { header: "EmployeeID", key: "employeeid" },
-            { header: "TitleName", key: "titlename" },
-            { header: "FirstName", key: "firstName" },
-            { header: "LastName", key: "lastName" },
-            { header: "PhoneNumber", key: "phonenumber" },
-            { header: "Email", key: "email" },
-            { header: "DepartmentName", key: "department" },
-            { header: "RoleName", key: "role" },
-            { header: "CreateDate", key: "createdate" },
-            { header: "CreateBy", key: "createby" },
-            { header: "UpdateDate", key: "updatedate" },
-            { header: "UpdateBy", key: "updateby" }
-        ];
-        res.setHeader(
-            "Content-Type",
-            "application/vnd.openxmlfomats-officedocument.spreadsheatml.sheet"
-        );
-        res.setHeader(
-            "Content-Disposition", `attachment; filename=Emp.csv`
-        );
-        return workbook.csv.write(res).then(() => {
-            res.status(200);
-        });
-    } catch (error) {
-        console.log(error.message);
-    }
-}
-//----------------------------------
-
-
 

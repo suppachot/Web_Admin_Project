@@ -2,6 +2,7 @@ import DataTable from 'react-data-table-component';
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
+import { Box } from '@mui/material';
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -29,7 +30,7 @@ function AddTitle() {
   const [titleList, settitleList] = useState([]);
   const getTitle = () => {
     Axios.get('http://localhost:5000/title').then((response) => {
-        settitleList(response.data);
+      settitleList(response.data);
     });
   }
 
@@ -43,18 +44,18 @@ function AddTitle() {
       CreateBy: CreateBy,
       UpdateDate: UpdateDate,
       UpdateBy: UpdateBy
-      }).then(() => {
-        settitleList([
-          ...titleList,
-          {
-            TitleID: TitleID,
-            TitleName: TitleName,
-            CreateDate: CreateDate,
-            CreateBy: CreateBy,
-            UpdateDate: UpdateDate,
-            UpdateBy: UpdateBy
-          }
-        ])
+    }).then(() => {
+      settitleList([
+        ...titleList,
+        {
+          TitleID: TitleID,
+          TitleName: TitleName,
+          CreateDate: CreateDate,
+          CreateBy: CreateBy,
+          UpdateDate: UpdateDate,
+          UpdateBy: UpdateBy
+        }
+      ])
     }).then((res) => {
       alert('Saved successfully.')
       navigate('/title');
@@ -88,16 +89,22 @@ function AddTitle() {
                   <div className="col-lg-12">
                     <div className="form-group">
                       <label>TitleName</label>
-                      <input required value={TitleName}
-                        type="text"
+                      <select
+                        placeholder="select title"
                         id='TitleName'
+                        value={TitleName}
                         onChange={e => setTitleName(e.target.value)}
-                        className="form-control">
-                      </input>
+                        className="form-select"
+                      >
+                        <option value="" selected>select Title</option>
+                        <option value="นาย">นาย</option>
+                        <option value="นาง">นาง</option>
+                        <option value="นางสาว">นางสาว</option>
+                      </select>
                     </div>
                   </div>
 
-                    <div className="col-lg-12">
+                  <div className="col-lg-12">
                     <div className="form-group">
                       <label>CreateDate</label>
                       <input value={CreateDate} type="datetime-local"
@@ -142,13 +149,18 @@ function AddTitle() {
                     </div>
                   </div>
 
-                  <div className="col-lg-12">
-                    <div className="form-group ">
-                      <br></br>
-                      <Link to="/title" className="btn btn-danger">Back</Link>
-                      <button className="btn btn-success" type="submit">Save</button>
-                    </div>
-                  </div>
+                  <Box display="flex">
+                    <Box sx={{ flexGrow: 4 }}>
+                      <div className="card-body col-lg-4" >
+                        <Link to="/title" className="btn btn-danger">Back</Link>
+                      </div>
+                    </Box>
+                    <Box>
+                      <div className="card-body col-lg-4" >
+                        <button className="btn btn-success" type="submit">Save</button>
+                      </div>
+                    </Box>
+                  </Box>
                 </div>
               </div>
             </div>

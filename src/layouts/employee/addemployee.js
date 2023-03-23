@@ -5,6 +5,7 @@ import Card from "@mui/material/Card";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
+import Box from "@mui/material/Box";
 import MDTypography from "components/MDTypography";
 
 // Material Dashboard 2 React example components
@@ -114,17 +115,16 @@ function AddEmployee() {
 
     fetch("http://localhost:5000/employee/add", requestOptions)
       .then(response => response.json())
-      .then(result =>{ 
-        alert('Saved successfully.')
-        navigate('/employee'); 
-      })
       // .then(result =>{ 
       //   alert('Saved successfully.')
-      //   if(result['protocol41'] === 'true'){
-      //     window.location.href ='/employee'
-      //    // navigate('/employee'); 
-      //   }
+      //   navigate('/employee'); 
       // })
+      .then(result => {
+        alert('Saved successfully.')
+        if (result['status'] === 'ok') {
+          navigate('/employee');
+        }
+      })
       .catch(error => console.log('error', error));
   }
 
@@ -133,7 +133,7 @@ function AddEmployee() {
       <DashboardNavbar />
       <div className="row">
         <div className="offset-lg-3 col-lg-6">
-          
+
           <form className="container" onSubmit={handlesubmit}>
             <div className="card" style={{ "textAlign": "left" }}>
               <div className="card-body">
@@ -161,7 +161,7 @@ function AddEmployee() {
                         onChange={e => setTitleName(e.target.value)}
                         className="form-select"
                       >
-                        <option value=""></option>
+                        <option value="" selected>select Title</option>
                         <option value="นาย">นาย</option>
                         <option value="นาง">นาง</option>
                         <option value="นางสาว">นางสาว</option>
@@ -231,7 +231,7 @@ function AddEmployee() {
                         onChange={e => setDepartmentName(e.target.value)}
                         className="form-select"
                       >
-                        <option value="" placeholder="select Department"></option>
+                        <option value=" " placeholder="select Department" selected>select Department</option>
                         <option value="ฝ่ายบุคคล">ฝ่ายบุคคล</option>
                         <option value="ฝ่ายบัญชี">ฝ่ายบัญชี</option>
                         <option value="พนักงานทั่วไป">พนักงานทั่วไป</option>
@@ -255,7 +255,7 @@ function AddEmployee() {
                         onChange={e => setRoleName(e.target.value)}
                         className="form-select"
                       >
-                        <option selected>select Role</option>
+                        <option value=" " placeholder="select Role" selected>select Role</option>
                         <option value="Administrator">Administrator</option>
                         <option value="Employee">Employee</option>
                       </select>
@@ -313,13 +313,19 @@ function AddEmployee() {
                     </div>
                   </div>
 
-                  <div className="col-lg-12">
-                    <div className="form-group ">
-                      <br></br>
-                      <Link to="/employee" className="btn btn-danger">Back</Link>
-                      <button className="btn btn-success" type="submit">Save</button>
-                    </div>
-                  </div>
+                  <Box display="flex">
+                    <Box sx={{ flexGrow: 4 }}>
+                      <div className="card-body col-lg-4" >
+                        <Link to="/employee" className="btn btn-danger">Back</Link>
+                      </div>
+                    </Box>
+                    <Box>
+                      <div className="card-body col-lg-4" >
+                        <button className="btn btn-success" type="submit">Save</button>
+                      </div>
+                    </Box>
+                  </Box>
+
                 </div>
               </div>
             </div>
