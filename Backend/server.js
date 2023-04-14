@@ -2,10 +2,7 @@ const express = require('express')
 const app = express();
 const mysql = require('mysql2');
 const cors = require('cors');
-
 const jwt = require('jsonwebtoken');
-const bodyParser = require('body-parser');
-const bcrypt = require('bcryptjs');
 
 // const multer = require("multer");
 // const csvParser = require("csv-parser");
@@ -16,8 +13,7 @@ const bcrypt = require('bcryptjs');
 
 app.use(cors());
 app.use(express.json());
-//app.use(bodyParser.json());
-//app.use(bodyParser.urlencoded({ extended: true }));
+
 
 const db = mysql.createConnection({
     host: "localhost",
@@ -36,119 +32,98 @@ db.connect((err) => {
 });
 
 
-//------------------------
-// app.post('/login/', (req, res) => {
-//     const EmployeeID = req.body.EmployeeID;
-//     const Pincode = req.body.Pincode;
+//login
+// app.post('/api/login', async (req, res) => {
+//     const { employeeID, pincode } = req.body;
 
-//     db.query("SELECT * FROM account WHERE  EmployeeID= ? AND Pincode= ?",[EmployeeID, Pincode],
-//         (err, result) => {
-//             if (err) {
-//                req.setEncoding({err:err});
-//             }
-//             else {
-//                 if(result.length > 0){
-//                     res.send(result);
-//                 }else{
-//                     res.send({message: "Wrong EmploeeId or Pincode"});
-//                 }
-//             }
-//         }
-//     );
-//     console.log('login success');
-// })
-
-// app.post('/login', (req, res) => {
-//     const { EmployeeID, Password } = req.body;
-//     db.query('SELECT * FROM account WHERE EmployeeID = ? ', [EmployeeID], (error, results) => {
-//       if (error) {
-//         res.status(500).send({ error: 'An error occurred' });
-//         return;
-//       }
-//       if (results.length === 0 || results[0].password !== password) {
-//         res.status(401).send({ error: 'Invalid username or password' });
-//         return;
-//       }
-//       const token = jwt.sign({ userId: results[0].id }, 'your-secret-key');
-//       res.send({ token });
-//     });
-//   });
-
-//   app.post('/login1', (req, res) => {
-//     const { EmployeeID, Password } = req.body;
-
-//     const sql = 'SELECT * FROM account WHERE EmployeeID = ? AND Password = ?';
-//     db.query(sql, [EmployeeID,Password], (err, result) => {
+//     const query = 'SELECT * FROM account LEFT JOIN employee ON account.EmployeeID = employee.EmployeeID WHERE account.EmployeeID = ? AND employee.RoleName = "Administrator" ';
+//     db.query(query, [employeeID], (err, results) => {
 //         if (err) {
-//             res.status(400).send({ error: err.message });
-//         } else if (result.length === 0) {
-//             res.status(401).send({ error: 'Invalid username or password' });
-//         } else {
-//             const user = result[0];
-//             if (bcrypt.compareSync(Password, user.Password)) {
-//                 const token = jwt.sign({ EmployeeID: user.EmployeeID }, 'secret-key');
-//                 res.status(200).send({ token });
-//             } else {
-//                 res.status(401).send({ error: 'Invalid username or password' });
-//             }
+//             console.error(err);
+//             return res.status(500).json({ error: 'Internal server error' });
 //         }
+
+//         if (results.length === 0) {
+//             return res.status(401).json({ error: 'Invalid EmployeeID or Pincode' });
+//         }
+
+//         const account = results[0];
+//         //const employee = results[0];
+//         if (account.Pincode !== pincode) {
+//             return res.status(401).json({ error: 'Invalid EmployeeID or Pincode' });
+//         }
+
+//        const token = jwt.sign({ id: account.AccountID }, 'your_jwt_secret', { expiresIn: '5h' });
+//        res.json({ token });
+//        //---ไม่เอา
+//         //const token = jwt.sign({ id: account.AccountID , role: account.RoleName} ,process.env.JWT_SECRET, { expiresIn: '1h' });
+//         // const token = jwt.sign({ id: AccountId, employeeId: EmployeeId }, process.env.JWT_SECRET, { expiresIn }); 
 //     });
 // });
 
-// app.post('/login2', (req, res) => {
-//     const { EmployeeID, Password } = req.body;
-//     db.query(
-//       'SELECT * FROM account WHERE EmployeeID = ? AND Password = ?',
-//       [EmployeeID, Password],
-//       (error, results, fields) => {
-//         if (error) {
-//           console.error(error);
-//           res.status(500).send('Error logging in');
-//         } else if (results.length > 0) {
-//           const token = jwt.sign({ EmployeeID }, 'secret');
-//           res.send({ token });
-//         } else {
-//           res.status(401).send('Invalid login credentials');
-//         }
-//       }
-//     );
-//   });
+app.post('/api/login', async (req, res) => {
+    const { employeeID, pincode } = req.body;
 
-  app.post('/api1/login', (req, res) => {
-    const { EmployeeID, Pincode } = req.body;
-    db.query(
-      'SELECT * FROM account WHERE EmployeeID = ? AND Pincode = ?',
-      [EmployeeID, Pincode],
-      (err, results) => {
-        if (err) throw err;
-        if (results.length > 0) {
-          res.json({ login: true });
-        } else {
-          res.json({ login: false });
+    //const query = 'SELECT * FROM account LEFT JOIN employee ON account.EmployeeID = employee.EmployeeID WHERE account.EmployeeID = ? AND employee.RoleName = "Administrator"';
+    const query = 'SELECT * FROM account LEFT JOIN employee ON account.EmployeeID = employee.EmployeeID WHERE account.EmployeeID = ?';
+    db.query(query, [employeeID], (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal server error' });
         }
-      }
-    );
-  });
 
-app.post('/api/login', (req, res) => {
-    const { username, password } = req.body;
-    db.query(
-      'SELECT * FROM user WHERE username = ? AND password = ?',
-      [username, password],
-      (err, results) => {
-        if (err) throw err;
-        if (results.length > 0) {
-          res.json({ success: true });
-        } else {
-          res.json({ success: false });
+        if (results.length === 0) {
+            return res.status(401).json({ error: 'Invalid EmployeeID or Pincode' });
         }
-      }
-    );
-  });
+
+        const account = results[0];
+        if (account.Pincode !== pincode) {
+            return res.status(401).json({ error: 'Invalid EmployeeID or Pincode' });
+        }
+
+        const payload = {
+            id: account.AccountID,
+            emp: account.EmployeeID,
+            firstName: account.FirstName,
+            lastName: account.LastName,
+        };
+        const token = jwt.sign(payload, 'your_jwt_secret', { expiresIn: '5h' });
+        res.json({
+            token,
+            emp: account.EmployeeID,
+            firstName: account.FirstName,
+            lastName: account.LastName,
+        });
+    });
+});
 
 
 
+// show profile user
+app.get('/employee-id', async (req, res) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
 
+    if (!token) {
+        return res.status(401).json({ error: 'Missing token' });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        const query = 'SELECT EmployeeID FROM account WHERE AccountID = ?';
+        const [rows] = await pool.execute(query, [decoded.id]);
+
+        if (!rows.length) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const employeeId = rows[0].EmployeeID;
+        res.json({ employeeId });
+    } catch (err) {
+        res.status(403).json({ error: 'Invalid token' });
+    }
+});
 
 // count admin
 app.get('/employee/admin_count', (req, res) => {
@@ -185,41 +160,63 @@ app.get('/account/user_app', (req, res) => {
 })
 
 // ------------dashboard-----------//
-app.get('/api/dashboard/check-in', async (req, res) => {
-    const conn = await pool.getConnection();
-    const [rows] = await conn.query('SELECT DATE(NOW()) AS date, COUNT(`EmployeeID`) AS checkin FROM checkin WHERE date(`CheckInDate`)=curdate();');
-    conn.release();
-    res.json(rows);
-  });
-
 
 app.get('/dashboard/check-in', (req, res) => {
-   const query = 'SELECT DATE(NOW()) AS date, COUNT(`EmployeeID`) AS checkin FROM checkin WHERE date(`CheckInDate`)=curdate();';
-   // const query = 'SELECT `EmployeeID`,`TransactionID` FROM `checkin`;';
-    db.query(query, (error, results) => {
-      if (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error querying database' });
-      } else {
-        res.json(results);
-      }
-    });
-  });
+    db.query(`SELECT DATE(NOW()) AS date, 
+                COUNT(DISTINCT checkin.EmployeeID) AS เข้างานแล้ว,
+                (SELECT COUNT(*) FROM employee WHERE RoleName = 'Employee') - COUNT(DISTINCT checkin.EmployeeID) AS ยังไม่เข้างาน 
+                FROM employee 
+                LEFT JOIN checkin ON employee.EmployeeID = checkin.EmployeeID 
+                WHERE employee.RoleName = 'Employee' 
+                AND DATE(checkin.CheckInDate) = CURDATE(); `,
+        (err, result) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).send('Internal Server Error');
+            }
+            else {
+                res.json([
+                    {
+                        status: 'เข้างานแล้ว',
+                        attendance: result[0].เข้างานแล้ว
+                    }
+                    , {
+                        status: 'ยังไม่เข้างาน',
+                        attendance: result[0].ยังไม่เข้างาน
+                    }
+                ]);
+            }
+        });
+});
 
 app.get('/dashboard/check-out', (req, res) => {
-    db.query("SELECT DATE(NOW()) AS date, COUNT(`EmployeeID`) AS checkout FROM checkout WHERE date(`CheckOutDate`)=curdate();", (err, result) => {
-        if (err) {
-            console.log(err);
-        }
-        else {
-            res.send(result);
-        }
-    })
-    //console.log('dashboard check-out');
-})
+    db.query(`SELECT DATE(NOW()) AS date, 
+                COUNT(DISTINCT checkout.EmployeeID) AS ออกงานแล้ว,
+                (SELECT COUNT(*) FROM employee WHERE RoleName = 'Employee') - COUNT(DISTINCT checkout.EmployeeID) AS ยังไม่ออกงาน 
+                FROM employee 
+                LEFT JOIN checkout ON employee.EmployeeID = checkout.EmployeeID 
+                WHERE employee.RoleName = 'Employee' 
+                AND DATE(checkout.CheckOutDate) = CURDATE(); `,
+        (err, result) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).send('Internal Server Error');
+            }
+            else {
+                res.json([
+                    {
+                        status: 'ออกงานแล้ว',
+                        attendance: result[0].ออกงานแล้ว
+                    }
+                    , {
+                        status: 'ยังไม่ออกงาน',
+                        attendance: result[0].ยังไม่ออกงาน
+                    }
+                ]);
+            }
+        });
+});
 
-
-// ----------------------//
 
 //title db
 app.get('/title', (req, res) => {
@@ -248,7 +245,8 @@ app.post('/title/add', (req, res) => {
                 console.log(err);
             }
             else {
-                res.send("Values Title inserted");
+                res.json({ message: 'Add Title  successfully', status: 'ok', result });
+                //res.send("Values Title inserted");
             }
         }
     );
@@ -280,6 +278,46 @@ app.delete('/deletetitle/:TitleID', (req, res) => {
     })
     console.log('Delete Title success');
 })
+
+//get title  for edit title
+app.get('/gettitle/:titleID', (req, res) => {
+    const titleID = req.params.titleID;
+    db.query("SELECT * FROM  title WHERE TitleID = ? ;", [titleID], (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.send(result);
+            // res.json({ message: ' User  ' ,status : 'ok',result});
+        }
+    })
+    //console.log('edit page');
+})
+
+//Update title
+app.put('/title/edit/:titleID', (req, res) => {
+    const titleID = req.params.titleID;
+    //const TitleID = req.body.TitleID;
+    const TitleName = req.body.TitleName;
+    const CreateDate = req.body.CreateDate;
+    const CreateBy = req.body.CreateBy;
+    const UpdateDate = req.body.UpdateDate;
+    const UpdateBy = req.body.UpdateBy;
+
+    db.query("UPDATE title SET  TitleName = ?  ,CreateDate = ? ,CreateBy = ?,UpdateDate = ?,UpdateBy = ?  WHERE TitleID = ? ",
+        [TitleName, CreateDate, CreateBy, UpdateDate, UpdateBy, titleID], (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                // res.send("Values Updated");
+                //res.json({ message: 'Update User  successfully', status: 'ok', result });
+                res.send(result);
+            }
+        })
+    console.log('Update title success');
+})
+
 //employee db
 app.get('/employee', (req, res) => {
     db.query("SELECT * FROM  employee ORDER BY `EmployeeID` ASC ;", (err, result) => {
@@ -306,19 +344,19 @@ app.get('/employee/:firstname', (req, res) => {
 //import file Emp ( 23-3-66)
 app.post("/api/import", (req, res) => {
     const data = req.body;
-  
-    const query = "INSERT INTO employee (EmployeeID, TitleName, FirstName , LastName, PhoneNumber, Email, DepartmentName, RoleName,CreateDate,CreateBy,UpdateDate,UpdateBy) VALUES ?";
-    const values = data.map((row) => [row.EmployeeID, row.TitleName, row.FirstName,row.LastName,row.PhoneNumber,row.Email,row.DepartmentName,row.RoleName,row.CreateDate,row.CreateBy,row.UpdateDate,row.UpdateBy]);
-  
+
+    const query = "INSERT INTO employee (EmployeeID, TitleName, FirstName , LastName, PhoneNumber, Email, DepartmentName, RoleName,CreateDate,CreateBy,UpdateDate,UpdateBy) VALUES ? ";
+    const values = data.map((row) => [row.EmployeeID, row.TitleName, row.FirstName, row.LastName, row.PhoneNumber, row.Email, row.DepartmentName, row.RoleName, row.CreateDate, row.CreateBy, row.UpdateDate, row.UpdateBy]);
+
     db.query(query, [values], (err) => {
-      if (err) {
-        res.status(500).json({ error: err.message });
-      } else {
-        res.status(200).json({status:'ok', message: "Data imported successfully!" });
-      }
+        if (err) {
+            res.status(500).json({ error: err.message });
+        } else {
+            res.status(200).json({ status: 'ok', message: "Data imported successfully!" });
+        }
     });
     console.log('import File csv_Emp');
-  });
+});
 
 // create Emp
 app.post('/employee/add', (req, res) => {
@@ -338,16 +376,16 @@ app.post('/employee/add', (req, res) => {
     db.query("INSERT INTO employee (EmployeeID, TitleName, FirstName , LastName, PhoneNumber, Email, DepartmentName, RoleName,CreateDate,CreateBy,UpdateDate,UpdateBy) VALUES(?,?,?,?,?,?,?,?,?,?,?,?);",
         [EmployeeID, TitleName, FirstName, LastName, PhoneNumber, Email, DepartmentName, RoleName, CreateDate, CreateBy, UpdateDate, UpdateBy],
         (err, result) => {
-            if (err)  {
+            if (err) {
                 console.log(err);
-               // res.status(201).json({ message: 'Add User  successfully' ,status : 'ok'});
+                // res.status(201).json({ message: 'Add User  successfully' ,status : 'ok'});
             }
             else {
                 //res.send("Values Emp inserted");
-                res.json({ message: 'Add User  successfully' ,status : 'ok',result});
-               // res.send(result);
-               // console.log(result);
-            }  
+                res.json({ message: 'Add User  successfully', status: 'ok', result });
+                // res.send(result);
+                // console.log(result);
+            }
         }
     );
     console.log('Insert Emp success');
@@ -356,7 +394,7 @@ app.post('/employee/add', (req, res) => {
 //Update employe
 app.put('/employee/edit/:employeeID', (req, res) => {
     const employeeID = req.params.employeeID;
-    const EmployeeID = req.body.EmployeeID;
+    //const EmployeeID = req.body.EmployeeID;
     const TitleName = req.body.TitleName;
     const FirstName = req.body.FirstName;
     const LastName = req.body.LastName;
@@ -370,17 +408,17 @@ app.put('/employee/edit/:employeeID', (req, res) => {
     const UpdateBy = req.body.UpdateBy;
 
     db.query("UPDATE employee SET TitleName=? , FirstName = ? , LastName = ? , PhoneNumber = ? , Email = ? , DepartmentName = ? , RoleName = ? ,CreateDate = ? ,CreateBy = ?,UpdateDate = ?,UpdateBy = ?  WHERE EmployeeID = ?",
-        [TitleName, FirstName, LastName, PhoneNumber, Email, DepartmentName, RoleName,CreateDate,CreateBy,UpdateDate,UpdateBy,employeeID], (err, result) => {
+        [TitleName, FirstName, LastName, PhoneNumber, Email, DepartmentName, RoleName, CreateDate, CreateBy, UpdateDate, UpdateBy, employeeID], (err, result) => {
             if (err) {
                 console.log(err);
             }
             else {
-               // res.send("Values Updated");
-               res.json({ message: 'Update User  successfully' ,status : 'ok',result});
-                //res.send(result);
+                // res.send("Values Updated");
+                //res.json({ message: 'Update User  successfully', status: 'ok', result });
+                res.send(result);
             }
         })
-    console.log('Update emp2 success');
+    console.log('Update  success');
 })
 
 //get Employee for edit employee
@@ -391,9 +429,9 @@ app.get('/getemployee/:employeeID', (req, res) => {
             console.log(err);
         }
         else {
-           res.send(result);
-          // res.json({ message: ' User  ' ,status : 'ok',result});
-           // res.json(result);
+            res.send(result);
+            // res.json({ message: ' User  ' ,status : 'ok',result});
+            // res.json(result);
         }
     })
     console.log('edit page');
@@ -402,7 +440,7 @@ app.get('/getemployee/:employeeID', (req, res) => {
 // deleate empoyee  
 app.delete('/deleteemployee/:EmployeID', (req, res) => {
     const EmployeID = req.params.EmployeID;
-    db.query("DELETE FROM employee WHERE EmployeeID = ?", EmployeID, (err, result) => {
+    db.query("DELETE FROM employee WHERE EmployeeID = ? ", EmployeID, (err, result) => {
         if (err) {
             console.log(err);
         }
@@ -424,7 +462,7 @@ app.get('/employee/detail/:Employeeid', (req, res) => {
             res.send(result);
         }
     })
-     console.log('Detail Emp');
+    console.log('Detail Emp');
     // console.log(res.data);
 })
 
@@ -436,7 +474,7 @@ app.get('/department', (req, res) => {
             console.log(err);
         }
         else {
-            res.send(result); 
+            res.send(result);
         }
     })
 })
@@ -462,7 +500,29 @@ app.post('/department/add', (req, res) => {
     );
     console.log('Insert Department success');
 })
+//Update dapartment
+app.put('/dapartment/edit/:departmentID', (req, res) => {
+    const departmentID = req.params.departmentID;
+    //const EmployeeID = req.body.EmployeeID;
+    const DepartmentName = req.body.DepartmentName;
+    const CreateDate = req.body.CreateDate;
+    const CreateBy = req.body.CreateBy;
+    const UpdateDate = req.body.UpdateDate;
+    const UpdateBy = req.body.UpdateBy;
 
+    db.query("UPDATE department SET  DepartmentName = ?  ,CreateDate = ? ,CreateBy = ?,UpdateDate = ?,UpdateBy = ?  WHERE DepartmentID = ?",
+        [DepartmentName, CreateDate, CreateBy, UpdateDate, UpdateBy, departmentID], (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                // res.send("Values Updated");
+                //res.json({ message: 'Update User  successfully', status: 'ok', result });
+                res.send(result);
+            }
+        })
+    console.log('Update  success');
+})
 //details department
 app.get('/department/detail/:DepartmentID', (req, res) => {
     const DepartmentID = req.params.DepartmentID;
@@ -483,9 +543,9 @@ app.get('/getdepartment/:departmentID', (req, res) => {
             console.log(err);
         }
         else {
-           res.send(result);
-          // res.json({ message: ' User  ' ,status : 'ok',result});
-           // res.json(result);
+            res.send(result);
+            // res.json({ message: ' User  ' ,status : 'ok',result});
+            // res.json(result);
         }
     })
     //console.log('edit page');
@@ -563,9 +623,49 @@ app.delete('/deleterole/:RoleID', (req, res) => {
     })
     console.log('Delete role success');
 })
-//meeting_approve
-app.get('/meeting_approve', (req, res) => {
-    db.query("SELECT * FROM  meeting_approve", (err, result) => {
+//get role for edit role
+app.get('/getrole/:roleID', (req, res) => {
+    const roleID = req.params.roleID;
+    db.query("SELECT * FROM  role WHERE RoleID = ? ;", [roleID], (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.send(result);
+            //res.json({ message: ' User  ' ,status : 'ok',result});
+            //res.json(result);
+
+        }
+    })
+    console.log('edit role page');
+
+})
+//Update role
+app.put('/role/edit/:roleID', (req, res) => {
+    const roleID = req.params.roleID;
+    const RoleName = req.body.RoleName;
+    const CreateDate = req.body.CreateDate;
+    const CreateBy = req.body.CreateBy;
+    const UpdateDate = req.body.UpdateDate;
+    const UpdateBy = req.body.UpdateBy;
+
+    db.query("UPDATE role SET  RoleName = ? ,CreateDate = ? ,CreateBy = ?,UpdateDate = ?,UpdateBy = ?  WHERE RoleID = ? ",
+        [RoleName, CreateDate, CreateBy, UpdateDate, UpdateBy, roleID], (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                // res.send("Values Updated");
+                //res.json({ message: 'Update User  successfully', status: 'ok', result });
+                res.send(result);
+            }
+        })
+    console.log('Update  success');
+})
+
+//meetinroom
+app.get('/meetingroom', (req, res) => {
+    db.query("SELECT * FROM  meetingroom", (err, result) => {
         if (err) {
             console.log(err);
         }
@@ -574,7 +674,115 @@ app.get('/meeting_approve', (req, res) => {
         }
     })
 })
+//addmeetinroom
+app.post('/meetingroom/add', (req, res) => {
+    const RoomID = req.body.RoomID;
+    const RoomName = req.body.RoomName;
+    const Capacity = req.body.Capacity;
+    const CreateDate = req.body.CreateDate;
+    const CreateBy = req.body.CreateBy;
+    const UpdateDate = req.body.UpdateDate;
+    const UpdateBy = req.body.UpdateBy;
+    db.query("INSERT INTO meetingroom(RoomID, RoomName, Capacity, CreateDate, CreateBy, UpdateDate, UpdateBy) VALUES(?,?,?,?,?,?,?);",
+        [RoomID, RoomName, Capacity, CreateDate, CreateBy, UpdateDate, UpdateBy],
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                res.send("Values Meetingroom inserted");
+            }
+        }
+    );
+    console.log('Insert Meetingroom success');
+})
+//Update Meetingroom
+app.put('/meetingroom/edit/:roomID', (req, res) => {
+    const roomID = req.params.roomID;
+    const RoomName = req.body.RoomName;
+    const Capacity = req.body.Capacity;
+    const CreateDate = req.body.CreateDate;
+    const CreateBy = req.body.CreateBy;
+    const UpdateDate = req.body.UpdateDate;
+    const UpdateBy = req.body.UpdateBy;
 
+    db.query("UPDATE meetingroom SET  RoomName = ? , Capacity = ? ,CreateDate = ? ,CreateBy = ?,UpdateDate = ?,UpdateBy = ?  WHERE RoomID = ?",
+        [RoomName, Capacity, CreateDate, CreateBy, UpdateDate, UpdateBy, roomID], (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                // res.send("Values Updated");
+                //res.json({ message: 'Update User  successfully', status: 'ok', result });
+                res.send(result);
+            }
+        })
+    console.log('Update emp2 success');
+})
+
+//get meetingroom for edit meetingroom
+app.get('/getmeetingroom/:roomID', (req, res) => {
+    const roomID = req.params.roomID;
+    db.query("SELECT * FROM  meetingroom WHERE RoomID = ? ;", [roomID], (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.send(result);
+            // res.json({ message: ' User  ' ,status : 'ok',result});
+            // res.json(result);
+        }
+    })
+    console.log('edit meeting page');
+})
+
+//deleate meeting
+app.delete('/deletemeetingroom/:RoomID', (req, res) => {
+    const RoomID = req.params.RoomID;
+    db.query("DELETE FROM meetingroom WHERE RoomID = ?", RoomID, (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.send(result);
+        }
+    })
+    console.log('Delete Room success');
+})
+//bookingApprove
+app.get('/bookingmeeting', (req, res) => {
+    db.query(`SELECT *
+    FROM booking_approve b
+    JOIN employee e ON b.EmployeeID = e.EmployeeID
+    JOIN meetingroom m ON b.RoomID = m.RoomID;`,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                res.send(result);
+            }
+        })
+})
+app.put("/booking/edit/:bookingID", (req, res) => {
+    const bookingID = req.params.bookingID;
+    const Status = req.body.Status;
+    const Attendant = req.body.Attendant;
+    const DateApprove = req.body.DateApprove;
+    db.query("UPDATE booking_approve SET Status = ? , Attendant= ?, DateApprove= ? WHERE BookingID =? ;",
+   //-----------------------------
+    // const Attendant = req.body.Attendant;
+    // db.query("UPDATE booking_approve SET  Attendant= ? WHERE BookingID =? ",
+        [Status,Attendant,DateApprove,bookingID], (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                res.send("Values Updated");
+            }
+        })
+    console.log('Update news success');
+})
 //news 
 app.get('/news', (req, res) => {
     db.query("SELECT * FROM  news", (err, result) => {
@@ -622,10 +830,10 @@ app.post('/createnews', (req, res) => {
     );
     console.log('Insert success');
 })
-//edit details news
-app.get('/news/editdetail/:NewsNo', (req, res) => {
-    const NewsNo = req.params.NewsNo;
-    db.query("SELECT * FROM  news WHERE NewsNo = ? ;", [NewsNo], (err, result) => {
+//get  news for edit
+app.get('/getnews/:newsNo', (req, res) => {
+    const newsNo = req.params.newsNo;
+    db.query("SELECT * FROM  news WHERE NewsNo = ? ;", [newsNo], (err, result) => {
         if (err) {
             console.log(err);
         }
@@ -660,7 +868,7 @@ app.delete('/deletenews/:NewsNo', (req, res) => {
 //         }
 //     })
 // })
-app.put("/news/edit2/:newsNo", (req, res) => {
+app.put("/news/edit/:newsNo", (req, res) => {
     const newsNo = req.params.newsNo;
     const NewsDate = req.body.NewsDate;
     const TopicNews = req.body.TopicNews;
@@ -670,15 +878,15 @@ app.put("/news/edit2/:newsNo", (req, res) => {
     const UpdateBy = req.body.UpdateBy;
 
     db.query("UPDATE news SET  NewsDate = ? , TopicNews = ?, NewsDetail = ?  ,CreateBy =? , UpdateDate = ? , UpdateBy = ? WHERE NewsNo = ?",
-    [NewsDate, TopicNews, NewsDetail, CreateBy, UpdateDate, UpdateBy, newsNo], (err, result) => {
-        if (err) {
-            console.log(err);
-        }
-        else {
-            res.send("Values Updated");
-        }
-    })
-console.log('Update news success');
+        [NewsDate, TopicNews, NewsDetail, CreateBy, UpdateDate, UpdateBy, newsNo], (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                res.send("Values Updated");
+            }
+        })
+    console.log('Update news success');
 
     // db.query("UPDATE news SET  NewsDate = ? , TopicNews = ? , NewsDetail = ? , CreateBy=? , UpdateDate = ? , UpdateBy = ? WHERE NewsNo = ?",
     //     [new_NewsDate, new_TopicNews, new_NewsDetail, CreateBy, new_UpdateDate,new_UpdateBy, NewsNo],(err, result) => {
@@ -707,18 +915,94 @@ app.get('/account', (req, res) => {
 
 //checkin db
 app.get('/checkin', (req, res) => {
-    db.query("SELECT * FROM  checkin", (err, result) => {
-        if (err) {
-            console.log(err);
-        }
-        else {
-            res.send(result);
-        }
-    })
+    db.query(`SELECT*
+    FROM employee e
+    INNER JOIN checkin c
+    ON e.EmployeeID = c.EmployeeID
+    WHERE CheckInDate >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH); `,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                res.send(result);
+            }
+        })
 })
+//get detail
+// app.get('/checkin/:TransactionID', (req, res) => {
+//     const TransactionID = req.params.TransactionID;
+//     db.query(`SELECT*
+//     FROM employee e
+//     INNER JOIN checkin c
+//     ON e.EmployeeID = c.EmployeeID
+//     WHERE CheckInDate >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND c.TransactionID =? ; `, [TransactionID],
+//         (err, result) => {
+//             if (err) {
+//                 console.log(err);
+//             }
+//             else {
+//                 res.send(result);
+//             }
+//         })
+// })
 //checkout
 app.get('/checkout', (req, res) => {
-    db.query("SELECT * FROM  checkout", (err, result) => {
+    db.query(`SELECT*
+    FROM employee e
+    INNER JOIN checkout c
+    ON e.EmployeeID = c.EmployeeID
+    WHERE CheckOutDate >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH); `,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                res.send(result);
+            }
+        })
+})
+
+//get detail
+// app.get('/checkout/:TransactionID', (req, res) => {
+//     const TransactionID = req.params.TransactionID;
+//     db.query(`SELECT*
+//     FROM employee e
+//     INNER JOIN checkout c
+//     ON e.EmployeeID = c.EmployeeID
+//     WHERE CheckOutDate >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) AND c.TransactionID =? ; `, [TransactionID],
+//         (err, result) => {
+//             if (err) {
+//                 console.log(err);
+//             }
+//             else {
+//                 res.send(result);
+//             }
+//         })
+// })
+//day by day
+app.get('/day/checkin', (req, res) => {
+    db.query(`SELECT *FROM employee e 
+    INNER JOIN checkin c ON e.EmployeeID = c.EmployeeID 
+    WHERE e.RoleName='Employee' AND date(c.CheckInDate)=curdate();`
+        , (err, result) => {
+            if (err) {
+                console.log(err);
+                res.status(500).send('Internal Server Error');
+            }
+            else {
+                res.send(result);
+            }
+        })
+})
+
+
+app.get('/day/checkout', (req, res) => {
+    db.query(`SELECT *FROM employee e 
+    INNER JOIN checkout c ON e.EmployeeID = c.EmployeeID 
+    WHERE e.RoleName='Employee' AND date(c.CheckOutDate)=curdate();
+    
+    `, (err, result) => {
         if (err) {
             console.log(err);
         }
@@ -727,7 +1011,6 @@ app.get('/checkout', (req, res) => {
         }
     })
 })
-
 app.listen('5000', () => {
     console.log('Server is runing o n port 5000');
 })
