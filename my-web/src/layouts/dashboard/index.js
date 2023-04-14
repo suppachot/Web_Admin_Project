@@ -1,4 +1,3 @@
-
 // @mui material components
 import Grid from "@mui/material/Grid";
 
@@ -13,11 +12,11 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
 import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
 import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
-import { PieChart, Pie, Cell, LabelList, Legend, ResponsiveContainer, Label } from 'recharts';
+import { PieChart, Pie, Cell, LabelList, Legend, ResponsiveContainer, Label, Tooltip } from 'recharts';
+
+
 
 // Data
-import reportsBarChartData from "layouts/dashboard/data/reportsBarChartData";
-import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
 import React, { Component } from 'react';
 import { style } from "@mui/system/Stack/createStack";
 import { useEffect, useState, useCallback } from "react";
@@ -28,6 +27,8 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import { Button } from "@mui/material";
 import link from './../../assets/theme/components/link';
+import jwtDecode from "jwt-decode";
+
 
 // rechart v.1 figData
 const dataFin = [
@@ -36,62 +37,43 @@ const dataFin = [
 
 ];
 const dataFout = [
-  { name: 'Group A', value: 0 },
-  { name: 'Group B', value: 100 }
+  { name: 'Group A', value: 20 },
+  { name: 'Group B', value: 80 }
 
 ];
 
 const COLORS = ["#00C49F", "#FF8042"];
 
 const RADIAN = Math.PI / 180;
-const renderCustomizedLabel = ({
-  cx,
-  cy,
-  midAngle,
-  innerRadius,
-  outerRadius,
-  percent,
-  index
-}: any) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
-  return (
-    <text
-      x={x}
-      y={y}
-      fill="white"
-      textAnchor={x > cx ? "start" : "end"}
-      dominantBaseline="central"
-    >
-      {`${(percent * 100).toFixed(0)}%`}
-    </text>
-  );
-};
-
-//api v.1
-// const renderCustomizedLabel1 = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+// const renderCustomizedLabel = ({
+//   cx,
+//   cy,
+//   midAngle,
+//   innerRadius,
+//   outerRadius,
+//   percent,
+//   index
+// }: any) => {
 //   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-//   const x = cx + radius * Math.cos(-midAngle * Math.PI / 180);
-//   const y = cy + radius * Math.sin(-midAngle * Math.PI / 180);
-
+//   const x = cx + radius * Math.cos(-midAngle * RADIAN);
+//   const y = cy + radius * Math.sin(-midAngle * RADIAN);
 //   return (
-//     <text x={x} y={y} fill="#fff" textAnchor="middle" dominantBaseline="central">
-//       {`${data1[index].label} (${(percent * 100).toFixed(0)}%)`}
+//     <text
+//       x={x}
+//       y={y}
+//       fill="white"
+//       textAnchor={x > cx ? "start" : "end"}
+//       dominantBaseline="central"
+//     >
+//       {`${(percent * 100).toFixed(0)}%`}
 //     </text>
 //   );
 // };
 
-
-
-
-
 function Dashboard() {
-  const { sales, tasks } = reportsLineChartData;
   const [count_admindata, count_adminchange] = useState(null);
   const [count_employeedata, count_employeechange] = useState(null);
   const [acountdata, acountdatachange] = useState(null);
-  const [data2, setData1] = useState([]);
   //------------Count---------------------------------------//
   useEffect(() => {
     fetch("http://localhost:5000/account/user_app").then((res) => {
@@ -122,18 +104,8 @@ function Dashboard() {
   }, [])
   //-----------------------------------------------------------------------//
   //-----------Dachboard--------------------------------------------------//
-  // useEffect(() => {
-  //   fetch("http://localhost:5000/dashboard/check-in").then((res) => {
-  //     return res.json();
-  //   }).then((resp) => {
-  //     setData1(resp);
-  //   }).catch((err) => {
-  //     console.log(err.message);
-  //   })
-  // }, [])
-
+  //dashboard check in
   const [data, setData] = useState([]);
-
   useEffect(() => {
     const fetchData = async () => {
       const result = await axios.get('http://localhost:5000/dashboard/check-in');
@@ -141,10 +113,46 @@ function Dashboard() {
     };
     fetchData();
   }, []);
+
+  const formatData = (item) => {
+    const formattedDate = new Date(item.date).toLocaleDateString('en-US');
+    return {
+      ...item,
+      date: formattedDate,
+    };
+  };
+  const formattedData = data.map(formatData);
+  //dashboard check out
+  const [data1, setData1] = useState([]);
+  useEffect(() => {
+    const fetchData1 = async () => {
+      const result1 = await axios.get('http://localhost:5000/dashboard/check-out');
+      setData1(result1.data);
+    };
+    fetchData1();
+  }, []);
+  //************************************ */
+  const token = localStorage.getItem("jwt");
+  const decodedToken = jwtDecode(token);
+  const { emp, firstName, lastName } = decodedToken;
+
+
   //----------------------------------------------------------------------//
   return (
     <DashboardLayout>
       <DashboardNavbar />
+
+      {/* <MDBox display="flex" alignItems="center" ml={1}>
+        <MDTypography variant="body2" fontWeight="bold" color="text">
+          EmployeeID: {emp}
+        </MDTypography>
+      </MDBox>
+      <MDBox display="flex" alignItems="center" ml={1}>
+        <MDTypography variant="body2" fontWeight="bold" color="text">
+          Name: {firstName} {lastName}
+        </MDTypography>
+      </MDBox> */}
+
       <MDBox py={3}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={4}>
@@ -154,12 +162,10 @@ function Dashboard() {
                   color="success"
                   icon="recent_actors"
                   title={
-                    <>
-                      <h1>จำนวนผู้ใช้ระบบ</h1>
-                    </>
+                    <h1>จำนวนผู้ใช้ระบบ</h1>
                   }
                   count={
-                    <h1>{val.Use_App}</h1>
+                    <h1>{val.Use_App.toString()}</h1>
                   }
                 />
               ))}
@@ -172,12 +178,10 @@ function Dashboard() {
                 <ComplexStatisticsCard
                   icon="supervisor_account"
                   title={
-                    <>
                       <h1>Employee</h1>
-                    </>
                   }
                   count={
-                    <h1>{val.Employee}</h1>
+                    <h1>{val.Employee.toString()}</h1>
                   }
                 />
               ))}
@@ -191,12 +195,10 @@ function Dashboard() {
                   color="primary"
                   icon="manage_accounts"
                   title={
-                    <>
                       <h1>Admin</h1>
-                    </>
                   }
                   count={
-                    <h1>{val.Admin}</h1>
+                    <h1>{val.Admin.toString()}</h1>
                   }
                 />
               ))}
@@ -211,22 +213,32 @@ function Dashboard() {
           <Grid container spacing={3}>
             <Grid item xs={12} md={8} lg={6}>
               <MDBox mb={5}>
-                {/* <ReportsBarChart
-                  chart={reportsBarChartData}
-                  color="info"
-                  title={
-                    <>
-                      <h1><center>เข้างาน</center></h1>
-                    </>
-                  }
-                  description={
-                    <>
-                      <center>ดูรายละเอียด</center>
-                    </>
-                  }
-                /> */}
+
                 <Paper>
                   <ResponsiveContainer width="100%" height={300}>
+                    <PieChart width={800} height={400}>
+                      <Pie
+                        data={data}
+                        //data={formattedData} 
+                        dataKey="attendance"
+                        nameKey="status"
+                        cx={350}
+                        cy={170}
+                        outerRadius={80}
+                        labelLine={false}
+                        fill="#8884d8"
+                        label
+                      >
+                        {
+                          data.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)
+                        }
+                      </Pie>
+                      <Tooltip />
+                      <Legend />
+                    </PieChart>
+                  </ResponsiveContainer>
+
+                  {/* <ResponsiveContainer width="100%" height={300}>
                     <PieChart width={1000} height={1000}>
                       <Pie
                         data={dataFin}
@@ -243,60 +255,46 @@ function Dashboard() {
                         ))}
                       </Pie>
                     </PieChart>
-                  </ResponsiveContainer>
+                  </ResponsiveContainer> */}
+
                   <Typography variant="h3" align="center">เข้างาน</Typography>
                   <div align={"center"}>
-                    <Button href="/checkin" color="secondary" size="medium" align='center' ><h5>ดูรายละเอียด</h5></Button>
+                    <Button href="/checkinday" color="secondary" size="medium" align='center' ><h5>ดูรายละเอียด</h5></Button>
                   </div>
                 </Paper>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={8} lg={6}>
               <MDBox mb={5}>
-                {/* <ReportsLineChart
-                  chart={sales}
-                  color="success"
-                  title={
-                    <>
-                      <h1><center>ออกงาน</center></h1>
-                    </>
-                  }
-                  description={
-                    <>
-                      <center>ดูรายละเอียด</center>
-                    </>
-                  }
-                /> */}
-                {/* <Paper sx={{ p: 25 }}> */}
                 <Paper >
 
                   <ResponsiveContainer width="100%" height={300} >
-                    <PieChart width={400} height={400}>
+                    <PieChart width={800} height={400}>
                       <Pie
-                        data={dataFout}
+                        data={data1}
+                        //data={formattedData} 
+                        dataKey="attendance"
+                        nameKey="status"
                         cx={350}
                         cy={170}
-                        labelLine={false}
-                        label={renderCustomizedLabel}
                         outerRadius={80}
+                        labelLine={false}
                         fill="#8884d8"
-                        dataKey="value"
-
-
+                        label
                       >
-                        {dataFout.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
+                        {
+                          data.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)
+                        }
                       </Pie>
+                      <Tooltip />
+                      <Legend />
                     </PieChart>
                   </ResponsiveContainer>
 
                   <Typography variant="h3" align="center">ออกงาน</Typography>
                   <div align={"center"}>
-                    <Button href="/checkout" color="secondary" size="medium" align='center' ><h5>ดูรายละเอียด</h5></Button>
+                    <Button href="/checkoutday" color="secondary" size="medium" align='center' ><h5>ดูรายละเอียด</h5></Button>
                   </div>
-
-                  {/* <Link to="/checkout" className="btn btn-success">ดูรายละเอียด</Link> */}
                 </Paper>
 
 

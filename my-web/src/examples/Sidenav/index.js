@@ -1,18 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 import { useEffect } from "react";
 
 // react-router-dom components
@@ -88,26 +73,34 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
     let returnValue;
 
     if (type === "collapse") {
-      returnValue = href ? (
-        <Link
-          href={href}
-          key={key}
-          target="_blank"
-          rel="noreferrer"
-          sx={{ textDecoration: "none" }}
-        >
-          <SidenavCollapse
-            name={name}
-            icon={icon}
-            active={key === collapseName}
-            noCollapse={noCollapse}
-          />
-        </Link>
-      ) : (
-        <NavLink key={key} to={route}>
-          <SidenavCollapse name={name} icon={icon} active={key === collapseName} />
-        </NavLink>
-      );
+      if (name === 'Logout') {
+        returnValue = (
+          <NavLink key={key} to={route}>
+            <SidenavCollapse name={name} icon={icon} active={key === collapseName} />
+          </NavLink>
+        );
+      } else {
+        returnValue = href ? (
+          <Link
+            href={href}
+            key={key}
+            target="_blank"
+            rel="noreferrer"
+            sx={{ textDecoration: "none" }}
+          >
+            <SidenavCollapse
+              name={name}
+              icon={icon}
+              active={key === collapseName}
+              noCollapse={noCollapse}
+            />
+          </Link>
+        ) : (
+          <NavLink key={key} to={route}>
+            <SidenavCollapse name={name} icon={icon} active={key === collapseName} />
+          </NavLink>
+        );
+      }
     } else if (type === "title") {
       returnValue = (
         <MDTypography
@@ -136,6 +129,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
         />
       );
     }
+
 
     return returnValue;
   });
@@ -179,7 +173,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
         }
       />
       <List>{renderRoutes}</List>
-      
+
     </SidenavRoot>
   );
 }

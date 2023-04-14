@@ -12,10 +12,12 @@ import MDTypography from "components/MDTypography";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { select } from 'assets/theme-dark/components/form/select';
 import Select from 'react-select'
+import Swal from 'sweetalert2';
+import jwtDecode from "jwt-decode";
 
 function AddEmployee() {
   // เก็บบันทึกค่าลง state
@@ -85,6 +87,22 @@ function AddEmployee() {
   //   console.log("message")
   // }
 
+  const token = localStorage.getItem("jwt");
+    const decodedToken = jwtDecode(token);
+    const { emp, firstName, lastName } = decodedToken;
+
+    useEffect(() => {
+        const moment = require('moment-timezone');
+        const date = new Date();
+        const timezone = 'Asia/Bangkok'; // ตามที่ต้องการ
+        const formattedDate = moment(date).tz(timezone).format('YYYY-MM-DDTHH:mm:ss');
+        const username = emp; // แก้ไขเป็นชื่อผู้ใช้จริงที่ต้องการใช้งาน
+        setCreateBy(username);
+        setCreateDate(formattedDate);
+        setUpdateDate(formattedDate);
+        setUpdateBy(username);
+      }, []);
+
   const handlesubmit = (e) => {
     e.preventDefault();
 
@@ -113,16 +131,32 @@ function AddEmployee() {
       redirect: 'follow'
     };
 
+    //   fetch("http://localhost:5000/employee/add", requestOptions)
+    //     .then(response => response.json())
+    //     // .then(result =>{ 
+    //     //   alert('Saved successfully.')
+    //     //   navigate('/employee'); 
+    //     // })
+    //     .then(result => {
+    //       alert('Saved successfully.')
+    //       if (result['status'] === 'ok') {
+    //         navigate('/employee');
+    //       }
+    //     })
+    //     .catch(error => console.log('error', error));
+    // }
     fetch("http://localhost:5000/employee/add", requestOptions)
       .then(response => response.json())
-      // .then(result =>{ 
-      //   alert('Saved successfully.')
-      //   navigate('/employee'); 
-      // })
       .then(result => {
-        alert('Saved successfully.')
         if (result['status'] === 'ok') {
-          navigate('/employee');
+          Swal.fire({
+            icon: 'success',
+            title: 'Saved successfully',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            navigate('/employee');
+          });
         }
       })
       .catch(error => console.log('error', error));
@@ -166,13 +200,6 @@ function AddEmployee() {
                         <option value="นาง">นาง</option>
                         <option value="นางสาว">นางสาว</option>
                       </select>
-
-                      {/* <input required value={TitleName}
-                        type="text"
-                        id='TitleName'
-                        onChange={e => setTitleName(e.target.value)}
-                        className="form-control">
-                      </input> */}
                     </div>
                   </div>
 
@@ -202,13 +229,16 @@ function AddEmployee() {
                   <div className="col-lg-12">
                     <div className="form-group">
                       <label>PhoneNumber</label>
-                      <input value={PhoneNumber} type="text"
+                      <input value={PhoneNumber} type="tel"
                         id='PhoneNumber'
                         onChange={e => setPhoneNumber(e.target.value)}
+                        pattern="[0]{1}[6,8,9]{1}[0-9]{8}" required
+                        title="กรุณากรอกหมายเลขโทรศัพท์ในรูปแบบ ตัวเลข 10 หลัก และไม่ใส่เครื่องหมายขีด เช่น 08x1234567"
                         className="form-control">
                       </input>
                     </div>
                   </div>
+  
 
                   <div className="col-lg-12">
                     <div className="form-group">
@@ -231,17 +261,11 @@ function AddEmployee() {
                         onChange={e => setDepartmentName(e.target.value)}
                         className="form-select"
                       >
-                        <option value=" " placeholder="select Department" selected>select Department</option>
+                        <option value=" " selected>select Department</option>
                         <option value="ฝ่ายบุคคล">ฝ่ายบุคคล</option>
                         <option value="ฝ่ายบัญชี">ฝ่ายบัญชี</option>
                         <option value="พนักงานทั่วไป">พนักงานทั่วไป</option>
                       </select>
-
-                      {/* <input value={DepartmentName} type="text"
-                        id='DepartmentName'
-                        onChange={e => setDepartmentName(e.target.value)}
-                        className="form-control">
-                      </input> */}
                     </div>
                   </div>
 
@@ -255,7 +279,7 @@ function AddEmployee() {
                         onChange={e => setRoleName(e.target.value)}
                         className="form-select"
                       >
-                        <option value=" " placeholder="select Role" selected>select Role</option>
+                        <option value=" " selected>select Role</option>
                         <option value="Administrator">Administrator</option>
                         <option value="Employee">Employee</option>
                       </select>

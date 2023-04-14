@@ -23,8 +23,6 @@
 
 // Material Dashboard 2 React layouts
 import Dashboard from "layouts/dashboard";
-import Tables from "layouts/tables";
-import Meetingroom from "layouts/meetingroom";
 //Employee
 import AddEmployee from "layouts/employee/addemployee";
 import HomeEmployee from "layouts/employee/homeemployee";
@@ -36,7 +34,7 @@ import ExportEmp from "layouts/employee/exportemp";
 import Department from "layouts/department/department";
 import AddDepartment from "layouts/department/add_department";
 import DetailDepartment from "layouts/department/detail_department";
-import EditDepartment from "layouts/department/add_department";
+import EditDepartment from "layouts/department/edit_department";
 //Role
 import Role from "layouts/role/role";
 import DetailRole from "layouts/role/detail_role";
@@ -53,24 +51,29 @@ import News from "layouts/news/news";
 import CreateNews from "layouts/news/createnews";
 import DetailNews from "layouts/news/detailnews";
 import EditsNews from "layouts/news/editnews";
-import Edit from "layouts/news/edit2";
 
+//meetingroom
 import Meeting from "layouts/meetingroom/meeting";
+import AddMeetingRoom from "layouts/meetingroom/addmeeting";
+import EditMeetingRoom from "layouts/meetingroom/editmeeting";
+//BookingApprove
+import BookingApprove from "layouts/bookingApprove/bookinghome";
+
+//checkin checkout
 import Checkin from "layouts/checkin";
+import DayCheckin from "layouts/checkin/daycheckin";
 import Checkout from "layouts/checkout";
+import DayCheckout from "layouts/checkout/daycheckout";
+
+
 import SignIn from "layouts/login/sign-in";
 import SignUp from "layouts/login/sign-up";
-
-import HomeR from "layouts/testRole/home";
-import UR from "layouts/testRole/update";
-import CR from "./layouts/testRole/create";
+import Logout from "layouts/logout/logout";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
 import { ImportExport, MeetingRoom } from "@mui/icons-material";
 import { PeopleAltIcon } from '@mui/icons-material/PeopleAlt';
-
-
 
 
 const routes = [
@@ -109,7 +112,7 @@ const routes = [
   {
     type: "collapse",
     name: "Title",
-    key: "Title",
+    key: "title",
     icon: <Icon fontSize="small"></Icon>,
     route: "/title",
     component: <HomeTitle />,  
@@ -117,10 +120,18 @@ const routes = [
   {
     type: "collapse",
     name: "Meetingroom",
-    key: "Meeting-room",
+    key: "meetingroom",
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/meetingroom",
     component: <Meeting />,  
+  },
+  {
+    type: "collapse",
+    name: "Bookingmeeting",
+    key: "bookingmeeting",
+    icon: <Icon fontSize="small"></Icon>,
+    route: "/bookingmeeting",
+    component: <BookingApprove />,  
   },
   {
     type: "collapse",
@@ -151,8 +162,8 @@ const routes = [
     name: "Logout",
     key: "logout",
     icon: <Icon fontSize="small">login</Icon>,
-    route: "/login/sign-in",
-    component: <SignIn />, 
+    route: "/logout",
+    component: <Logout />, 
   },
   // {
   //   type: "collapse",
@@ -182,7 +193,7 @@ const routes = [
   {
     key: "edittile",
     icon: <Icon fontSize="small"></Icon>,
-    route: "/title/edit/:employeeID",
+    route: "/title/edit/:titleID",
     component: <EditTitle />,  
   },
   {
@@ -225,10 +236,9 @@ const routes = [
   {
     key: "editdepartment",
     icon: <Icon fontSize="small"></Icon>,
-    route: "/department/edit/:employeeID",
+    route: "/department/edit/:departmentID",
     component: <EditDepartment />,  
   },
-
   {
     key: "addrole",
     icon: <Icon fontSize="small"></Icon>,
@@ -244,7 +254,7 @@ const routes = [
   {
     key: "editrole",
     icon: <Icon fontSize="small"></Icon>,
-    route: "/role/edit/:employeeID",
+    route: "/role/edit/:roleID",
     component: <EditRole />,  
   },
 
@@ -258,15 +268,8 @@ const routes = [
     name: "editsnews",
     key: "news",
     icon: <Icon fontSize="small"></Icon>,
-    route: "/news/edit/:NewsNo",
+    route: "/news/edit/:newsNo",
     component: <EditsNews />,  
-  },
-  {
-    name: "edit2",
-    key: "news",
-    icon: <Icon fontSize="small"></Icon>,
-    route: "/news/edit2/:newsNo",
-    component: <Edit />,  
   },
   {
     key: "detailsenews",
@@ -274,8 +277,31 @@ const routes = [
     route: "/news/detail/:NewsNo",
     component: <DetailNews />,  
   },
-  
- 
+  {
+    key: "addmeetingroom",
+    icon: <Icon fontSize="small"></Icon>,
+    route: "/addmeetingroom",
+    component: <AddMeetingRoom />,  
+  },
+  {
+    key: "editmeetingroom",
+    icon: <Icon fontSize="small"></Icon>,
+    route: "/meetingroom/edit/:roomID",
+    component: <EditMeetingRoom />,  
+  },
+  {
+    key: "daycheckin",
+    icon: <Icon fontSize="small"></Icon>,
+    route: "/checkinday",
+    component: <DayCheckin />,  
+  },
+  {
+    key: "daycheckout",
+    icon: <Icon fontSize="small"></Icon>,
+    route: "/checkoutday",
+    component: <DayCheckout />,  
+  }
+
 ];
 
 export default routes;

@@ -14,7 +14,6 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 
 import Axios from "axios";
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
 import moment from "moment/moment";
 import Paper from "@mui/material/Paper";
@@ -25,12 +24,13 @@ import Button from '@mui/material/Button';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 
+
 // ประกาศตัวแปรสำหรับสไตล์ Modal
 const style = {
   position: 'absolute',
   top: '50%',
   left: '50%',
-  transform: 'translate(-50%, -50%)',
+  transform: 'translate(-35%, -50%)',
   width: 600,
   bgcolor: 'background.paper',
   boxShadow: 24,
@@ -92,20 +92,21 @@ const DetailModal = ({ open, handleClose, transaction }) => {
               Role :
             </Typography>
             <Typography variant="body1">{transaction.RoleName}</Typography>
+
+
           </Grid>
-          
           <Grid item xs={12} sm={6}>
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
               Check In Date :
             </Typography>
             <Typography variant="body1">
-              {moment(transaction.CheckInDate).format('DD/MM/YYYY')}
+              {moment(transaction.CheckOutDate).format('DD/MM/YYYY')}
             </Typography>
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
               Check In Time :
             </Typography>
             <Typography variant="body1">
-              {moment(transaction.CheckInTime, 'HH:mm:ss').format('HH:mm:ss A')}
+              {moment(transaction.CheckOutTime, 'HH:mm:ss').format('HH:mm:ss A')}
             </Typography>
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
               Location :
@@ -138,16 +139,11 @@ const DetailModal = ({ open, handleClose, transaction }) => {
   );
 };
 
-function Checkin() {
+function DayCheckout() {
 
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
-
-  const navigate = useNavigate();
-  const LoadDetail = (TransactionID) => {
-    navigate("/checkin/" + TransactionID);
-  }
 
   const [filterText, setFilterText] = useState('');
   const filteredData = items.filter((item) =>
@@ -162,7 +158,6 @@ function Checkin() {
   const handleClearFilter = () => {
     setFilterText('');
   };
-
   //ทำ modal
   const [open, setOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
@@ -192,13 +187,13 @@ function Checkin() {
       width: '200px'
     },
     {
-      name: 'CheckInDate',
-      selector: row => moment(row.CheckInDate).format('DD/MM/YYYY '),
+      name: 'CheckOutDate',
+      selector: row => moment(row.CheckOutDate).format('DD/MM/YYYY'),
       width: '200px'
     },
     {
-      name: 'CheckInTime',
-      selector: row => row.CheckInTime,
+      name: 'CheckOutTime',
+      selector: row => row.CheckOutTime,
       width: '200px'
     },
     {
@@ -222,14 +217,14 @@ function Checkin() {
     }
   ];
 
+
   useEffect(() => {
-    fetch("http://localhost:5000/checkin")
+    fetch("http://localhost:5000/day/checkout")
       .then(res => res.json())
       .then(
         (result) => {
           setIsLoaded(true);
           setItems(result);
-          console.log(result);
         },
         (error) => {
           setIsLoaded(true);
@@ -247,6 +242,7 @@ function Checkin() {
     return (
       <DashboardLayout>
         <DashboardNavbar />
+
         <Box display="flex">
           <Box sx={{ flexGrow: 2 }} >
             <div class="input-group col-lg-4" >
@@ -272,23 +268,21 @@ function Checkin() {
           <div className="card-body" >
 
             <DataTable
-              title="check-in"
+              title="check-out"
               columns={columns}
               //data={items}
               data={filteredData}
               highlightOnHover
               pagination
-              paginationPerPage={10}
-              paginationRowsPerPageOptions={[10, 15, 25, 50]}
+              paginationPerPage={5}
+              paginationRowsPerPageOptions={[5, 15, 25, 50]}
               paginationComponentOptions={{
                 rowsPerPageText: 'Records per page:',
                 rangeSeparatorText: 'out of',
               }}
             />
           </div>
-
         </Paper>
-
         {selectedTransaction && (
           <DetailModal
             open={open}
@@ -296,10 +290,8 @@ function Checkin() {
             transaction={selectedTransaction}
           />
         )}
-
       </DashboardLayout>
     );
   }
 }
-export default Checkin;
-
+export default DayCheckout;

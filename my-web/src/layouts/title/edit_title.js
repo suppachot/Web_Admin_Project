@@ -1,4 +1,3 @@
-import DataTable from 'react-data-table-component';
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
@@ -12,11 +11,21 @@ import MDTypography from "components/MDTypography";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useParams } from 'react-router-dom';
+import TextField from '@mui/material/TextField';
+import Item from "antd/es/list/Item";
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import moment from "moment/moment";
+import jwtDecode from "jwt-decode";
 
 function EditTitle() {
   // เก็บบันทึกค่าลง state
+
+  const { titleID } = useParams();
+
   const [TitleID, setTitleID] = useState("");
   const [TitleName, setTitleName] = useState("");
   const [CreateDate, setCreateDate] = useState("");
@@ -28,37 +37,52 @@ function EditTitle() {
   const navigate = useNavigate();
   // อ่านค่าจาก db
   const [titleList, settitleList] = useState([]);
-  const getTitle = () => {
-    Axios.get('http://localhost:5000/title').then((response) => {
-      settitleList(response.data);
-    });
-  }
+  const getTitelID = async () => {
+    const response = await Axios.get('http://localhost:5000/gettitle/' + titleID);
+    console.log(response);
+    if (response.data && response.data[0]) {
+      setTitleID(response.data[0].TitleID);
+      setTitleName(response.data[0].TitleName);
+      setCreateDate(response.data[0].CreateDate);
+      setCreateBy(response.data[0].CreateBy);
+    } else {
+      console.log("No data found.");
+    }
+  };
+  const token = localStorage.getItem("jwt");
+  const decodedToken = jwtDecode(token);
+  const { emp, firstName, lastName } = decodedToken;
+  useEffect(() => {
+    getTitelID();
+    const moment = require('moment-timezone');
+    const date = new Date();
+    const timezone = 'Asia/Bangkok'; // ตามที่ต้องการ
+    const formattedDate = moment(date).tz(timezone).format('YYYY-MM-DDTHH:mm:ss');
+    const username = emp; // แก้ไขเป็นชื่อผู้ใช้จริงที่ต้องการใช้งาน
+    setUpdateDate(formattedDate);
+    setUpdateBy(username);
+  }, []);
+
 
   // ส่งข้อมูล 
   const handlesubmit = (e) => {
     e.preventDefault();
-    Axios.post('http://localhost:5000/title/add', {
+    Axios.put('http://localhost:5000/title/edit/' + TitleID, {
       TitleID: TitleID,
       TitleName: TitleName,
       CreateDate: CreateDate,
       CreateBy: CreateBy,
       UpdateDate: UpdateDate,
       UpdateBy: UpdateBy
-    }).then(() => {
-      settitleList([
-        ...titleList,
-        {
-          TitleID: TitleID,
-          TitleName: TitleName,
-          CreateDate: CreateDate,
-          CreateBy: CreateBy,
-          UpdateDate: UpdateDate,
-          UpdateBy: UpdateBy
-        }
-      ])
     }).then((res) => {
-      alert('Saved successfully.')
-      navigate('/title');
+      Swal.fire({
+        icon: 'success',
+        title: 'Saved successfully',
+        showConfirmButton: false,
+        timer: 1500
+      }).then(() => {
+        navigate('/title');
+      });
     }).catch((err) => {
       console.log(err.message)
     })
@@ -80,6 +104,7 @@ function EditTitle() {
                       <input required value={TitleID}
                         type="text"
                         id='TitleID'
+                        disabled
                         onChange={e => setTitleID(e.target.value)}
                         className="form-control">
                       </input>
@@ -89,26 +114,22 @@ function EditTitle() {
                   <div className="col-lg-12">
                     <div className="form-group">
                       <label>TitleName</label>
-                      <select
-                        placeholder="select title"
+                      <input
                         id='TitleName'
                         value={TitleName}
                         onChange={e => setTitleName(e.target.value)}
-                        className="form-select"
+                        className="form-control"
                       >
-                        <option value="" selected>select Title</option>
-                        <option value="นาย">นาย</option>
-                        <option value="นาง">นาง</option>
-                        <option value="นางสาว">นางสาว</option>
-                      </select>
+                      </input>
                     </div>
                   </div>
 
                   <div className="col-lg-12">
                     <div className="form-group">
                       <label>CreateDate</label>
-                      <input value={CreateDate} type="datetime-local"
+                      <input value={moment(CreateDate).format('DD/MM/YYYY HH:mm:ss A')} type="datetime"
                         id='CreateDate'
+                        disabled
                         onChange={e => setCreateDate(e.target.value)}
                         className="form-control">
 
@@ -122,6 +143,7 @@ function EditTitle() {
                       <label>CreateBy</label>
                       <input value={CreateBy} type="text"
                         id='CreateBy'
+                        disabled
                         onChange={e => setCreateBy(e.target.value)}
                         className="form-control"></input>
                     </div>

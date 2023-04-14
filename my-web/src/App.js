@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useMemo } from "react";
+import React ,{ useState, useEffect, useMemo } from "react";
 
 // react-router components
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
@@ -24,11 +24,6 @@ import themeRTL from "assets/theme/theme-rtl";
 import themeDark from "assets/theme-dark";
 import themeDarkRTL from "assets/theme-dark/theme-rtl";
 
-// RTL plugins
-// import rtlPlugin from "stylis-plugin-rtl";
-// import { CacheProvider } from "@emotion/react";
-// import createCache from "@emotion/cache";
-
 // Material Dashboard 2 React routes
 import routes from "routes";
 
@@ -41,8 +36,40 @@ import brandDark from "assets/images/TKS.png";
 import Basic from "layouts/login/sign-in";
 import SignIn from "layouts/login/sign-in";
 
+import jwt_decode from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
 
 export default function App() {
+  //useAutoLogout();
+  const navigate = useNavigate();
+  useEffect(() => {
+    const checkTokenExpiration = () => {
+      const token = localStorage.getItem('jwt');
+      if (!token) return;
+
+      try {
+        const decoded = jwt_decode(token);
+        const currentTime = Math.floor(Date.now() / 1000);
+
+        if (decoded.exp < currentTime) {
+          localStorage.removeItem('jwt');
+          localStorage.removeItem('firstName');
+          localStorage.removeItem('lastName');
+          localStorage.removeItem('emp');
+          navigate('/login/sign-in');
+        }
+      } catch (error) {
+        console.error('Invalid JWT token:', error);
+      }
+    };
+
+    const interval = setInterval(checkTokenExpiration, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [navigate]);
+
 
   const [controller, dispatch] = useMaterialUIController();
   const {
@@ -59,17 +86,6 @@ export default function App() {
   const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
 
-  // Cache for the rtl
-  /*
-  useMemo(() => {
-    const cacheRtl = createCache({
-      key: "rtl",
-      stylisPlugins: [rtlPlugin],
-    });
-
-    setRtlCache(cacheRtl);
-  }, []);
-*/
   // Open sidenav when mouse enter on mini sidenav
   const handleOnMouseEnter = () => {
     if (miniSidenav && !onMouseEnter) {
@@ -113,30 +129,6 @@ export default function App() {
       return null;
     });
 
-  const configsButton = (
-    <MDBox
-      // display="flex"
-      // justifyContent="center"
-      // alignItems="center"
-      // width="3.25rem"
-      // height="3.25rem"
-      // bgColor="white"
-      // shadow="sm"
-      // borderRadius="50%"
-      // position="fixed"
-      // right="2rem"
-      // bottom="2rem"
-      // zIndex={99}
-      // color="dark"
-      // sx={{ cursor: "pointer" }}
-      //onClick={handleConfiguratorOpen}
-    >
-      {/* <Icon fontSize="small" color="inherit">
-        settings
-      </Icon> */}
-    </MDBox>
-  );
-
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />
@@ -151,8 +143,8 @@ export default function App() {
             onMouseLeave={handleOnMouseLeave}
           />
           <Configurator />
-          {configsButton}
         </>
+        
       )}
       {layout === "vr" && <Configurator />}
       <Routes>

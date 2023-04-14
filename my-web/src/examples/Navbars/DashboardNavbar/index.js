@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 
 // react-router components
@@ -17,10 +16,12 @@ import Icon from "@mui/material/Icon";
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
-
+import MDTypography from "components/MDTypography";
 // Material Dashboard 2 React example components
 import Breadcrumbs from "examples/Breadcrumbs";
 import NotificationItem from "examples/Items/NotificationItem";
+
+import jwtDecode from "jwt-decode";
 
 // Custom styles for DashboardNavbar
 import {
@@ -45,6 +46,11 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode } = controller;
   const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split("/").slice(1);
+
+  const token = localStorage.getItem("jwt");
+  const decodedToken = jwtDecode(token);
+  const { emp, firstName, lastName } = decodedToken;
+
 
   useEffect(() => {
     // Setting the navbar type
@@ -90,9 +96,9 @@ function DashboardNavbar({ absolute, light, isMini }) {
       onClose={handleCloseMenu}
       sx={{ mt: 2 }}
     >
-        <Link to="/meetingroom">
-          <NotificationItem  icon={<Icon>email</Icon>}  title="Check new meeting approve"/>
-        </Link>
+      <Link to="/meetingroom">
+        <NotificationItem icon={<Icon>email</Icon>} title="Check new meeting approve" />
+      </Link>
     </Menu>
   );
 
@@ -116,14 +122,30 @@ function DashboardNavbar({ absolute, light, isMini }) {
       sx={(theme) => navbar(theme, { transparentNavbar, absolute, light, darkMode })}
     >
       <Toolbar sx={(theme) => navbarContainer(theme)}>
+
         <MDBox color="inherit" mb={{ xs: 1, md: 0 }} sx={(theme) => navbarRow(theme, { isMini })}>
-          <Breadcrumbs icon="home" title={route[route.length - 1]} route={route} light={light} />
+          <Link to="/dashboard">
+            <Breadcrumbs icon="home" title={route[route.length - 1]} route={route} light={light} />
+          </Link>
         </MDBox>
+
+        {/* <MDBox display="flex" alignItems="center" ml={1}>
+          <MDTypography variant="body2" fontWeight="bold" color="text">
+            EmployeeID: {emp}
+            Name: {firstName} {lastName}
+          </MDTypography>
+        </MDBox> */}
+
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
             <MDBox color={light ? "white" : "inherit"}>
               <Link to="/employee">
                 <IconButton sx={navbarIconButton} size="small" disableRipple>
+                  <MDBox display="flex" alignItems="center" mr={2}>
+                    <MDTypography variant="body2" fontWeight="bold" color="primary ">
+                      {firstName} {lastName}   
+                    </MDTypography>
+                  </MDBox>
                   <Icon sx={iconsStyle}>account_circle</Icon>
                 </IconButton>
               </Link>
@@ -159,6 +181,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
               >
                 <Icon sx={iconsStyle}>notifications</Icon>
               </IconButton>
+
               {renderMenu()}
             </MDBox>
           </MDBox>
@@ -183,3 +206,4 @@ DashboardNavbar.propTypes = {
 };
 
 export default DashboardNavbar;
+

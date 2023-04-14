@@ -17,6 +17,7 @@ import DataTable from 'react-data-table-component';
 import moment from "moment/moment";
 import { Link, useNavigate } from 'react-router-dom';
 import { Paper } from "@mui/material";
+import Swal from 'sweetalert2';
 
 
 
@@ -30,23 +31,45 @@ function Department() {
   const [departmentdata, departmentdatachange] = useState(null);
   const navigate = useNavigate();
 
-  const LoadDetail = (DepartmentID) => {
-    navigate("/department/detail/" + DepartmentID);
-  }
+  // const LoadDetail = (DepartmentID) => {
+  //   navigate("/department/detail/" + DepartmentID);
+  // }
+  // const LoadEdit = (DepartmentID) => {
+  //   navigate("/department/edit/" + DepartmentID);
+  // }
   const LoadEdit = (DepartmentID) => {
     navigate("/department/edit/" + DepartmentID);
   }
   const Removefunction = (DepartmentID) => {
-    if (window.confirm('Do you want to remove?')) {
-      Axios.delete("http://localhost:5000/deletedepartment/" + DepartmentID, {
-      }).then((res) => {
-        alert('Removed successfully.')
-        window.location.reload();
-      }).catch((err) => {
-        console.log(err.message)
-      })
-    }
+    Swal.fire({
+      title: 'Do you want to remove?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, remove it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Axios.delete("http://localhost:5000/deletedepartment/" + DepartmentID, {
+        }).then(() => {
+          Swal.fire({
+            title: 'Removed successfully!',
+            icon: 'success'
+          })
+          window.location.reload()
+        })
+          .catch((error) => {
+            Swal.fire({
+              title: 'Error!',
+              text: error.message,
+              icon: 'error',
+              confirmButtonText: 'OK'
+            })
+          })
+      }
+    })
   }
+
 
   const columns = [
     {
@@ -61,7 +84,7 @@ function Department() {
     },
     {
       name: 'CreateDate',
-      selector: row => moment(row.CreateDate).format('DD-MM-YYYY HH:mm:ss A'),
+      selector: row => moment(row.CreateDate).format('DD/MM/YYYY HH:mm:ss A'),
       width: '250px'
     },
     {
@@ -71,7 +94,7 @@ function Department() {
     },
     {
       name: 'UpdateDate',
-      selector: row => moment(row.UpdateDate).format('DD-MM-YYYY HH:mm:ss A'),
+      selector: row => moment(row.UpdateDate).format('DD/MM/YYYY HH:mm:ss A'),
       width: '250px'
     },
     {
@@ -85,7 +108,7 @@ function Department() {
 
         <div class="btn-group" role="group" aria-label="Basic example">
 
-          <button className="btn btn-primary" onClick={(clickHandler) => { LoadDetail(row.DepartmentID) }} >Detail</button>
+          {/* <button className="btn btn-primary" onClick={(clickHandler) => { LoadDetail(row.DepartmentID) }} >Detail</button> */}
           <button className="btn btn-warning" onClick={() => { LoadEdit(row.DepartmentID) }} >Edit</button>
           <button className="btn btn-danger" onClick={() => { Removefunction(row.DepartmentID) }} >Delete</button>
 
@@ -102,14 +125,13 @@ function Department() {
         (result) => {
           setIsLoaded(true);
           setItems(result);
+          console.log(result);
         },
         (error) => {
           setIsLoaded(true);
           setError(error);
         }
-      ).then((resp) => {
-        departmentdatachange(resp);
-      }).catch((err) => {
+      ).catch((err) => {
         console.log(err.message);
       })
   }, [])

@@ -19,7 +19,7 @@ import { Button, Modal } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { CSVLink, CSVDownload } from "react-csv";
 import Paper from "@mui/material/Paper";
-
+import Swal from 'sweetalert2'
 
 
 function Meeting() {
@@ -28,93 +28,114 @@ function Meeting() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
 
-  const [newsdata, newsdatachange] = useState(null);
+  const [meetingroomdata, meetingroomchange] = useState(null);
+  const navigate = useNavigate();
+
+  const LoadEdit = (RoomID) => {
+    navigate("/meetingroom/edit/" + RoomID);
+  }
+
+  const Removefunction = (RoomID) => {
+    Swal.fire({
+      title: 'Do you want to remove?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, remove it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Axios.delete(`http://localhost:5000/deletemeetingroom/${RoomID}`)
+          .then(() => {
+            Swal.fire({
+              title: 'Removed successfully!',
+              icon: 'success'
+            })
+            window.location.reload()
+          })
+          .catch((error) => {
+            Swal.fire({
+              title: 'Error!',
+              text: error.message,
+              icon: 'error',
+              confirmButtonText: 'OK'
+            })
+          })
+      }
+    })
+  }
+
+
   const columns = [
     {
-      id: 'Topic',
-      name: 'Topic',
-      selector: row => row.Topic,
-      width: '300px'
+      id: 'RoomID',
+      name: 'RoomID',
+      selector: row => row.RoomID,
+      width: '100px'
     },
     {
-      id: 'EmployeeID',
-      name: 'EmployeeID',
-      selector: row => row.EmployeeID,
+      id: 'RoomName',
+      name: 'RoomName',
+      selector: row => row.RoomName,
       width: '150px'
     },
     {
-      id: 'TimeStart',
-      name: 'TimeStart',
-      selector: row => row.TimeStart,
+      id: 'Capacity',
+      name: 'Capacity',
+      selector: row => row.Capacity,
       width: '150px'
     },
     {
-      id: 'TimeEnd',
-      name: 'TimeEnd',
-      selector: row => row.TimeEnd,
+      id: 'createdate',
+      name: 'CreateDate',
+      selector: row => moment(row.CreateDate).format('DD/MM/YYYY HH:mm:ss A'),
+      width: '250px'
+    },
+    {
+      id: 'createby',
+      name: 'CreateBy',
+      selector: row => row.CreateBy,
       width: '150px'
     },
     {
-      id: 'Date',
-      name: 'Date',
-      selector: 'date',
-      format: row => moment(row.Date).format('DD-MM-YYYY '),
-      width: '150px'
+      id: 'updatedate',
+      name: 'UpdateDate',
+      selector: row => moment(row.UpdateDate).format('DD/MM/YYYY HH:mm:ss A'),
+      width: '250px'
     },
     {
-      id: 'Status',
-      name: 'Status',
-      width: '150px',
-      selector: row => 
-      
+      id: 'updateby',
+      name: 'UpdateBy',
+      selector: row => row.UpdateBy,
+      width: '150px'
+    }, {
+      name: 'Action',
+      selector: row =>
+
         <div class="btn-group" role="group" aria-label="Basic example">
-          <select
-            placeholder="select Department"
-            id='DepartmentName'
-            value={row.Status}
-            className="form-select"
-          >
-            <option value={row.Status}>Approve</option>
-            <option value={row.Status}>No approve</option>
-            <option value={row.Status}>Wait approve</option>
-            
-          </select>
+          <button className="btn btn-warning" onClick={() => { LoadEdit(row.RoomID) }} >Edit</button>
+          <button className="btn btn-danger" onClick={() => { Removefunction(row.RoomID) }} >Delete</button>
 
         </div>
 
-    },
-    {
-      id: 'Attendant',
-      name: 'Attendant',
-      selector: row => row.Attendant,
-      width: '150px'
-    },
-    {
-      id: 'DateApprove',
-      name: 'DateApprove',
-      selector: 'date',
-      format: row => moment(row.DateApprove).format('DD-MM-YYYY'),
-      width: '150px'
     }
   ];
 
   useEffect(() => {
-    fetch("http://localhost:5000/meeting_approve")
+    fetch("http://localhost:5000/meetingroom")
       .then(res => res.json())
-      // .then((resJson) => {
-      //     const data = JSON.parse(resJson);
-      // })
       .then(
         (result) => {
           setIsLoaded(true);
           setItems(result);
+          console.log(result);
         },
         (error) => {
           setIsLoaded(true);
           setError(error);
         }
       ).then((resp) => {
-        newsdatachange(resp);
+        meetingroomchange(resp);
       }).catch((err) => {
         console.log(err.message);
       })
@@ -129,14 +150,15 @@ function Meeting() {
       <DashboardLayout>
         <DashboardNavbar />
         <div className="LayoutContainer">
-
-          <div className="card-body" >
-            <div className="card-body" >
+          <div className="card-body">
+            <div className="btn">
+              <Link to="/addmeetingroom" className="btn btn-success">Add New</Link>
             </div>
+
             <Paper sx={{ p: 1 }} style={{ backgroundColor: '#F2F3F4' }}>
               <div className="card-body" >
                 <DataTable
-                  title="Meetingroom Approve"
+                  title="Meetingroom"
                   columns={columns}
                   data={items}
                   highlightOnHover
@@ -147,15 +169,12 @@ function Meeting() {
                     rowsPerPageText: 'Records per page:',
                     rangeSeparatorText: 'out of',
                   }}
-
                 />
               </div>
             </Paper>
-
-
           </div>
-        </div >
-      </DashboardLayout >
+        </div>
+      </DashboardLayout>
     );
   }
 }

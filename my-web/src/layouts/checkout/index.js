@@ -18,6 +18,127 @@ import DataTable from 'react-data-table-component';
 import moment from "moment/moment";
 import Paper from "@mui/material/Paper";
 
+import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
+
+
+// ประกาศตัวแปรสำหรับสไตล์ Modal
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-35%, -50%)',
+  width: 600,
+  bgcolor: 'background.paper',
+  boxShadow: 24,
+  p: 4,
+  borderRadius: '20px',
+};
+
+// สร้าง Modal Component ที่ใช้แสดงข้อมูลเพิ่มเติม
+const DetailModal = ({ open, handleClose, transaction }) => {
+  return (
+    <Modal
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={style}>
+        <IconButton
+          onClick={handleClose}
+          sx={{
+            position: 'absolute',
+            right: '5px',
+            top: '5px',
+            color: 'grey.500',
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+        <Typography
+          id="modal-modal-title"
+          variant="h6"
+          component="h2"
+          sx={{ marginBottom: '15px' }}
+        >
+          Checkin Detail
+        </Typography>
+
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+              Transaction ID :
+            </Typography>
+            <Typography variant="body1">{transaction.TransactionID}</Typography>
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+              Employee ID :
+            </Typography>
+            <Typography variant="body1">{transaction.EmployeeID}</Typography>
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+              Name :
+            </Typography>
+            <Typography variant="body1">
+              {transaction.TitleName} {transaction.FirstName} {transaction.LastName}
+            </Typography>
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+              Department :
+            </Typography>
+            <Typography variant="body1">{transaction.DepartmentName}</Typography>
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+              Role :
+            </Typography>
+            <Typography variant="body1">{transaction.RoleName}</Typography>
+
+
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+              Check In Date :
+            </Typography>
+            <Typography variant="body1">
+              {moment(transaction.CheckOutDate).format('DD/MM/YYYY')}
+            </Typography>
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+              Check In Time :
+            </Typography>
+            <Typography variant="body1">
+              {moment(transaction.CheckOutTime, 'HH:mm:ss').format('HH:mm:ss A')}
+            </Typography>
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+              Location :
+            </Typography>
+            <Typography variant="body1">{transaction.Location}</Typography>
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+              Model :
+            </Typography>
+            <Typography variant="body1">{transaction.Model}</Typography>
+          </Grid>
+        </Grid>
+
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-danger"
+            onClick={handleClose}
+            data-dismiss="modal"
+            sx={{
+              marginTop: '15px',
+              marginLeft: 'auto',
+              display: 'block',
+            }}
+          >
+            Close
+          </button>
+        </div>
+      </Box>
+    </Modal>
+  );
+};
+
 function Checkout() {
 
   const [error, setError] = useState(null);
@@ -37,6 +158,23 @@ function Checkout() {
   const handleClearFilter = () => {
     setFilterText('');
   };
+  //ทำ modal
+  const [open, setOpen] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] = useState(null);
+
+  // ฟังก์ชันเปิด Modal และกำหนด selectedTransaction เมื่อคลิกปุ่มดูรายละเอียด
+  const handleOpenModal = (transaction) => {
+    setSelectedTransaction(transaction);
+    setOpen(true);
+  };
+
+  // ฟังก์ชันปิด Modal และล้าง selectedTransaction
+  const handleCloseModal = () => {
+    setSelectedTransaction(null);
+    setOpen(false);
+  };
+
+  //-------------------------//
   const columns = [
     {
       name: 'TransactionID',
@@ -50,13 +188,13 @@ function Checkout() {
     },
     {
       name: 'CheckOutDate',
-      selector: row => moment(row.CheckOutDate).format('DD-MM-YYYY'),
-      width: '250px'
+      selector: row => moment(row.CheckOutDate).format('DD/MM/YYYY'),
+      width: '200px'
     },
     {
       name: 'CheckOutTime',
       selector: row => row.CheckOutTime,
-      width: '150px'
+      width: '200px'
     },
     {
       name: 'Location',
@@ -66,7 +204,16 @@ function Checkout() {
     {
       name: 'Model',
       selector: row => row.Model,
-      width: '150px'
+      width: '200px'
+    },
+    {
+      name: 'Action',
+      selector: row =>
+
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button className="btn btn-primary" onClick={() => handleOpenModal(row)}>Detail</button>
+        </div>
+
     }
   ];
 
@@ -136,7 +283,13 @@ function Checkout() {
             />
           </div>
         </Paper>
-
+        {selectedTransaction && (
+          <DetailModal
+            open={open}
+            handleClose={handleCloseModal}
+            transaction={selectedTransaction}
+          />
+        )}
       </DashboardLayout>
     );
   }

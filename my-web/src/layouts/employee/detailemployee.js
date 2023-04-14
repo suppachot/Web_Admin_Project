@@ -32,9 +32,7 @@ function DetailEmpolyee() {
             }).catch((err) => {
                 console.log(err.message);
             })
-    }, []);
-
-
+    }, [EmployeeID]);
     return (
         <DashboardLayout>
             <DashboardNavbar />
@@ -52,12 +50,12 @@ function DetailEmpolyee() {
                             <h4>EmployeeID : <b>{val.EmployeeID}</b></h4>
                             <h5 >
                                 Name       : {val.TitleName}  {val.FirstName}  {val.LastName} <br></br>
-                            
+
                                 Phone      : {val.PhoneNumber} <br></br>
                                 Email      : {val.Email}<br></br>
                                 Department : {val.DepartmentName}<br></br>
                                 Role       : {val.RoleName}<br></br>
-                                CreateDate : {moment(val.CreateDate).format('DD-MM-YYYY HH:mm:ss A')} <br></br>                                                  
+                                CreateDate : {moment(val.CreateDate).format('DD-MM-YYYY HH:mm:ss A')} <br></br>
                                 CreateBy   : {val.CreateBy}<br></br>
                                 UpdateDate : {moment(val.UpdateDate).format('DD-MM-YYYY HH:mm:ss A')}<br></br>
                                 UpdateBy   : {val.UpdateBy}<br></br>
@@ -79,5 +77,6 @@ function DetailEmpolyee() {
     );
 }
 export default DetailEmpolyee;
+
 
 

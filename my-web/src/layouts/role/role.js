@@ -17,7 +17,7 @@ import DataTable from 'react-data-table-component';
 import moment from "moment";
 import { Link, useNavigate } from 'react-router-dom';
 import { Paper } from "@mui/material";
-
+import Swal from 'sweetalert2'
 
 function Role() {
 
@@ -35,17 +35,32 @@ function Role() {
     navigate("/role/edit/" + RoleID);
   }
   const Removefunction = (RoleID) => {
-    if (window.confirm('Do you want to remove?')) {
-      Axios.delete("http://localhost:5000/deleterole/" + RoleID, {
-      }).then((res) => {
-        alert('Removed successfully.')
-        window.location.reload();
-      }).catch((err) => {
-        console.log(err.message)
-      })
-    }
+    Swal.fire({
+      title: 'Do you want to remove?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, remove it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Axios.delete("http://localhost:5000/deleterole/" + RoleID, {}).then((res) => {
+          Swal.fire({
+            title: 'Removed successfully.',
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            window.location.reload();
+          });
+        }).catch((err) => {
+          console.log(err.message)
+        })
+      }
+    })
   }
-
+  
+  
   const columns = [
     {
       name: 'RoleID',
@@ -59,7 +74,7 @@ function Role() {
     },
     {
       name: 'CreateDate',
-      selector: row => moment(row.CreateDate).format('DD-MM-YYYY HH:mm:ss A'),
+      selector: row => moment(row.CreateDate).format('DD/MM/YYYY HH:mm:ss A'),
       width: '250px'
     },
     {
@@ -69,7 +84,7 @@ function Role() {
     },
     {
       name: 'UpdateDate',
-      selector: row => moment(row.UpdateDate).format('DD-MM-YYYY HH:mm:ss A'),
+      selector: row => moment(row.UpdateDate).format('DD/MM/YYYY HH:mm:ss A'),
       width: '250px'
     },
     {
@@ -83,7 +98,7 @@ function Role() {
 
         <div class="btn-group" role="group" aria-label="Basic example">
 
-          <button className="btn btn-primary" onClick={(clickHandler) => { LoadDetail(row.RoleID) }} >Detail</button>
+          {/* <button className="btn btn-primary" onClick={(clickHandler) => { LoadDetail(row.RoleID) }} >Detail</button> */}
           <button className="btn btn-warning" onClick={() => { LoadEdit(row.RoleID) }} >Edit</button>
           <button className="btn btn-danger" onClick={() => { Removefunction(row.RoleID) }} >Delete</button>
 
@@ -100,14 +115,16 @@ function Role() {
         (result) => {
           setIsLoaded(true);
           setItems(result);
+          console.log(result);
         },
         (error) => {
           setIsLoaded(true);
           setError(error);
         }
-      ).then((resp) => {
-        roledatachange(resp);
-      }).catch((err) => {
+      // ).then((resp) => {
+      //   roledatachange(resp);
+      // }
+      ).catch((err) => {
         console.log(err.message);
       })
   }, [])

@@ -30,7 +30,7 @@ const style = {
   position: 'absolute',
   top: '50%',
   left: '50%',
-  transform: 'translate(-50%, -50%)',
+  transform: 'translate(-35%, -50%)',
   width: 600,
   bgcolor: 'background.paper',
   boxShadow: 24,
@@ -75,7 +75,7 @@ const DetailModal = ({ open, handleClose, transaction }) => {
             </Typography>
             <Typography variant="body1">{transaction.TransactionID}</Typography>
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-              Employee ID :
+              Employee ID : 
             </Typography>
             <Typography variant="body1">{transaction.EmployeeID}</Typography>
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
@@ -92,8 +92,9 @@ const DetailModal = ({ open, handleClose, transaction }) => {
               Role :
             </Typography>
             <Typography variant="body1">{transaction.RoleName}</Typography>
+
+
           </Grid>
-          
           <Grid item xs={12} sm={6}>
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
               Check In Date :
@@ -138,16 +139,13 @@ const DetailModal = ({ open, handleClose, transaction }) => {
   );
 };
 
-function Checkin() {
+function DayCheckin() {
 
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
 
   const navigate = useNavigate();
-  const LoadDetail = (TransactionID) => {
-    navigate("/checkin/" + TransactionID);
-  }
 
   const [filterText, setFilterText] = useState('');
   const filteredData = items.filter((item) =>
@@ -210,8 +208,7 @@ function Checkin() {
       name: 'Model',
       selector: row => row.Model,
       width: '200px'
-    },
-    {
+    }, {
       name: 'Action',
       selector: row =>
 
@@ -223,7 +220,7 @@ function Checkin() {
   ];
 
   useEffect(() => {
-    fetch("http://localhost:5000/checkin")
+    fetch("http://localhost:5000/day/checkin")
       .then(res => res.json())
       .then(
         (result) => {
@@ -301,5 +298,5 @@ function Checkin() {
     );
   }
 }
-export default Checkin;
+export default DayCheckin;
 

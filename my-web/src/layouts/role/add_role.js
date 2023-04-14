@@ -12,8 +12,10 @@ import MDTypography from "components/MDTypography";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
+import jwtDecode from "jwt-decode";
 
 function AddRole() {
     // เก็บบันทึกค่าลง state
@@ -34,6 +36,22 @@ function AddRole() {
         });
     }
 
+    const token = localStorage.getItem("jwt");
+    const decodedToken = jwtDecode(token);
+    const { emp, firstName, lastName } = decodedToken;
+
+    useEffect(() => {
+        const moment = require('moment-timezone');
+        const date = new Date();
+        const timezone = 'Asia/Bangkok'; // ตามที่ต้องการ
+        const formattedDate = moment(date).tz(timezone).format('YYYY-MM-DDTHH:mm:ss');
+        const username = emp; // แก้ไขเป็นชื่อผู้ใช้จริงที่ต้องการใช้งาน
+        setCreateBy(username);
+        setCreateDate(formattedDate);
+        setUpdateDate(formattedDate);
+        setUpdateBy(username);
+    }, []);
+
     // ส่งข้อมูล 
     const handlesubmit = (e) => {
         e.preventDefault();
@@ -49,16 +67,21 @@ function AddRole() {
                 ...RoleList,
                 {
                     RoleID: RoleID,
-                    Roletame: RoleName,
+                    RoleName: RoleName,
                     CreateDate: CreateDate,
                     CreateBy: CreateBy,
                     UpdateDate: UpdateDate,
                     UpdateBy: UpdateBy
                 }
-            ])
-        }).then((res) => {
-            alert('Saved successfully.')
-            navigate('/role');
+            ]);
+            Swal.fire({
+                title: 'Saved successfully.',
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1500
+            }).then(() => {
+                navigate('/role');
+            });
         }).catch((err) => {
             console.log(err.message)
         })
@@ -89,17 +112,13 @@ function AddRole() {
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>RoleName</label>
-                                            <select
+                                            <input
                                                 id='RoleName'
-                                                placeholder="select Role"
                                                 value={RoleName}
                                                 onChange={e => setRoleName(e.target.value)}
-                                                className="form-select"
+                                                className="form-control"
                                             >
-                                                <option value=" " placeholder="select Role" selected>select Role</option>
-                                                <option value="Administrator">Administrator</option>
-                                                <option value="Employee">Employee</option>
-                                            </select>
+                                            </input>
                                         </div>
                                     </div>
 

@@ -1,22 +1,30 @@
-import DataTable from 'react-data-table-component';
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import { Box } from '@mui/material';
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
+import Box from "@mui/material/Box";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import Axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Axios from "axios";
+import { useParams } from 'react-router-dom';
+import TextField from '@mui/material/TextField';
+import Item from "antd/es/list/Item";
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import moment from "moment/moment";
+import jwtDecode from "jwt-decode";
 
 function EditRole() {
     // เก็บบันทึกค่าลง state
+    const { roleID } = useParams();
+
     const [RoleID, setRoleID] = useState("");
     const [RoleName, setRoleName] = useState("");
     const [CreateDate, setCreateDate] = useState("");
@@ -28,41 +36,69 @@ function EditRole() {
     const navigate = useNavigate();
     // อ่านค่าจาก db
     const [RoleList, setRoleList] = useState([]);
-    const getRole = () => {
-        Axios.get('http://localhost:5000/role').then((response) => {
-            setRoleList(response.data);
-        });
-    }
+
+    // const getRoleID = async () => {
+    //     const response = await Axios.get('http://localhost:5000/getrole/' + roleID);
+    //     console.log(response);
+    //     setRoleID(response.data[0].RoleID);
+    //     setRoleName(response.data[0].RoleName);
+    //     setCreateDate(response.data[0].CreateDate);
+    //     setCreateBy(response.data[0].CreateBy);
+    // };
+
+    const getRoleID = async () => {
+        const response = await Axios.get('http://localhost:5000/getrole/' + roleID);
+        console.log(response);
+        if (response.data && response.data[0]) {
+            setRoleID(response.data[0].RoleID);
+            setRoleName(response.data[0].RoleName);
+            setCreateDate(response.data[0].CreateDate);
+            setCreateBy(response.data[0].CreateBy);
+        } else {
+            console.log("No data found.");
+        }
+    };
+
+    
+
+    const token = localStorage.getItem("jwt");
+    const decodedToken = jwtDecode(token);
+    const { emp, firstName, lastName } = decodedToken;
+    useEffect(() => {
+        getRoleID();
+        const moment = require('moment-timezone');
+        const date = new Date();
+        const timezone = 'Asia/Bangkok'; // ตามที่ต้องการ
+        const formattedDate = moment(date).tz(timezone).format('YYYY-MM-DDTHH:mm:ss');
+        const username = emp; // แก้ไขเป็นชื่อผู้ใช้จริงที่ต้องการใช้งาน
+      //  setCreateDate(formattedDate);
+        setUpdateDate(formattedDate);
+        setUpdateBy(username);
+    }, []);
 
     // ส่งข้อมูล 
     const handlesubmit = (e) => {
         e.preventDefault();
-        Axios.post('http://localhost:5000/role/add', {
+        Axios.put("http://localhost:5000/role/edit/" + RoleID, {
             RoleID: RoleID,
             RoleName: RoleName,
             CreateDate: CreateDate,
             CreateBy: CreateBy,
             UpdateDate: UpdateDate,
             UpdateBy: UpdateBy
-        }).then(() => {
-            setRoleList([
-                ...RoleList,
-                {
-                    RoleID: RoleID,
-                    Roletame: RoleName,
-                    CreateDate: CreateDate,
-                    CreateBy: CreateBy,
-                    UpdateDate: UpdateDate,
-                    UpdateBy: UpdateBy
-                }
-            ])
         }).then((res) => {
-            alert('Saved successfully.')
+          Swal.fire({
+            icon: 'success',
+            title: 'Saved successfully',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
             navigate('/role');
+          });
         }).catch((err) => {
-            console.log(err.message)
+          console.log(err.message)
         })
-    }
+      }
 
     return (
         <DashboardLayout>
@@ -80,6 +116,7 @@ function EditRole() {
                                             <input required value={RoleID}
                                                 type="text"
                                                 id='RoleID'
+                                                disabled
                                                 onChange={e => setRoleID(e.target.value)}
                                                 className="form-control">
                                             </input>
@@ -89,25 +126,23 @@ function EditRole() {
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>RoleName</label>
-                                            <select
+                                            <input
                                                 id='RoleName'
-                                                placeholder="select Role"
                                                 value={RoleName}
                                                 onChange={e => setRoleName(e.target.value)}
-                                                className="form-select"
+                                                className="form-control"
                                             >
-                                                <option value=" " placeholder="select Role" selected>select Role</option>
-                                                <option value="Administrator">Administrator</option>
-                                                <option value="Employee">Employee</option>
-                                            </select>
+                    
+                                            </input>
                                         </div>
                                     </div>
 
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>CreateDate</label>
-                                            <input value={CreateDate} type="datetime-local"
+                                            <input value={moment(CreateDate).format('DD/MM/YYYY HH:mm:ss A')} type="datetime"
                                                 id='CreateDate'
+                                                disabled
                                                 onChange={e => setCreateDate(e.target.value)}
                                                 className="form-control">
 
@@ -121,6 +156,7 @@ function EditRole() {
                                             <label>CreateBy</label>
                                             <input value={CreateBy} type="text"
                                                 id='CreateBy'
+                                                disabled
                                                 onChange={e => setCreateBy(e.target.value)}
                                                 className="form-control"></input>
                                         </div>

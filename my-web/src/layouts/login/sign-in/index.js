@@ -2,7 +2,7 @@
 import { useState } from "react";
 
 // react-router-dom components
-import { Link , useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -32,74 +32,63 @@ function Basic() {
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
-  const [EmployeeID, setEmployeeID] = useState("");
-  const [Pincode, setPincode] = useState("");
   const [Password, setPassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const[loginStatus,setLoginStatus]= useState("");
+
+  const [loginStatus, setLoginStatus] = useState("");
   const navigate = useNavigate();
-  
-  // const handleLogin = (e) => {
-  //    e.preventDefault();
-  //   // Axios.post("http://localhost:5000/login",{
-  //   //   EmployeeID : EmployeeID,
-  //   //   Password : Password,
-  //   // }).then((Response)=>{
-  //   //   if(Response.data.message){
-  //   //     setLoginStatus(Response.data.message);
-  //   //   }else{
-  //   //     setLoginStatus(Response.data[0].EmployeeID);
-  //   //     navigate("/dashboard" );
-  //   //   }
-  //   // })
-    
-  //   // perform login validation here
-  //   // if successful, redirect to dashboard page
-  //    navigate("/dashboard" );
-  // };
 
-  // const handleSubmit  = async e =>{
+  const [employeeID, setEmployeeID] = useState('');
+  const [pincode, setPincode] = useState('');
+  const [error, setError] = useState(null);
+
+  // const handleSubmit = async (e) => {
   //   e.preventDefault();
-  // }
-
-  const handleSubmit1 = async (event) => {
-    event.preventDefault();
-    try {
-      const response = await axios.post('/api1/login', {
-        EmployeeID,
-        Pincode,
-      });
-      console.log(response);
-      navigate("/dashboard" );
-    } catch (error) {
-      console.error(error);
-      navigate("/dashboard" );
-    }
-  };
-
-  // const [username, setUsername] = useState('');
-  // //const [password, setPassword] = useState('');
-
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault();
   //   try {
-  //     const response = await axios.post('/api/login', {
-  //       username,
-  //       password,
+  //     const response = await axios.post('http://localhost:5000/api/login', {
+  //       employeeID,
+  //       pincode,
   //     });
-  //     console.log(response.data);
-  //     navigate("/dashboard" );
+
+  //     const token = response.data.token;
+  //     localStorage.setItem('jwt', token);
+  //     setError(null);
+  //     navigate("/dashboard");
+  //   console.log(response);
+    
   //   } catch (error) {
-  //     console.error(error);
-  //     navigate("/dashboard" );
+  //     setError('Invalid EmployeeID or Pincode.');
   //   }
   // };
- 
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:5000/api/login', {
+        employeeID,
+        pincode,
+      });
+  
+      const { token, firstName, lastName, emp } = response.data;
+      localStorage.setItem('jwt', token);
+      localStorage.setItem('emp', emp);
+      localStorage.setItem('firstName', firstName);
+      localStorage.setItem('lastName', lastName);
+      
+      setError(null);
+      navigate('/dashboard');
+    } catch (error) {
+      setError('Invalid EmployeeID or Pincode.');
+    }
+  };
+  
+
+
 
   return (
     <BasicLayout image={bgImage}>
       <Card>
-        <from onSubmit={handleSubmit1}>
+
         <MDBox
           variant="gradient"
           bgColor="info"
@@ -115,16 +104,17 @@ function Basic() {
             Sign in
           </MDTypography>
         </MDBox>
+        {/* <form onSubmit={handleSubmit}> */}
 
-        <MDBox pt={4} pb={3} px={3}>
-          <MDBox component="form" role="form">
-            <MDBox mb={2}>
-              <MDInput type="text" label="EmployeeID" value={EmployeeID}  onChange={(event) => setEmployeeID(event.target.value)} fullWidth />
-            </MDBox>
-            <MDBox mb={2}>
-              <MDInput type="Password" label="Password" value={Pincode} onChange={(event) => setPincode(event.target.value)}  fullWidth />
-            </MDBox>
-            <MDBox display="flex" alignItems="center" ml={-1}>
+          <MDBox pt={4} pb={3} px={3}>
+            <MDBox component="form" role="form" onSubmit={handleSubmit} >
+              <MDBox mb={2}>
+                <MDInput type="text" label="EmployeeID" value={employeeID} required onChange={(e) => setEmployeeID(e.target.value)} fullWidth />
+              </MDBox>
+              <MDBox mb={2}>
+                <MDInput type="Password" label="Pincode" value={pincode} required onChange={(e) => setPincode(e.target.value)} fullWidth />
+              </MDBox>
+              {/* <MDBox display="flex" alignItems="center" ml={-1}>
               <Switch checked={rememberMe} onChange={handleSetRememberMe} />
               <MDTypography
                 variant="button"
@@ -135,22 +125,24 @@ function Basic() {
               >
                 &nbsp;&nbsp;Remember me
               </MDTypography>
-            </MDBox>
-            <h1>{loginStatus}</h1>
-            <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" 
-                color="info" fullWidth   
-                // component={Link}
-                // to="dashboard"
-                type="submit"
+            </MDBox> */}
+
+
+              {error && <div className="error">{error}</div>}
+              <MDBox mt={4} mb={1}>
+                <MDButton variant="gradient"
+                  color="info" fullWidth
+                  // component={Link}
+                  // to="dashboard"
+                  type="submit"
                 //onClick={handleLogin}
-              >
-                Log in
-              </MDButton>
+                >
+                  Log in
+                </MDButton>
+              </MDBox>
             </MDBox>
           </MDBox>
-        </MDBox>
-        </from>
+        {/* </form> */}
       </Card>
     </BasicLayout>
   );

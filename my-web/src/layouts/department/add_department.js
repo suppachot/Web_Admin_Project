@@ -11,10 +11,12 @@ import MDTypography from "components/MDTypography";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Axios from "axios";
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Department } from 'layouts/department/department';
 import { Box } from '@mui/material';
+import jwtDecode from "jwt-decode";
+import Swal from 'sweetalert2';
 
 function EditDepartment() {
     // เก็บบันทึกค่าลง state
@@ -34,6 +36,22 @@ function EditDepartment() {
             setdepartmentList(response.data);
         });
     }
+
+    const token = localStorage.getItem("jwt");
+    const decodedToken = jwtDecode(token);
+    const { emp, firstName, lastName } = decodedToken;
+
+    useEffect(() => {
+        const moment = require('moment-timezone');
+        const date = new Date();
+        const timezone = 'Asia/Bangkok'; // ตามที่ต้องการ
+        const formattedDate = moment(date).tz(timezone).format('YYYY-MM-DDTHH:mm:ss');
+        const username = emp; // แก้ไขเป็นชื่อผู้ใช้จริงที่ต้องการใช้งาน
+        setCreateBy(username);
+        setCreateDate(formattedDate);
+        setUpdateDate(formattedDate);
+        setUpdateBy(username);
+      }, []);
 
     // ส่งข้อมูล 
     const handlesubmit = (e) => {
@@ -56,10 +74,15 @@ function EditDepartment() {
                     UpdateDate: UpdateDate,
                     UpdateBy: UpdateBy
                 }
-            ])
-        }).then((res) => {
-            alert('Saved successfully.')
-            navigate('/department');
+            ]);
+            Swal.fire({
+                title: 'Saved successfully.',
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1500
+            }).then(() => {
+                navigate('/department');
+            });
         }).catch((err) => {
             console.log(err.message)
         })
@@ -74,7 +97,7 @@ function EditDepartment() {
                         <div className="card" style={{ "textAlign": "left" }}>
                             <div className="card-body">
                                 <div className="row">
-
+    
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>DepartmentID</label>
@@ -90,18 +113,13 @@ function EditDepartment() {
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>DepartmentName</label>
-                                            <select
-                                                placeholder="select Department"
+                                            <input
                                                 id='DepartmentName'
-                                                value={DepartmentName}
+                                                required value={DepartmentName}
                                                 onChange={e => setDepartmentName(e.target.value)}
-                                                className="form-select"
+                                                className="form-control"
                                             >
-                                                <option value=" " placeholder="select Department" selected>select Department</option>
-                                                <option value="ฝ่ายบุคคล">ฝ่ายบุคคล</option>
-                                                <option value="ฝ่ายบัญชี">ฝ่ายบัญชี</option>
-                                                <option value="พนักงานทั่วไป">พนักงานทั่วไป</option>
-                                            </select>
+                                            </input>
                                         </div>
                                     </div>
 

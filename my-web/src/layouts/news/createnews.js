@@ -13,6 +13,8 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Axios from "axios";
+import jwtDecode from "jwt-decode";
+import Swal from 'sweetalert2';
 
 function CreateNews() {
   const [NewsNo, setNewsNo] = useState("");
@@ -33,6 +35,22 @@ function CreateNews() {
       setNewsList(response.data);
     });
   }
+  const token = localStorage.getItem("jwt");
+  const decodedToken = jwtDecode(token);
+  const { emp, firstName, lastName } = decodedToken;
+
+  useEffect(() => {
+    const moment = require('moment-timezone');
+    const date = new Date();
+    const timezone = 'Asia/Bangkok'; // ตามที่ต้องการ
+    const formattedDate = moment(date).tz(timezone).format('YYYY-MM-DDTHH:mm:ss');
+    const formattedDatee = moment(date).tz(timezone).format('YYYY-MM-DD');
+    const username = emp; // แก้ไขเป็นชื่อผู้ใช้จริงที่ต้องการใช้งาน
+    setCreateBy(username);
+    setNewsDate(formattedDatee);
+    setUpdateDate(formattedDate);
+    setUpdateBy(username);
+  }, []);
   const handlesubmit = (e) => {
     e.preventDefault();
     Axios.post("http://localhost:5000/createnews", {
@@ -44,11 +62,17 @@ function CreateNews() {
       UpdateDate: UpdateDate,
       UpdateBy: UpdateBy
     }).then((res) => {
-      alert('Saved successfully.')
-      navigate('/news');
-    }).catch((err) => {
-      console.log(err.message)
-    })
+        Swal.fire({
+          title: 'Saved successfully.',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1500
+        }).then(() => {
+          navigate('/news');
+        });
+      }).catch((err) => {
+        console.log(err.message)
+      })
   }
 
   return (
@@ -82,7 +106,7 @@ function CreateNews() {
                         className="form-control">
 
                       </input>
-                      {NewsDate.length == 0 && validation && <span className="text-danger">Enter the date</span>}
+                      {NewsDate.length == 0 && validation && <span className="text-danger">กรุณาเลือกวันที่</span>}
                     </div>
                   </div>
 
@@ -93,9 +117,8 @@ function CreateNews() {
                         onMouseDown={e => valchange(true)} type="text"
                         onChange={e => setTopicNews(e.target.value)}
                         className="form-control">
-
                       </input>
-                      {TopicNews.length == 0 && validation && <span className="text-danger">Enter the topic news</span>}
+                      {TopicNews.length == 0 && validation && <span className="text-danger">กรุณากรอกหัวข้อข่าวสาร !</span>}
                     </div>
                   </div>
 
@@ -105,7 +128,8 @@ function CreateNews() {
                       <textarea value={NewsDetail}
                         type="text"
                         onChange={e => setNewsDetail(e.target.value)}
-                        className="form-control"></textarea>
+                        className="form-control"  style={{ height: '150px' }}>
+                      </textarea>
                     </div>
                   </div>
 
@@ -144,13 +168,6 @@ function CreateNews() {
                       </input>
                     </div>
                   </div>
-
-                  {/* <div className="col-lg-12">
-                    <div className="form-check">
-                      <input checked={active} onChange={e => setactive(e.target.checked)} type="checkbox" className="form-check-input"></input>
-                      <label className="form-check-label">Is Active</label>
-                    </div>
-                  </div> */}
 
                   <Box display="flex">
                     <Box sx={{ flexGrow: 4 }}>

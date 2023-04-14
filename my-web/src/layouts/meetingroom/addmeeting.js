@@ -2,25 +2,28 @@ import DataTable from 'react-data-table-component';
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import { Box } from '@mui/material';
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
+import Box from "@mui/material/Box";
 import MDTypography from "components/MDTypography";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Axios from "axios";
-import { useState ,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import jwtDecode from "jwt-decode";
+import { select } from 'assets/theme-dark/components/form/select';
+import Select from 'react-select'
 import Swal from 'sweetalert2';
+import jwtDecode from "jwt-decode";
 
-function AddTitle() {
+function AddMeetingRoom() {
   // เก็บบันทึกค่าลง state
-  const [TitleID, setTitleID] = useState("");
-  const [TitleName, setTitleName] = useState("");
+  const [roomID, setroomID] = useState("");
+  const [RoomName, setRoomName] = useState("");
+  const [Capacity, setCapacity] = useState("");
   const [CreateDate, setCreateDate] = useState("");
   const [CreateBy, setCreateBy] = useState("");
   const [UpdateDate, setUpdateDate] = useState("");
@@ -29,69 +32,71 @@ function AddTitle() {
 
   const navigate = useNavigate();
   // อ่านค่าจาก db
-  const [titleList, settitleList] = useState([]);
-  const getTitle = () => {
-    Axios.get('http://localhost:5000/title').then((response) => {
-      settitleList(response.data);
+  const [meetingroom, setmeetingroom] = useState([]);
+  const getmeetingroom = () => {
+    Axios.get('http://localhost:5000/meetingroom').then((response) => {
+      setmeetingroom(response.data);
     });
   }
-
   const token = localStorage.getItem("jwt");
-    const decodedToken = jwtDecode(token);
-    const { emp, firstName, lastName } = decodedToken;
+  const decodedToken = jwtDecode(token);
+  const { emp, firstName, lastName } = decodedToken;
 
-    useEffect(() => {
-        const moment = require('moment-timezone');
-        const date = new Date();
-        const timezone = 'Asia/Bangkok'; 
-        const formattedDate = moment(date).tz(timezone).format('YYYY-MM-DDTHH:mm:ss');
-        const username = emp; // แก้ไขเป็นชื่อผู้ใช้จริงที่ต้องการใช้งาน
-        setCreateBy(username);
-        setCreateDate(formattedDate);
-        setUpdateDate(formattedDate);
-        setUpdateBy(username);
-      }, []);
+  useEffect(() => {
+    const moment = require('moment-timezone');
+    const date = new Date();
+    const timezone = 'Asia/Bangkok'; // ตามที่ต้องการ
+    const formattedDate = moment(date).tz(timezone).format('YYYY-MM-DDTHH:mm:ss');
+    const username = emp; // แก้ไขเป็นชื่อผู้ใช้จริงที่ต้องการใช้งาน
+    setCreateBy(username);
+    setCreateDate(formattedDate);
+    setUpdateDate(formattedDate);
+    setUpdateBy(username);
+  }, []);
 
   // ส่งข้อมูล 
   const handlesubmit = (e) => {
     e.preventDefault();
-    Axios.post('http://localhost:5000/title/add', {
-      TitleID: TitleID,
-      TitleName: TitleName,
+    Axios.post('http://localhost:5000/meetingroom/add', {
+      RoomID: roomID,
+      RoomName: RoomName,
+      Capacity: Capacity,
       CreateDate: CreateDate,
       CreateBy: CreateBy,
       UpdateDate: UpdateDate,
       UpdateBy: UpdateBy
     }).then(() => {
-      settitleList([
-        ...titleList,
+      setmeetingroom([
+        ...meetingroom,
         {
-          TitleID: TitleID,
-          TitleName: TitleName,
+          RoomID: roomID,
+          RoomName: RoomName,
+          Capacity: Capacity,
           CreateDate: CreateDate,
           CreateBy: CreateBy,
           UpdateDate: UpdateDate,
           UpdateBy: UpdateBy
         }
-      ]);
+      ])
       Swal.fire({
-          title: 'Saved successfully.',
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 1500
+        icon: 'success',
+        title: 'Saved successfully.',
+        showConfirmButton: false,
+        timer: 1500
       }).then(() => {
-          navigate('/title');
+        navigate('/meetingroom');
       });
-  }).catch((err) => {
+    }).catch((err) => {
       console.log(err.message)
-  })
-  }
+    });
+  };
 
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <div className="row">
         <div className="offset-lg-3 col-lg-6">
+
           <form className="container" onSubmit={handlesubmit}>
             <div className="card" style={{ "textAlign": "left" }}>
               <div className="card-body">
@@ -99,11 +104,11 @@ function AddTitle() {
 
                   <div className="col-lg-12">
                     <div className="form-group">
-                      <label>TitleID</label>
-                      <input required value={TitleID}
+                      <label>RoomID</label>
+                      <input required value={roomID}
                         type="text"
-                        id='TitleID'
-                        onChange={e => setTitleID(e.target.value)}
+                        id='RoomID'
+                        onChange={e => setroomID(e.target.value)}
                         className="form-control">
                       </input>
                     </div>
@@ -111,13 +116,23 @@ function AddTitle() {
 
                   <div className="col-lg-12">
                     <div className="form-group">
-                      <label>TitleName</label>
-                      <input
-                        id='TitleName'
-                        value={TitleName}
-                        onChange={e => setTitleName(e.target.value)}
-                        className="form-control"
-                      >
+                      <label>RoomName</label>
+                      <input required value={RoomName}
+                        type="text"
+                        id='RoomName'
+                        onChange={e => setRoomName(e.target.value)}
+                        className="form-control">
+                      </input>
+                    </div>
+                  </div>
+
+                  <div className="col-lg-12">
+                    <div className="form-group">
+                      <label>Capacity</label>
+                      <input value={Capacity} type="text"
+                        id='Capacity'
+                        onChange={e => setCapacity(e.target.value)}
+                        className="form-control">
                       </input>
                     </div>
                   </div>
@@ -170,7 +185,7 @@ function AddTitle() {
                   <Box display="flex">
                     <Box sx={{ flexGrow: 4 }}>
                       <div className="card-body col-lg-4" >
-                        <Link to="/title" className="btn btn-danger">Back</Link>
+                        <Link to="/meetingroom" className="btn btn-danger">Back</Link>
                       </div>
                     </Box>
                     <Box>
@@ -179,13 +194,15 @@ function AddTitle() {
                       </div>
                     </Box>
                   </Box>
+
                 </div>
               </div>
             </div>
           </form>
         </div>
-      </div>
-    </DashboardLayout>
+      </div >
+    </DashboardLayout >
   );
 }
-export default AddTitle;
+export default AddMeetingRoom;
+

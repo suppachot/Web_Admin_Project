@@ -35,15 +35,19 @@
     "exceljs": "^4.3.0",
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.4",
+    "moment-timezone": "^0.5.43",
     "papaparse": "^5.4.0",
     "prop-types": "15.8.1",
     "react": "17.0.2",
+    "react-bootstrap": "^2.7.3",
     "react-chartjs-2": "3.0.4",
     "react-csv": "^2.2.2",
     "react-data-table-component": "^7.5.3",
     "react-dom": "17.0.2",
     "react-github-btn": "1.2.1",
     "react-history-router": "^1.4.1",
+    "react-i18next": "^12.2.0",
+    "react-phone-input-material-ui": "^2.17.4",
     "react-router-dom": "6.2.1",
     "react-scripts": "5.0.0",
     "react-select": "^5.7.0",
@@ -52,6 +56,7 @@
     "styled-components": "^5.3.9",
     "stylis": "4.0.13",
     "stylis-plugin-rtl": "2.1.1",
+    "sweetalert2": "^11.7.3",
     "web-vitals": "2.1.4",
     "yup": "0.32.11"
   },
@@ -89,6 +94,7 @@
     "eslint-plugin-prettier": "4.0.0",
     "eslint-plugin-react": "7.28.0",
     "eslint-plugin-react-hooks": "4.3.0",
-    "prettier": "2.5.1"
+    "prettier": "2.5.1",
+    "webpack-dev-server": "^4.13.2"
   }
 }
