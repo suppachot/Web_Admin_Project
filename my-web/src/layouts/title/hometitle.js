@@ -35,17 +35,7 @@ function HomeTitle() {
     const LoadEdit = (TitleID) => {
         navigate("/title/edit/" + TitleID);
     }
-    // const Removefunction = (TitleID) => {
-    //     if (window.confirm('Do you want to remove?')) {
-    //         Axios.delete("http://localhost:5000/deletetitle/" + TitleID, {
-    //         }).then((res) => {
-    //             alert('Removed successfully.')
-    //             window.location.reload();
-    //         }).catch((err) => {
-    //             console.log(err.message)
-    //         })
-    //     }
-    // }
+  
     
     const Removefunction = (TitleID) => {
         Swal.fire({
@@ -82,36 +72,42 @@ function HomeTitle() {
             id: 'titleID',
             name: 'TitleID',
             selector: row => row.TitleID,
+            sortable: true,
             width: '150px'
         },
         {
             id: 'title',
             name: 'Title',
             selector: row => row.TitleName,
+            sortable: true,
             width: '150px'
         },
         {
             id: 'createdate',
             name: 'CreateDate',
             selector: row => moment(row.CreateDate).format('DD/MM/YYYY HH:mm:ss A'),
+            sortable: true,
             width: '250px'
         },
         {
             id: 'createby',
             name: 'CreateBy',
             selector: row => row.CreateBy,
+            sortable: true,
             width: '150px'
         },
         {
             id: 'updatedate',
             name: 'UpdateDate',
             selector: row => moment(row.UpdateDate).format('DD/MM/YYYY HH:mm:ss A'),
+            sortable: true,
             width: '250px'
         },
         {
             id: 'updateby',
             name: 'UpdateBy',
             selector: row => row.UpdateBy,
+            sortable: true,
             width: '150px'
         },
         {

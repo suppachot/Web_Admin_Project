@@ -21,7 +21,7 @@ import jwtDecode from "jwt-decode";
 
 function AddMeetingRoom() {
   // เก็บบันทึกค่าลง state
-  const [roomID, setroomID] = useState("");
+  //const [roomID, setroomID] = useState("");
   const [RoomName, setRoomName] = useState("");
   const [Capacity, setCapacity] = useState("");
   const [CreateDate, setCreateDate] = useState("");
@@ -58,7 +58,7 @@ function AddMeetingRoom() {
   const handlesubmit = (e) => {
     e.preventDefault();
     Axios.post('http://localhost:5000/meetingroom/add', {
-      RoomID: roomID,
+     // RoomID: roomID,
       RoomName: RoomName,
       Capacity: Capacity,
       CreateDate: CreateDate,
@@ -69,7 +69,7 @@ function AddMeetingRoom() {
       setmeetingroom([
         ...meetingroom,
         {
-          RoomID: roomID,
+         // RoomID: roomID,
           RoomName: RoomName,
           Capacity: Capacity,
           CreateDate: CreateDate,
@@ -102,7 +102,7 @@ function AddMeetingRoom() {
               <div className="card-body">
                 <div className="row">
 
-                  <div className="col-lg-12">
+                  {/* <div className="col-lg-12">
                     <div className="form-group">
                       <label>RoomID</label>
                       <input required value={roomID}
@@ -112,7 +112,7 @@ function AddMeetingRoom() {
                         className="form-control">
                       </input>
                     </div>
-                  </div>
+                  </div> */}
 
                   <div className="col-lg-12">
                     <div className="form-group">

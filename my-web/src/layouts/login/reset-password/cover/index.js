@@ -1,18 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 // @mui material components
 import Card from "@mui/material/Card";
 
@@ -26,9 +11,46 @@ import MDButton from "components/MDButton";
 import CoverLayout from "layouts/login/components/CoverLayout";
 
 // Images
-import bgImage from "assets/images/bg-reset-cover.jpeg";
+import bgImage from "assets/images/TKS_lo.jpg";
+
+import { useState } from "react";
+// react-router-dom components
+import { Link, useNavigate } from "react-router-dom";
+import { Axios } from 'axios';
+import { message } from 'antd';
+import jwtDecode from "jwt-decode";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 function Cover() {
+
+  const [email, setEmail] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('http://localhost:5000/api/forgot-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email })
+      });
+  
+      if (response.ok) {
+        await Swal.fire('Reset password email sent');
+      } else {
+        const error = await response.json();
+        await Swal.fire('Error', error.message, 'error');
+      }
+    } catch (error) {
+      console.log(error);
+      await Swal.fire('Error sending reset password email');
+    }
+  };
+  
+
   return (
     <CoverLayout coverHeight="50vh" image={bgImage}>
       <Card>
@@ -46,18 +68,15 @@ function Cover() {
           <MDTypography variant="h3" fontWeight="medium" color="white" mt={1}>
             Reset Password
           </MDTypography>
-          <MDTypography display="block" variant="button" color="white" my={1}>
-            You will receive an e-mail in maximum 60 seconds
-          </MDTypography>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
-          <MDBox component="form" role="form">
+          <MDBox component="form" role="form" onSubmit={handleSubmit}>
             <MDBox mb={4}>
-              <MDInput type="email" label="Email" variant="standard" fullWidth />
+              <MDInput type="email" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} required  variant="standard" fullWidth />
             </MDBox>
             <MDBox mt={6} mb={1}>
-              <MDButton variant="gradient" color="info" fullWidth>
-                reset
+              <MDButton variant="gradient" color="info" type="submit" fullWidth>
+              Send Reset Password Email
               </MDButton>
             </MDBox>
           </MDBox>

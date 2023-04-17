@@ -71,42 +71,49 @@ function Meeting() {
       id: 'RoomID',
       name: 'RoomID',
       selector: row => row.RoomID,
+      sortable: true,
       width: '100px'
     },
     {
       id: 'RoomName',
       name: 'RoomName',
       selector: row => row.RoomName,
+      sortable: true,
       width: '150px'
     },
     {
       id: 'Capacity',
       name: 'Capacity',
       selector: row => row.Capacity,
+      sortable: true,
       width: '150px'
     },
     {
       id: 'createdate',
       name: 'CreateDate',
       selector: row => moment(row.CreateDate).format('DD/MM/YYYY HH:mm:ss A'),
+      sortable: true,
       width: '250px'
     },
     {
       id: 'createby',
       name: 'CreateBy',
       selector: row => row.CreateBy,
+      sortable: true,
       width: '150px'
     },
     {
       id: 'updatedate',
       name: 'UpdateDate',
       selector: row => moment(row.UpdateDate).format('DD/MM/YYYY HH:mm:ss A'),
+      sortable: true,
       width: '250px'
     },
     {
       id: 'updateby',
       name: 'UpdateBy',
       selector: row => row.UpdateBy,
+      sortable: true,
       width: '150px'
     }, {
       name: 'Action',

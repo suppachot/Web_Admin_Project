@@ -19,7 +19,7 @@ import Swal from 'sweetalert2';
 
 function AddTitle() {
   // เก็บบันทึกค่าลง state
-  const [TitleID, setTitleID] = useState("");
+  //const [TitleID, setTitleID] = useState("");
   const [TitleName, setTitleName] = useState("");
   const [CreateDate, setCreateDate] = useState("");
   const [CreateBy, setCreateBy] = useState("");
@@ -56,7 +56,7 @@ function AddTitle() {
   const handlesubmit = (e) => {
     e.preventDefault();
     Axios.post('http://localhost:5000/title/add', {
-      TitleID: TitleID,
+     // TitleID: TitleID,
       TitleName: TitleName,
       CreateDate: CreateDate,
       CreateBy: CreateBy,
@@ -66,7 +66,7 @@ function AddTitle() {
       settitleList([
         ...titleList,
         {
-          TitleID: TitleID,
+          //TitleID: TitleID,
           TitleName: TitleName,
           CreateDate: CreateDate,
           CreateBy: CreateBy,
@@ -97,7 +97,7 @@ function AddTitle() {
               <div className="card-body">
                 <div className="row">
 
-                  <div className="col-lg-12">
+                  {/* <div className="col-lg-12">
                     <div className="form-group">
                       <label>TitleID</label>
                       <input required value={TitleID}
@@ -107,7 +107,7 @@ function AddTitle() {
                         className="form-control">
                       </input>
                     </div>
-                  </div>
+                  </div> */}
 
                   <div className="col-lg-12">
                     <div className="form-group">

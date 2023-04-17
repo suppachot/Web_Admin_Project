@@ -75,31 +75,37 @@ function Department() {
     {
       name: 'DepartmentID',
       selector: row => row.DepartmentID,
+      sortable: true,
       width: '150px'
     },
     {
       name: 'DepartmentName',
       selector: row => row.DepartmentName,
+      sortable: true,
       width: '200px'
     },
     {
       name: 'CreateDate',
       selector: row => moment(row.CreateDate).format('DD/MM/YYYY HH:mm:ss A'),
+      sortable: true,
       width: '250px'
     },
     {
       name: 'CreateBy',
       selector: row => row.CreateBy,
+      sortable: true,
       width: '150px'
     },
     {
       name: 'UpdateDate',
       selector: row => moment(row.UpdateDate).format('DD/MM/YYYY HH:mm:ss A'),
+      sortable: true,
       width: '250px'
     },
     {
       name: 'UpdateBy',
       selector: row => row.UpdateBy,
+      sortable: true,
       width: '150px'
     },
     {

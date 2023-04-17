@@ -135,7 +135,7 @@ const DetailModal = ({ open, handleClose, booking }) => {
                         </Typography>
                     </Grid>
                 </Grid>
-                
+
                 <div class="modal-footer">
                     <button
                         type="button"
@@ -179,8 +179,9 @@ function BookingApprove() {
 
     const [filterText, setFilterText] = useState('');
     const filteredData = items.filter((item) =>
-        item.RoomName.toLowerCase().includes(filterText.toLowerCase())
-
+        item.RoomName.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.Topic.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.Status.toLowerCase().includes(filterText.toLowerCase())
     );
 
     const handleFilter = (e) => {
@@ -197,48 +198,56 @@ function BookingApprove() {
         {
             id: 'BookingID',
             name: 'BookingID',
+            sortable: true,
             selector: row => row.BookingID,
-            width: '100px'
+            width: '120px'
         },
         {
             id: 'RoomName',
             name: 'RoomName',
+            sortable: true,
             selector: row => row.RoomName,
             width: '120px'
         },
         {
             id: 'Topic',
             name: 'Topic',
+            sortable: true,
             selector: row => row.Topic,
             width: '200px'
         },
         {
             id: 'EmployeeID',
             name: 'EmployeeID',
+            sortable: true,
             selector: row => row.EmployeeID,
             width: '120px'
         },
         {
             id: 'StartTime',
             name: 'StartTime',
+            sortable: true,
             selector: row => row.StartTime,
             width: '100px'
         },
         {
             id: 'EndTime',
             name: 'EndTime',
+            sortable: true,
             selector: row => row.EndTime,
             width: '100px'
         },
         {
             id: 'Date',
             name: 'Date',
+            sortable: true,
             selector: row => moment(row.Date).format('DD/MM/YYYY '),
             width: '120px'
         },
         {
             id: 'Status',
             name: 'Status',
+            sortable: true,
             selector: row => row.Status,
             width: '150px',
             cell: row => {
@@ -261,7 +270,7 @@ function BookingApprove() {
                         id="btnGroupDrop1"
                         type="button"
                         className={`btn dropdown-toggle 
-                    ${row.Status === 'Wait' ? 'btn-warning'
+                                ${row.Status === 'Wait' ? 'btn-warning'
                                 : row.Status === 'Approve' ? 'btn-success'
                                     : row.Status === 'No approve' ? 'btn-danger'
                                         : ''}`}
@@ -272,16 +281,18 @@ function BookingApprove() {
                         {row.Status}
                     </button>
                     <div className="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                        <button
+                        {/* <button
                             className="dropdown-item"
                             onClick={() => handleStatusUpdate(row, 'Wait')}
+                            disabled={row.Status === 'Wait'}
                         >
                             Wait
-                        </button>
+                        </button> */}
                         <button
                             className="dropdown-item"
                             onClick={() => handleStatusUpdate(row, 'Approve')}
-                            disabled={row.Status === 'Approve' || row.Status === 'No approve'}
+                            disabled={row.Status === 'Approve' || row.Status === 'No approve' }
+                            data-bookingid={row.BookingID}
                         >
                             Approve
                         </button>
@@ -289,6 +300,7 @@ function BookingApprove() {
                             className="dropdown-item"
                             onClick={() => handleStatusUpdate(row, 'No approve')}
                             disabled={row.Status === 'Approve' || row.Status === 'No approve'}
+                            data-bookingid={row.BookingID}
                         >
                             No approve
                         </button>
@@ -363,10 +375,12 @@ function BookingApprove() {
                 } else if (status === 'Approve' || status === 'No approve') {
                     const statusButton = document.querySelector(`[data-bookingid="${row.BookingID}"]`);
                     statusButton.disabled = true;
-                }
+                 }
+         
             })
             .catch(error => console.log(error));
     };
+
 
     useEffect(() => {
         fetch("http://localhost:5000/bookingmeeting")
@@ -404,6 +418,7 @@ function BookingApprove() {
         return (
             <DashboardLayout>
                 <DashboardNavbar />
+
                 <Box display="flex">
                     <Box sx={{ flexGrow: 2 }} >
                         <div class="input-group col-lg-4" >
@@ -421,7 +436,6 @@ function BookingApprove() {
                                 Clear
                             </button>
                         </div>
-
                     </Box>
                 </Box>
 

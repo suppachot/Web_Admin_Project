@@ -69,12 +69,12 @@ import DayCheckout from "layouts/checkout/daycheckout";
 import SignIn from "layouts/login/sign-in";
 import SignUp from "layouts/login/sign-up";
 import Logout from "layouts/logout/logout";
-
+import Cover from "layouts/login/reset-password/cover";
+import ResetPW from "layouts/login/reset-password/cover/resetpassword";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import { ImportExport, MeetingRoom } from "@mui/icons-material";
 import { PeopleAltIcon } from '@mui/icons-material/PeopleAlt';
-
 
 const routes = [
   {
@@ -97,7 +97,7 @@ const routes = [
     type: "collapse",
     name: "Department",
     key: "department",
-    icon: <Icon fontSize="small"></Icon>,
+    icon: <Icon fontSize="small">people_alt</Icon>,
     route: "/department",
     component: <Department />,  
   },
@@ -105,7 +105,7 @@ const routes = [
     type: "collapse",
     name: "Role",
     key: "role",
-    icon: <Icon fontSize="small"></Icon>,
+    icon: <Icon fontSize="small">engineering</Icon>,
     route: "/role",
     component: <Role />,  
   },
@@ -113,7 +113,7 @@ const routes = [
     type: "collapse",
     name: "Title",
     key: "title",
-    icon: <Icon fontSize="small"></Icon>,
+    icon: <Icon fontSize="small">man</Icon>,
     route: "/title",
     component: <HomeTitle />,  
   },
@@ -129,7 +129,7 @@ const routes = [
     type: "collapse",
     name: "Bookingmeeting",
     key: "bookingmeeting",
-    icon: <Icon fontSize="small"></Icon>,
+    icon: <Icon fontSize="small">mark_as_unread</Icon>,
     route: "/bookingmeeting",
     component: <BookingApprove />,  
   },
@@ -165,13 +165,6 @@ const routes = [
     route: "/logout",
     component: <Logout />, 
   },
-  // {
-  //   type: "collapse",
-  //   name: "homeR",
-  //   key: "homeR",
-  //   route: "/homeR",
-  //   component: <SignUp />, 
-  // },
   {
     name: "Login",
     key: "Login",
@@ -300,6 +293,24 @@ const routes = [
     icon: <Icon fontSize="small"></Icon>,
     route: "/checkoutday",
     component: <DayCheckout />,  
+  }
+  ,{
+    key: "signup",
+    icon: <Icon fontSize="small"></Icon>,
+    route: "/login/sign-up",
+    component: <SignUp />,  
+  }
+  ,{
+    key: "cover",
+    icon: <Icon fontSize="small"></Icon>,
+    route: "/cover",
+    component: <Cover />,  
+  }
+  ,{
+    key: "resetpw",
+    icon: <Icon fontSize="small"></Icon>,
+    route: "/resetpassword",
+    component: <ResetPW />,  
   }
 
 ];

@@ -65,31 +65,37 @@ function Role() {
     {
       name: 'RoleID',
       selector: row => row.RoleID,
+      sortable: true,
       width: '150px'
     },
     {
       name: 'RoleName',
       selector: row => row.RoleName,
+      sortable: true,
       width: '150px'
     },
     {
       name: 'CreateDate',
       selector: row => moment(row.CreateDate).format('DD/MM/YYYY HH:mm:ss A'),
+      sortable: true,
       width: '250px'
     },
     {
       name: 'CreateBy',
       selector: row => row.CreateBy,
+      sortable: true,
       width: '150px'
     },
     {
       name: 'UpdateDate',
       selector: row => moment(row.UpdateDate).format('DD/MM/YYYY HH:mm:ss A'),
+      sortable: true,
       width: '250px'
     },
     {
       name: 'UpdateBy',
       selector: row => row.UpdateBy,
+      sortable: true,
       width: '150px'
     },
     {

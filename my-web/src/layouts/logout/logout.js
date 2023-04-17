@@ -18,13 +18,16 @@ const Logout = () => {
         // localStorage.removeItem('lastName');
         // localStorage.removeItem('emp');
         localStorage.clear();
+        sessionStorage.clear();
         Swal.fire('You logout', '', 'success')
         navigate('/login/sign-in');
       } else if (result.isDenied) {
-        //localStorage.setItem('jwt', localStorage.getItem('jwt'));
-        localStorage.setItem('firstName', localStorage.getItem('firstName'));
-        localStorage.setItem('lastName', localStorage.getItem('lastName'));
-        localStorage.setItem('emp', localStorage.getItem('emp'));
+        // localStorage.setItem('firstName', localStorage.getItem('firstName'));
+        // localStorage.setItem('lastName', localStorage.getItem('lastName'));
+        // localStorage.setItem('emp', localStorage.getItem('emp'));
+        sessionStorage.setItem('firstName', sessionStorage.getItem('firstName'));
+        sessionStorage.setItem('lastName', sessionStorage.getItem('lastName'));
+        sessionStorage.setItem('emp', sessionStorage.getItem('emp'));
         navigate(-1);
       }
     });

@@ -179,31 +179,37 @@ function DayCheckout() {
     {
       name: 'TransactionID',
       selector: row => row.TransactionID,
+      sortable: true,
       width: '150px'
     },
     {
       name: 'EmployeeID',
       selector: row => row.EmployeeID,
+      sortable: true,
       width: '200px'
     },
     {
       name: 'CheckOutDate',
       selector: row => moment(row.CheckOutDate).format('DD/MM/YYYY'),
+      sortable: true,
       width: '200px'
     },
     {
       name: 'CheckOutTime',
       selector: row => row.CheckOutTime,
+      sortable: true,
       width: '200px'
     },
     {
       name: 'Location',
       selector: row => row.Location,
+      sortable: true,
       width: '250px'
     },
     {
       name: 'Model',
       selector: row => row.Model,
+      sortable: true,
       width: '200px'
     },
     {

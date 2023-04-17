@@ -66,7 +66,7 @@ function EditDepartment() {
     const handlesubmit = (e) => {
         e.preventDefault();
         Axios.put("http://localhost:5000/dapartment/edit/" + DepartmentID, {
-            DepartmentID: DepartmentID,
+            //DepartmentID: DepartmentID,
             DepartmentName: DepartmentName,
             CreateDate: CreateDate,
             CreateBy: CreateBy,

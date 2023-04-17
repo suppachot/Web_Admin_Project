@@ -3,17 +3,36 @@ const app = express();
 const mysql = require('mysql2');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const nodemailer = require('nodemailer');
 
-// const multer = require("multer");
-// const csvParser = require("csv-parser");
-// const fs = require("fs");
-// const csv = require('csv-parser');
-// const jsonParser = bodyParser.json()
+const { v4: uuidv4 } = require('uuid');
+const crypto = require('crypto');
 
 
 app.use(cors());
 app.use(express.json());
 
+const mammoth = require('mammoth');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+
+
+// const upload = multer();
+// app.use(upload.none());
+
+
+function readDocFile(file) {
+    return new Promise((resolve, reject) => {
+        mammoth.convertToHtml({ buffer: file.buffer })
+            .then((result) => {
+                const html = result.value;
+                const messages = result.messages;
+                resolve({ html, messages });
+            })
+            .catch((err) => reject(err));
+    });
+}
 
 const db = mysql.createConnection({
     host: "localhost",
@@ -31,12 +50,10 @@ db.connect((err) => {
     }
 });
 
-
-//login
+// login jwt ธรรมดา
 // app.post('/api/login', async (req, res) => {
-//     const { employeeID, pincode } = req.body;
-
-//     const query = 'SELECT * FROM account LEFT JOIN employee ON account.EmployeeID = employee.EmployeeID WHERE account.EmployeeID = ? AND employee.RoleName = "Administrator" ';
+//     const { employeeID, Password } = req.body;
+//     const query = 'SELECT * FROM account_admin LEFT JOIN employee ON account_admin.EmployeeID = employee.EmployeeID WHERE account_admin.EmployeeID = ? AND employee.RoleName = "Administrator"';
 //     db.query(query, [employeeID], (err, results) => {
 //         if (err) {
 //             console.error(err);
@@ -47,55 +64,188 @@ db.connect((err) => {
 //             return res.status(401).json({ error: 'Invalid EmployeeID or Pincode' });
 //         }
 
-//         const account = results[0];
-//         //const employee = results[0];
-//         if (account.Pincode !== pincode) {
+//         const account_admin = results[0];
+//         if (account_admin.Password !== Password) {
 //             return res.status(401).json({ error: 'Invalid EmployeeID or Pincode' });
 //         }
 
-//        const token = jwt.sign({ id: account.AccountID }, 'your_jwt_secret', { expiresIn: '5h' });
-//        res.json({ token });
-//        //---ไม่เอา
-//         //const token = jwt.sign({ id: account.AccountID , role: account.RoleName} ,process.env.JWT_SECRET, { expiresIn: '1h' });
-//         // const token = jwt.sign({ id: AccountId, employeeId: EmployeeId }, process.env.JWT_SECRET, { expiresIn }); 
+//         const payload = {
+//             id: account_admin.AccountID,
+//             emp: account_admin.EmployeeID,
+//             firstName: account_admin.FirstName,
+//             lastName: account_admin.LastName,
+//         };
+//         const token = jwt.sign(payload, 'your_jwt_secret', { expiresIn: '5h' });
+//         res.json({
+//             token,
+//             emp: account_admin.EmployeeID,
+//             firstName: account_admin.FirstName,
+//             lastName: account_admin.LastName,
+//         });
 //     });
 // });
 
 app.post('/api/login', async (req, res) => {
-    const { employeeID, pincode } = req.body;
+    const { employeeID, password } = req.body;
+    const query = 'SELECT * FROM account_admin LEFT JOIN employee ON account_admin.EmployeeID = employee.EmployeeID WHERE account_admin.EmployeeID = ? AND employee.RoleName = "Administrator"';
+    db.query(query, [employeeID], async (err, results) => {
+        try {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ error: 'Internal server error' });
+            }
 
-    //const query = 'SELECT * FROM account LEFT JOIN employee ON account.EmployeeID = employee.EmployeeID WHERE account.EmployeeID = ? AND employee.RoleName = "Administrator"';
-    const query = 'SELECT * FROM account LEFT JOIN employee ON account.EmployeeID = employee.EmployeeID WHERE account.EmployeeID = ?';
-    db.query(query, [employeeID], (err, results) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: 'Internal server error' });
+            if (results.length === 0) {
+                return res.status(401).json({ error: 'Invalid EmployeeID or Pincode' });
+            }
+
+            const account_admin = results[0];
+            const isMatch = await bcrypt.compare(password, account_admin.Password);
+            if (account_admin.Password == !isMatch) {
+                return res.status(401).json({ error: 'Invalid EmployeeID or Pincode' });
+            }
+
+            const payload = {
+                id: account_admin.AccountID,
+                emp: account_admin.EmployeeID,
+                firstName: account_admin.FirstName,
+                lastName: account_admin.LastName,
+            };
+            const token = jwt.sign(payload, 'your_jwt_secret', { expiresIn: '5h' });
+            res.json({
+                token,
+                emp: account_admin.EmployeeID,
+                firstName: account_admin.FirstName,
+                lastName: account_admin.LastName,
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ message: 'Error logging in' });
         }
-
-        if (results.length === 0) {
-            return res.status(401).json({ error: 'Invalid EmployeeID or Pincode' });
-        }
-
-        const account = results[0];
-        if (account.Pincode !== pincode) {
-            return res.status(401).json({ error: 'Invalid EmployeeID or Pincode' });
-        }
-
-        const payload = {
-            id: account.AccountID,
-            emp: account.EmployeeID,
-            firstName: account.FirstName,
-            lastName: account.LastName,
-        };
-        const token = jwt.sign(payload, 'your_jwt_secret', { expiresIn: '5h' });
-        res.json({
-            token,
-            emp: account.EmployeeID,
-            firstName: account.FirstName,
-            lastName: account.LastName,
-        });
     });
 });
+
+// register ธรรมดา
+// app.post('/api/register', (req, res) => {
+//     const employeeID = req.body.employeeID;
+//     const email = req.body.email;
+//     const Password = req.body.Password;
+//     db.query("INSERT INTO account_admin( EmployeeID, Email, Password) VALUES(?,?,?);",
+//         [employeeID, email, Password],
+//         (err, result) => {
+//             if (err) {
+//                 console.log(err);
+//                 // res.status(201).json({ message: 'Add User  successfully' ,status : 'ok'});
+//             }
+//             else {
+//                 //res.send("Values Emp inserted");
+//                 res.json({ message: 'Add User  successfully', status: 'ok', result });
+//                 // res.send(result);
+//                 // console.log(result);
+//             }
+//         }
+//     );
+//     console.log('regis success');
+// })
+// register เข้ารหัส
+app.post('/api/register', async (req, res) => {
+    try {
+        const employeeID = req.body.employeeID;
+        const email = req.body.email;
+        const password = req.body.password;
+
+        // generate salt for password
+        const salt = await bcrypt.genSalt(10);
+        // hash password with salt
+        const encryptedPassword = await bcrypt.hash(password, salt);
+
+        db.query("INSERT INTO account_admin( EmployeeID, Email, Password) VALUES(?,?,?);",
+            [employeeID, email, encryptedPassword],
+            (err, result) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).json({ message: 'Error registering user' });
+                } else {
+                    res.status(201).json({ message: 'User registered successfully', status: 'ok', result });
+                }
+            }
+        );
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Error registering user' });
+    }
+});
+//reset password
+app.post('/api/forgot-password', async (req, res) => {
+    try {
+        const email = req.body.email;
+
+        // generate reset token
+        const resetToken = crypto.randomBytes(20).toString('hex');
+        const resetTokenExpiry = Date.now() + 60 * 60 * 1000; // 1 hour from now
+
+        // update reset token and expiry time in database
+        db.query("UPDATE account_admin SET ResetToken = ?, ResetTokenExpiry = ? WHERE Email = ?;",
+            [resetToken, resetTokenExpiry, email],
+            (err, result) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).json({ message: 'Error sending reset password email' });
+                } else {
+                    // send reset password email
+                    const transporter = nodemailer.createTransport({
+                        service: 'gmail',
+                        auth: {
+                            user: "adarsh438tcsckandivali@gmail.com",
+                            pass: "rmdklolcsmswvyfw",
+                        }
+                    });
+
+                    const mailOptions = {
+                        from: 'your_email@gmail.com',
+                        to: email,
+                        subject: 'Reset Password',
+                        html: `<p>Click <a href="http://localhost:3000/reset-password/${resetToken}">here</a> to reset your password.</p>`
+                    };
+
+                    transporter.sendMail(mailOptions, (err, info) => {
+                        if (err) {
+                            console.log(err);
+                            res.status(500).json({ message: 'Error sending reset password email' });
+                        } else {
+                            console.log(info);
+                            res.status(200).json({ message: 'Reset password email sent' });
+                        }
+                    });
+                }
+            }
+        );
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Error sending reset password email' });
+    }
+});
+
+app.get('/api/reset-password/:resetToken', (req, res) => {
+    const resetToken = req.params.resetToken;
+
+    db.query("SELECT * FROM account_admin WHERE ResetToken = ? AND ResetTokenExpiry > ?;",
+        [resetToken, Date.now()],
+        (err, result) => {
+            if (err) {
+                console.log(err);
+                res.status(500).json({ message: 'Error resetting password' });
+            } else if (result.length === 0) {
+                res.status(400).json({ message: 'Invalid or expired reset token' });
+            } else {
+                // render reset password form
+                res.render('reset-password', { resetToken });
+            }
+        }
+    );
+});
+
+
 
 
 
@@ -112,7 +262,7 @@ app.get('/employee-id', async (req, res) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
         const query = 'SELECT EmployeeID FROM account WHERE AccountID = ?';
-        const [rows] = await pool.execute(query, [decoded.id]);
+        const [rows] = await db.execute(query, [decoded.id]);
 
         if (!rows.length) {
             return res.status(404).json({ error: 'User not found' });
@@ -123,6 +273,7 @@ app.get('/employee-id', async (req, res) => {
     } catch (err) {
         res.status(403).json({ error: 'Invalid token' });
     }
+    console.log('regis success');
 });
 
 // count admin
@@ -231,15 +382,15 @@ app.get('/title', (req, res) => {
 })
 // create Title
 app.post('/title/add', (req, res) => {
-    const TitleID = req.body.TitleID;
+    //const TitleID = req.body.TitleID;
     const TitleName = req.body.TitleName;
     const CreateDate = req.body.CreateDate;
     const CreateBy = req.body.CreateBy;
     const UpdateDate = req.body.UpdateDate;
     const UpdateBy = req.body.UpdateBy;
 
-    db.query("INSERT INTO title (TitleID, TitleName ,CreateDate,CreateBy,UpdateDate,UpdateBy) VALUES(?,?,?,?,?,?);",
-        [TitleID, TitleName, CreateDate, CreateBy, UpdateDate, UpdateBy],
+    db.query("INSERT INTO title ( TitleName ,CreateDate,CreateBy,UpdateDate,UpdateBy) VALUES(?,?,?,?,?);",
+        [TitleName, CreateDate, CreateBy, UpdateDate, UpdateBy],
         (err, result) => {
             if (err) {
                 console.log(err);
@@ -342,21 +493,43 @@ app.get('/employee/:firstname', (req, res) => {
     })
 })
 //import file Emp ( 23-3-66)
-app.post("/api/import", (req, res) => {
+// app.post("/import/emp", (req, res) => {
+//     const data = req.body;
+
+//     const query = "INSERT INTO employee (EmployeeID, TitleName, FirstName , LastName, PhoneNumber, Email, DepartmentName, RoleName,CreateDate,CreateBy,UpdateDate,UpdateBy) VALUES ? ";
+//     const values = data.map((row) => [row.EmployeeID, row.TitleName, row.FirstName, row.LastName, row.PhoneNumber, row.Email, row.DepartmentName, row.RoleName, row.CreateDate, row.CreateBy, row.UpdateDate, row.UpdateBy]);
+
+//     db.query(query, [values], (err) => {
+//         if (err) {
+//             res.status(500).json({ error: err.message });
+//         } else {
+//             res.status(200).json({ status: 'ok', message: "Data imported successfully!" });
+//         }
+//     });
+//     console.log('import File csv_Emp');
+// });
+// v.2
+
+app.post('/import/employee', (req, res) => {
     const data = req.body;
+    const values = data.map(({ EmployeeID, TitleName, FirstName, LastName, PhoneNumber, Email, DepartmentName, RoleName, CreateBy, UpdateBy }) =>
+        `('${EmployeeID}', '${TitleName}', '${FirstName}', '${LastName}', '${PhoneNumber}', '${Email}', '${DepartmentName}', '${RoleName}', CURRENT_TIMESTAMP(), '${CreateBy}', CURRENT_TIMESTAMP(), '${UpdateBy}')`
+    ).join(', ');
+    const sql = `INSERT INTO employee (EmployeeID, TitleName, FirstName, LastName, PhoneNumber, Email, DepartmentName, RoleName, CreateDate, CreateBy, UpdateDate, UpdateBy) VALUES ${values}`;
 
-    const query = "INSERT INTO employee (EmployeeID, TitleName, FirstName , LastName, PhoneNumber, Email, DepartmentName, RoleName,CreateDate,CreateBy,UpdateDate,UpdateBy) VALUES ? ";
-    const values = data.map((row) => [row.EmployeeID, row.TitleName, row.FirstName, row.LastName, row.PhoneNumber, row.Email, row.DepartmentName, row.RoleName, row.CreateDate, row.CreateBy, row.UpdateDate, row.UpdateBy]);
-
-    db.query(query, [values], (err) => {
+    db.query(sql, (err, result) => {
         if (err) {
-            res.status(500).json({ error: err.message });
+            console.log(err);
+            res.status(500).send("Error importing employee data");
         } else {
-            res.status(200).json({ status: 'ok', message: "Data imported successfully!" });
+            console.log(result);
+            res.status(200).send("Employee data imported successfully");
         }
     });
-    console.log('import File csv_Emp');
 });
+
+
+
 
 // create Emp
 app.post('/employee/add', (req, res) => {
@@ -480,15 +653,15 @@ app.get('/department', (req, res) => {
 })
 // create department
 app.post('/department/add', (req, res) => {
-    const DepartmentID = req.body.DepartmentID;
+    // const DepartmentID = req.body.DepartmentID;
     const DepartmentName = req.body.DepartmentName;
     const CreateDate = req.body.CreateDate;
     const CreateBy = req.body.CreateBy;
     const UpdateDate = req.body.UpdateDate;
     const UpdateBy = req.body.UpdateBy;
 
-    db.query("INSERT INTO department (DepartmentID, DepartmentName ,CreateDate,CreateBy,UpdateDate,UpdateBy) VALUES(?,?,?,?,?,?);",
-        [DepartmentID, DepartmentName, CreateDate, CreateBy, UpdateDate, UpdateBy],
+    db.query("INSERT INTO department ( DepartmentName ,CreateDate,CreateBy,UpdateDate,UpdateBy) VALUES(?,?,?,?,?);",
+        [DepartmentName, CreateDate, CreateBy, UpdateDate, UpdateBy],
         (err, result) => {
             if (err) {
                 console.log(err);
@@ -577,15 +750,15 @@ app.get('/role', (req, res) => {
 })
 // create role
 app.post('/role/add', (req, res) => {
-    const RoleID = req.body.RoleID;
+    //const RoleID = req.body.RoleID;
     const RoleName = req.body.RoleName;
     const CreateDate = req.body.CreateDate;
     const CreateBy = req.body.CreateBy;
     const UpdateDate = req.body.UpdateDate;
     const UpdateBy = req.body.UpdateBy;
 
-    db.query("INSERT INTO role (RoleID, RoleName ,CreateDate,CreateBy,UpdateDate,UpdateBy) VALUES(?,?,?,?,?,?);",
-        [RoleID, RoleName, CreateDate, CreateBy, UpdateDate, UpdateBy],
+    db.query("INSERT INTO role ( RoleName ,CreateDate,CreateBy,UpdateDate,UpdateBy) VALUES(?,?,?,?,?);",
+        [RoleName, CreateDate, CreateBy, UpdateDate, UpdateBy],
         (err, result) => {
             if (err) {
                 console.log(err);
@@ -665,7 +838,7 @@ app.put('/role/edit/:roleID', (req, res) => {
 
 //meetinroom
 app.get('/meetingroom', (req, res) => {
-    db.query("SELECT * FROM  meetingroom", (err, result) => {
+    db.query("SELECT * FROM  meetingroom ORDER BY RoomID ASC", (err, result) => {
         if (err) {
             console.log(err);
         }
@@ -676,15 +849,15 @@ app.get('/meetingroom', (req, res) => {
 })
 //addmeetinroom
 app.post('/meetingroom/add', (req, res) => {
-    const RoomID = req.body.RoomID;
+    // const RoomID = req.body.RoomID;
     const RoomName = req.body.RoomName;
     const Capacity = req.body.Capacity;
     const CreateDate = req.body.CreateDate;
     const CreateBy = req.body.CreateBy;
     const UpdateDate = req.body.UpdateDate;
     const UpdateBy = req.body.UpdateBy;
-    db.query("INSERT INTO meetingroom(RoomID, RoomName, Capacity, CreateDate, CreateBy, UpdateDate, UpdateBy) VALUES(?,?,?,?,?,?,?);",
-        [RoomID, RoomName, Capacity, CreateDate, CreateBy, UpdateDate, UpdateBy],
+    db.query("INSERT INTO meetingroom( RoomName, Capacity, CreateDate, CreateBy, UpdateDate, UpdateBy) VALUES(?,?,?,?,?,?);",
+        [RoomName, Capacity, CreateDate, CreateBy, UpdateDate, UpdateBy],
         (err, result) => {
             if (err) {
                 console.log(err);
@@ -754,7 +927,8 @@ app.get('/bookingmeeting', (req, res) => {
     db.query(`SELECT *
     FROM booking_approve b
     JOIN employee e ON b.EmployeeID = e.EmployeeID
-    JOIN meetingroom m ON b.RoomID = m.RoomID;`,
+    JOIN meetingroom m ON b.RoomID = m.RoomID
+    ORDER BY BookingID ASC;`,
         (err, result) => {
             if (err) {
                 console.log(err);
@@ -770,10 +944,10 @@ app.put("/booking/edit/:bookingID", (req, res) => {
     const Attendant = req.body.Attendant;
     const DateApprove = req.body.DateApprove;
     db.query("UPDATE booking_approve SET Status = ? , Attendant= ?, DateApprove= ? WHERE BookingID =? ;",
-   //-----------------------------
-    // const Attendant = req.body.Attendant;
-    // db.query("UPDATE booking_approve SET  Attendant= ? WHERE BookingID =? ",
-        [Status,Attendant,DateApprove,bookingID], (err, result) => {
+        //-----------------------------
+        // const Attendant = req.body.Attendant;
+        // db.query("UPDATE booking_approve SET  Attendant= ? WHERE BookingID =? ",
+        [Status, Attendant, DateApprove, bookingID], (err, result) => {
             if (err) {
                 console.log(err);
             }
@@ -781,11 +955,11 @@ app.put("/booking/edit/:bookingID", (req, res) => {
                 res.send("Values Updated");
             }
         })
-    console.log('Update news success');
+    console.log('Update Aprrove success');
 })
 //news 
 app.get('/news', (req, res) => {
-    db.query("SELECT * FROM  news", (err, result) => {
+    db.query("SELECT * FROM  news ORDER BY NewsNo ASC", (err, result) => {
         if (err) {
             console.log(err);
         }
@@ -1011,6 +1185,72 @@ app.get('/day/checkout', (req, res) => {
         }
     })
 })
+
+app.get('/notificationCount', (req, res) => {
+    db.query(`SELECT COUNT(Status) AS count FROM booking_approve WHERE Status='Wait';`,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                res.send(result);
+            }
+        })
+})
+
+// app.get("/notificationCount", async (req, res) => {
+//     try {
+//       const connection = await pool.getConnection();
+//       const [rows] = await connection.query(
+//         "SELECT COUNT(`Status`) AS count FROM booking_approve WHERE `Status`='Wait'"
+//       );
+//       connection.release();
+//       res.json({ count: rows[0].count });
+//     } catch (error) {
+//       console.error(error);
+//       res.status(500).json({ error: "Internal server error" });
+//     }
+//   });
+
+// app.post('/uploadnews', upload.single('file'), async (req, res) => {
+//     try {
+//         const file = req.file;
+//         const { html } = await readDocFile(file);
+
+//         const sql = 'INSERT INTO news ( NewsDate, TopicNews,NewsDetail, CreateBy, UpdateDate, UpdateBy) VALUES (?,?,?,?,?,?)';
+//         connection.query(sql, [NewsDate, TopicNews, NewsDetail, CreateBy, UpdateDate, UpdateBy], (err, results, fields) => {
+//             if (err) {
+//                 console.error('Error writing to database: ', err.stack);
+//                 return res.status(500).json({ message: 'Internal server error' });
+//             }
+
+//             res.status(200).json({ message: 'Data inserted into database' });
+//         });
+//     } catch (err) {
+//         console.error('Error processing file: ', err.stack);
+//         res.status(500).json({ message: 'Internal server error' });
+//     }
+// });
+
+app.post('/import-doc', (req, res) => {
+
+    const data = req.body;
+
+    // Write data to MySQL database
+    const sql = 'INSERT INTO `news`(`NewsDate`, `TopicNews`, `NewsDetail`, `CreateBy`, `UpdateDate`, `UpdateBy`) VALUES (?,?,?,?,?,?)';
+
+    // db.query(sql, [ NewsDate, TopicNews, NewsDetail, CreateBy, UpdateDate, UpdateBy], (err, results, fields) => {
+    db.query(sql, [data.NewsDate, data.TopicNews, data.NewsDetail, data.CreateBy, data.UpdateDate, data.UpdateBy], (err, results, fields) => {
+        if (err) {
+            console.error('Error writing to database: ', err.stack);
+            res.status(500).json({ error: 'Error writing to database' });
+        } else {
+            res.status(200).json({ message: 'Data inserted successfully' });
+        }
+    });
+    console.log('susecc');
+});
+
 app.listen('5000', () => {
     console.log('Server is runing o n port 5000');
 })

@@ -15,7 +15,6 @@ import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatist
 import { PieChart, Pie, Cell, LabelList, Legend, ResponsiveContainer, Label, Tooltip } from 'recharts';
 
 
-
 // Data
 import React, { Component } from 'react';
 import { style } from "@mui/system/Stack/createStack";
@@ -29,46 +28,9 @@ import { Button } from "@mui/material";
 import link from './../../assets/theme/components/link';
 import jwtDecode from "jwt-decode";
 
-
-// rechart v.1 figData
-const dataFin = [
-  { name: 'Group A', value: 10 },
-  { name: 'Group B', value: 90 }
-
-];
-const dataFout = [
-  { name: 'Group A', value: 20 },
-  { name: 'Group B', value: 80 }
-
-];
-
 const COLORS = ["#00C49F", "#FF8042"];
 
 const RADIAN = Math.PI / 180;
-// const renderCustomizedLabel = ({
-//   cx,
-//   cy,
-//   midAngle,
-//   innerRadius,
-//   outerRadius,
-//   percent,
-//   index
-// }: any) => {
-//   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-//   const x = cx + radius * Math.cos(-midAngle * RADIAN);
-//   const y = cy + radius * Math.sin(-midAngle * RADIAN);
-//   return (
-//     <text
-//       x={x}
-//       y={y}
-//       fill="white"
-//       textAnchor={x > cx ? "start" : "end"}
-//       dominantBaseline="central"
-//     >
-//       {`${(percent * 100).toFixed(0)}%`}
-//     </text>
-//   );
-// };
 
 function Dashboard() {
   const [count_admindata, count_adminchange] = useState(null);
@@ -142,17 +104,6 @@ function Dashboard() {
     <DashboardLayout>
       <DashboardNavbar />
 
-      {/* <MDBox display="flex" alignItems="center" ml={1}>
-        <MDTypography variant="body2" fontWeight="bold" color="text">
-          EmployeeID: {emp}
-        </MDTypography>
-      </MDBox>
-      <MDBox display="flex" alignItems="center" ml={1}>
-        <MDTypography variant="body2" fontWeight="bold" color="text">
-          Name: {firstName} {lastName}
-        </MDTypography>
-      </MDBox> */}
-
       <MDBox py={3}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={4}>
@@ -178,7 +129,7 @@ function Dashboard() {
                 <ComplexStatisticsCard
                   icon="supervisor_account"
                   title={
-                      <h1>Employee</h1>
+                    <h1>จำนวนพนักงาน</h1>
                   }
                   count={
                     <h1>{val.Employee.toString()}</h1>
@@ -195,7 +146,7 @@ function Dashboard() {
                   color="primary"
                   icon="manage_accounts"
                   title={
-                      <h1>Admin</h1>
+                    <h1>แอดมิน</h1>
                   }
                   count={
                     <h1>{val.Admin.toString()}</h1>
@@ -204,9 +155,6 @@ function Dashboard() {
               ))}
             </MDBox>
           </Grid>
-
-
-
         </Grid>
 
         <MDBox mt={4.5}>
@@ -222,8 +170,10 @@ function Dashboard() {
                         //data={formattedData} 
                         dataKey="attendance"
                         nameKey="status"
-                        cx={350}
-                        cy={170}
+                        // cx={350}
+                        // cy={150}
+                        cx="50%"
+                        cy="50%"
                         outerRadius={80}
                         labelLine={false}
                         fill="#8884d8"
@@ -237,25 +187,6 @@ function Dashboard() {
                       <Legend />
                     </PieChart>
                   </ResponsiveContainer>
-
-                  {/* <ResponsiveContainer width="100%" height={300}>
-                    <PieChart width={1000} height={1000}>
-                      <Pie
-                        data={dataFin}
-                        cx={350}
-                        cy={170}
-                        labelLine={false}
-                        label={renderCustomizedLabel}
-                        outerRadius={80}
-                        fill="#8884d8"
-                        dataKey="value"
-                      >
-                        {dataFin.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
-                      </Pie>
-                    </PieChart>
-                  </ResponsiveContainer> */}
 
                   <Typography variant="h3" align="center">เข้างาน</Typography>
                   <div align={"center"}>
@@ -275,8 +206,10 @@ function Dashboard() {
                         //data={formattedData} 
                         dataKey="attendance"
                         nameKey="status"
-                        cx={350}
-                        cy={170}
+                        // cx={350}
+                        // cy={170}
+                        cx="50%"
+                        cy="50%"
                         outerRadius={80}
                         labelLine={false}
                         fill="#8884d8"
@@ -290,7 +223,7 @@ function Dashboard() {
                       <Legend />
                     </PieChart>
                   </ResponsiveContainer>
-
+              
                   <Typography variant="h3" align="center">ออกงาน</Typography>
                   <div align={"center"}>
                     <Button href="/checkoutday" color="secondary" size="medium" align='center' ><h5>ดูรายละเอียด</h5></Button>
@@ -299,8 +232,6 @@ function Dashboard() {
 
 
               </MDBox>
-
-
 
             </Grid>
           </Grid>
