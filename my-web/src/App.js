@@ -53,9 +53,12 @@ export default function App() {
 
         if (decoded.exp < currentTime) {
           localStorage.removeItem('jwt');
-          localStorage.removeItem('firstName');
-          localStorage.removeItem('lastName');
-          localStorage.removeItem('emp');
+          // localStorage.removeItem('firstName');
+          // localStorage.removeItem('lastName');
+          // localStorage.removeItem('emp');
+          sessionStorage.removeItem('emp');
+          sessionStorage.removeItem('firstName');
+          sessionStorage.removeItem('lastName');
           navigate('/login/sign-in');
         }
       } catch (error) {

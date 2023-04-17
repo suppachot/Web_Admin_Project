@@ -151,7 +151,7 @@ function Checkin() {
 
   const [filterText, setFilterText] = useState('');
   const filteredData = items.filter((item) =>
-    item.EmployeeID.toLowerCase().includes(filterText.toLowerCase())
+    item.EmployeeID.toLowerCase().includes(filterText.toLowerCase()) 
 
   );
 
@@ -184,31 +184,37 @@ function Checkin() {
     {
       name: 'TransactionID',
       selector: row => row.TransactionID,
+      sortable: true,
       width: '150px'
     },
     {
       name: 'EmployeeID',
       selector: row => row.EmployeeID,
+      sortable: true,
       width: '200px'
     },
     {
       name: 'CheckInDate',
       selector: row => moment(row.CheckInDate).format('DD/MM/YYYY '),
+      sortable: true,
       width: '200px'
     },
     {
       name: 'CheckInTime',
       selector: row => row.CheckInTime,
+      sortable: true,
       width: '200px'
     },
     {
       name: 'Location',
       selector: row => row.Location,
+      sortable: true,
       width: '250px'
     },
     {
       name: 'Model',
       selector: row => row.Model,
+      sortable: true,
       width: '200px'
     },
     {

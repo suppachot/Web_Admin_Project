@@ -19,7 +19,7 @@ import jwtDecode from "jwt-decode";
 
 function AddRole() {
     // เก็บบันทึกค่าลง state
-    const [RoleID, setRoleID] = useState("");
+   // const [RoleID, setRoleID] = useState("");
     const [RoleName, setRoleName] = useState("");
     const [CreateDate, setCreateDate] = useState("");
     const [CreateBy, setCreateBy] = useState("");
@@ -56,7 +56,7 @@ function AddRole() {
     const handlesubmit = (e) => {
         e.preventDefault();
         Axios.post('http://localhost:5000/role/add', {
-            RoleID: RoleID,
+          //  RoleID: RoleID,
             RoleName: RoleName,
             CreateDate: CreateDate,
             CreateBy: CreateBy,
@@ -66,7 +66,7 @@ function AddRole() {
             setRoleList([
                 ...RoleList,
                 {
-                    RoleID: RoleID,
+                   // RoleID: RoleID,
                     RoleName: RoleName,
                     CreateDate: CreateDate,
                     CreateBy: CreateBy,
@@ -97,7 +97,7 @@ function AddRole() {
                             <div className="card-body">
                                 <div className="row">
 
-                                    <div className="col-lg-12">
+                                    {/* <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>RoleID</label>
                                             <input required value={RoleID}
@@ -107,7 +107,7 @@ function AddRole() {
                                                 className="form-control">
                                             </input>
                                         </div>
-                                    </div>
+                                    </div> */}
 
                                     <div className="col-lg-12">
                                         <div className="form-group">

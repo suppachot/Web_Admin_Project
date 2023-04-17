@@ -296,36 +296,42 @@ function News() {
     {
       id: 'newsNo',
       name: 'NewsNo',
+      sortable: true,
       selector: row => row.NewsNo,
       width: '100px'
     },
     {
       id: 'newsDate',
       name: 'NewsDate',
+      sortable: true,
       selector: row => moment(row.NewsDate).format('DD/MM/YYYY '),
       width: '200px'
     },
     {
       id: 'topicNews',
       name: 'TopicNews',
+      sortable: true,
       selector: row => row.TopicNews,
       width: '300px'
     },
     {
       id: 'createby',
       name: 'CreateBy',
+      sortable: true,
       selector: row => row.CreateBy,
       width: '150px'
     },
     {
       id: 'updatedate',
       name: 'UpdateDate',
+      sortable: true,
       selector: row => moment(row.UpdateDate).format('DD/MM/YYYY HH:mm:ss A'),
       width: '250px'
     },
     {
       id: 'updateby',
       name: 'UpdateBy',
+      sortable: true,
       selector: row => row.UpdateBy,
       width: '150px'
     },
@@ -334,7 +340,7 @@ function News() {
       selector: row =>
 
         <div class="btn-group" role="group" aria-label="Basic example">
-          <button className="btn btn-primary" onClick={() => handleOpenModal(row)}>Detail</button>
+          {/* <button className="btn btn-primary" onClick={() => handleOpenModal(row)}>Detail</button> */}
           <button className="btn btn-primary" onClick={() => { LoadDetail(row.NewsNo) }} >Detail</button>
           <button className="btn btn-warning" onClick={() => { LoadEdit(row.NewsNo) }} >Edit</button>
           <button className="btn btn-danger" onClick={() => { Removefunction(row.NewsNo) }} >Delete</button>
@@ -343,6 +349,47 @@ function News() {
 
     }
   ];
+
+  const [file, setFile] = useState(null);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const formData = new FormData();
+    formData.append('file', file);
+    // formData.append('file', file, file.name);
+    Axios.post('http://localhost:5000/import-doc', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+      .then((response) => {
+        console.log(response.data);
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  //const [file, setFile] = useState(null);
+
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+  //   const formData = new FormData();
+  //   formData.append('file', file);
+  //   Axios.post('http://localhost:5000/import-doc1', formData, {
+  //     headers: {
+  //       'Content-Type': 'multipart/form-data',
+  //     },
+  //   })
+  //     .then((response) => {
+  //       console.log(response.data);
+  //       window.location.reload();
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // };
+
 
   useEffect(() => {
     fetch("http://localhost:5000/news")
@@ -373,11 +420,26 @@ function News() {
         <div className="LayoutContainer">
 
           <div className="LayoutContainer">
-            <div className="card-body">
-              <div className="btn">
-                <Link to="/CreateNews" className="btn btn-success">Add New</Link>
+            <form>
+              <div className="card-body">
+                <div className="btn">
+                  <Link to="/CreateNews" className="btn btn-success">Add New</Link>
+                </div>
               </div>
-            </div>
+            </form>
+
+            {/* <form onSubmit={handleSubmit} >
+              <div>
+                <label htmlFor="file">Choose a file:</label>
+                <input
+                  type="file"
+                  id="file"
+                  accept=".doc,.docx"
+                  onChange={(e) => setFile(e.target.files[0])}
+                />
+                 <button type="submit">Upload</button>
+              </div>
+            </form> */}
 
             <Paper sx={{ p: 1 }} style={{ backgroundColor: '#F2F3F4' }}>
               <div className="card-body" >
@@ -406,7 +468,7 @@ function News() {
 
           </div>
         </div>
-      </DashboardLayout>
+      </DashboardLayout >
     );
   }
 }

@@ -20,7 +20,7 @@ import Swal from 'sweetalert2';
 
 function EditDepartment() {
     // เก็บบันทึกค่าลง state
-    const [DepartmentID, setDepartmentID] = useState("");
+   // const [DepartmentID, setDepartmentID] = useState("");
     const [DepartmentName, setDepartmentName] = useState("");
     const [CreateDate, setCreateDate] = useState("");
     const [CreateBy, setCreateBy] = useState("");
@@ -57,7 +57,7 @@ function EditDepartment() {
     const handlesubmit = (e) => {
         e.preventDefault();
         Axios.post('http://localhost:5000/department/add', {
-            DepartmentID: DepartmentID,
+            //DepartmentID: DepartmentID,
             DepartmentName: DepartmentName,
             CreateDate: CreateDate,
             CreateBy: CreateBy,
@@ -67,7 +67,7 @@ function EditDepartment() {
             setdepartmentList([
                 ...departmentList,
                 {
-                    DepartmentID: DepartmentID,
+                   // DepartmentID: DepartmentID,
                     DepartmentName: DepartmentName,
                     CreateDate: CreateDate,
                     CreateBy: CreateBy,
@@ -98,7 +98,7 @@ function EditDepartment() {
                             <div className="card-body">
                                 <div className="row">
     
-                                    <div className="col-lg-12">
+                                    {/* <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>DepartmentID</label>
                                             <input required value={DepartmentID}
@@ -108,7 +108,7 @@ function EditDepartment() {
                                                 className="form-control">
                                             </input>
                                         </div>
-                                    </div>
+                                    </div> */}
 
                                     <div className="col-lg-12">
                                         <div className="form-group">

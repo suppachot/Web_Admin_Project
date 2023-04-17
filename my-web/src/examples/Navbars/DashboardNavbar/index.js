@@ -21,7 +21,13 @@ import MDTypography from "components/MDTypography";
 import Breadcrumbs from "examples/Breadcrumbs";
 import NotificationItem from "examples/Items/NotificationItem";
 
+import Axios from "axios";
 import jwtDecode from "jwt-decode";
+import io from "socket.io-client";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Badge } from "@mui/material";
+import Swal from "sweetalert2";
 
 // Custom styles for DashboardNavbar
 import {
@@ -51,6 +57,10 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const decodedToken = jwtDecode(token);
   const { emp, firstName, lastName } = decodedToken;
 
+  // function to show a notification
+  const [notificationCount, setNotificationCount] = useState(0);
+
+
 
   useEffect(() => {
     // Setting the navbar type
@@ -60,7 +70,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
       setNavbarType("static");
     }
 
-    // A function that sets the transparent state of the navbar.
+    // Add notification count state
     function handleTransparentNavbar() {
       setTransparentNavbar(dispatch, (fixedNavbar && window.scrollY === 0) || !fixedNavbar);
     }
@@ -80,8 +90,50 @@ function DashboardNavbar({ absolute, light, isMini }) {
 
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
-  const handleOpenMenu = (event) => setOpenMenu(event.currentTarget);
-  const handleCloseMenu = () => setOpenMenu(false);
+  //const handleOpenMenu = (event) => setOpenMenu(event.currentTarget);
+  // const handleOpenMenu = (event) => {
+  //   // Add notification count
+  //   setNotificationCount(0);
+  //   setOpenMenu(event.currentTarget);
+  // };
+  // const handleCloseMenu = () => setOpenMenu(false);
+
+  const [initialNotificationCount, setInitialNotificationCount] = useState(0);
+  useEffect(() => {
+    const fetchInitialNotificationCount = async () => {
+      try {
+        const response = await Axios.get("http://localhost:5000/notificationCount");
+        const count = response.data[0].count;
+        setInitialNotificationCount(count);
+        setNotificationCount(count);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchInitialNotificationCount();
+    const intervalId = setInterval(fetchInitialNotificationCount, 3000);
+    // Clear interval on cleanup
+    return () => clearInterval(intervalId);
+  }, []);
+  // useEffect(() => {
+  //   if (notificationCount < initialNotificationCount) {
+  //     Swal.fire({
+  //       icon: 'success',
+  //       title: 'New Notification',
+  //       text: `You have ${ initialNotificationCount- notificationCount} new meeting approve.`,
+  //       timer: 5000, // แสดงข้อความ 5 วินาทีแล้วหายไป
+  //       timerProgressBar: true 
+  //     });
+  //   }
+  // }, [notificationCount, initialNotificationCount]);
+  const handleCloseMenu = () => {
+    // Set notification count to the initial count when closing the menu
+    setNotificationCount(initialNotificationCount);
+    setOpenMenu(false);
+  };
+  const handleOpenMenu = (event) => {
+    setOpenMenu(event.currentTarget);
+  };
 
   // Render the notifications menu
   const renderMenu = () => (
@@ -96,11 +148,15 @@ function DashboardNavbar({ absolute, light, isMini }) {
       onClose={handleCloseMenu}
       sx={{ mt: 2 }}
     >
-      <Link to="/meetingroom">
-        <NotificationItem icon={<Icon>email</Icon>} title="Check new meeting approve" />
+      <Link to="/bookingmeeting">
+        <NotificationItem icon={<Icon>email</Icon>} title={`Check new meeting approve (${notificationCount})`} />
       </Link>
     </Menu>
   );
+  const handleNotificationClick = () => {
+    // Add notification count
+    setNotificationCount(notificationCount - 1);
+  };
 
   // Styles for the navbar icons
   const iconsStyle = ({ palette: { dark, white, text }, functions: { rgba } }) => ({
@@ -143,7 +199,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 <IconButton sx={navbarIconButton} size="small" disableRipple>
                   <MDBox display="flex" alignItems="center" mr={2}>
                     <MDTypography variant="body2" fontWeight="bold" color="primary ">
-                      {firstName} {lastName}   
+                      {firstName} {lastName}
                     </MDTypography>
                   </MDBox>
                   <Icon sx={iconsStyle}>account_circle</Icon>
@@ -179,10 +235,12 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 variant="contained"
                 onClick={handleOpenMenu}
               >
-                <Icon sx={iconsStyle}>notifications</Icon>
+                <Badge badgeContent={notificationCount} color="error">
+                  <Icon sx={iconsStyle}>notifications</Icon>
+                </Badge>
               </IconButton>
-
               {renderMenu()}
+              <ToastContainer />
             </MDBox>
           </MDBox>
         )}
