@@ -226,7 +226,7 @@ function DayCheckin() {
   ];
 
   useEffect(() => {
-    fetch("http://localhost:5000/day/checkin")
+    fetch("http://103.253.73.66:5000/day/checkin")
       .then(res => res.json())
       .then(
         (result) => {

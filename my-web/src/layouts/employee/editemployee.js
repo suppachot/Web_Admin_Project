@@ -23,9 +23,6 @@ import jwtDecode from "jwt-decode";
 
 function EditEmp() {
   const { employeeID } = useParams();
-
-  const [employeedata, setemployeedata] = useState([]);
-
   const [EmployeeID, setEmployeeID] = useState("");
   const [TitleName, setTitleName] = useState("");
   const [FirstName, setFirstName] = useState("");
@@ -45,7 +42,7 @@ function EditEmp() {
   const navigate = useNavigate();
 
   const getEmployeeID = async () => {
-    const response = await Axios.get('http://localhost:5000/getemployee/' + employeeID);
+    const response = await Axios.get('http://103.253.73.66:5000/getemployee/' + employeeID);
     console.log(response);
     setEmployeeID(response.data[0].EmployeeID);
     setTitleName(response.data[0].TitleName);
@@ -57,13 +54,11 @@ function EditEmp() {
     setRoleName(response.data[0].RoleName);
     setCreateDate(response.data[0].CreateDate);
     setCreateBy(response.data[0].CreateBy);
-    // setUpdateDate(response.data[0].UpdateDate);
-    // setUpdateBy(response.data[0].UpdateBy);
   };
 
   const token = localStorage.getItem("jwt");
   const decodedToken = jwtDecode(token);
-  const { emp, firstName, lastName } = decodedToken;
+  const { emp } = decodedToken;
   useEffect(() => {
     getEmployeeID();
     const moment = require('moment-timezone');
@@ -79,7 +74,7 @@ function EditEmp() {
 
   const handlesubmit = (e) => {
     e.preventDefault();
-    Axios.put("http://localhost:5000/employee/edit/" + EmployeeID, {
+    Axios.put("http://103.253.73.66:5000/employee/edit/" + EmployeeID, {
       EmployeeID: EmployeeID,
       TitleName: TitleName,
       FirstName: FirstName,
@@ -92,13 +87,6 @@ function EditEmp() {
       CreateBy: CreateBy,
       UpdateDate: UpdateDate,
       UpdateBy: UpdateBy
-
-      // }).then((res) => {
-      //   alert('Saved successfully.')
-      //   navigate('/employee');
-      // }).catch((err) => {
-      //   console.log(err.message)
-      // })
     }).then((res) => {
       Swal.fire({
         icon: 'success',

@@ -21,39 +21,25 @@ import BasicLayout from "layouts/login/components/BasicLayout";
 
 // Images backgrond
 import bgImage from "assets/images/TKS_lo.jpg";
-import { Axios } from 'axios';
-import { message } from 'antd';
-import jwtDecode from "jwt-decode";
 import axios from "axios";
 
 function Basic() {
-  const [rememberMe, setRememberMe] = useState(false);
 
-  const handleSetRememberMe = () => setRememberMe(!rememberMe);
-  const [Email, setEmail] = useState("");
+  const [employeeID, setEmployeeID] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const [loginStatus, setLoginStatus] = useState("");
-  const navigate = useNavigate();
-
-  const [employeeID, setEmployeeID] = useState('');
-  const [pincode, setPincode] = useState('');
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/login', {
+      const response = await axios.post('http://103.253.73.66:5000/api/login', {
         employeeID,
         password,
       });
 
       const { token, firstName, lastName, emp } = response.data;
       localStorage.setItem('jwt', token);
-      // localStorage.setItem('emp', emp);
-      // localStorage.setItem('firstName', firstName);
-      // localStorage.setItem('lastName', lastName);
       sessionStorage.setItem('emp', emp);
       sessionStorage.setItem('firstName', firstName);
       sessionStorage.setItem('lastName', lastName);
@@ -89,10 +75,21 @@ function Basic() {
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form" onSubmit={handleSubmit} >
             <MDBox mb={2}>
-              <MDInput type="text" label="EmployeeID" value={employeeID} required onChange={(e) => setEmployeeID(e.target.value)} fullWidth />
+              <MDInput
+                type="text"
+                label="EmployeeID"
+                value={employeeID}
+                required
+                onChange={(e) => setEmployeeID(e.target.value)}
+                fullWidth />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput type={showPassword ? "text" : "password"} label="Password" value={password} required onChange={(e) => setPassword(e.target.value)} fullWidth
+              <MDInput
+                type={showPassword ? "text" : "password"}
+                label="Password"
+                value={password}
+                required onChange={(e) => setPassword(e.target.value)}
+                fullWidth
                 InputProps={{
                   endAdornment: (
                     <IconButton onClick={handleShowPassword} edge="end">
@@ -102,8 +99,8 @@ function Basic() {
                 }}
               />
             </MDBox>
-
             {error && <div className="error" style={{ color: 'red' }} >{error}</div>}
+{/* 
             <MDBox mt={3} mb={1} textAlign="right">
               <MDTypography variant="button" color="text">
                 <MDTypography
@@ -117,7 +114,7 @@ function Basic() {
                   Forgotten password?
                 </MDTypography>
               </MDTypography>
-            </MDBox>
+            </MDBox> */}
 
             <MDBox mt={4} mb={1}>
               <MDButton variant="gradient"

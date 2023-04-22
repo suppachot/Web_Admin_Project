@@ -35,19 +35,21 @@ function EditsNews() {
     const [UpdateBy, setUpdateBy] = useState("");
     const [active, setactive] = useState(true);
     const [validation, valchange] = useState(false);
+    const [Pin, setPin] = useState(false);
 
     const navigate = useNavigate();
     // อ่านค่าจาก db
     const [newsdata, newsdatachange] = useState(null);
 
     const getNewNo = async () => {
-        const response = await Axios.get('http://localhost:5000/getnews/' + newsNo);
+        const response = await Axios.get('http://103.253.73.66:5000/getnews/' + newsNo);
         console.log(response);
         setNewsNo(response.data[0].NewsNo);
         //setNewsDate(response.data[0].NewsDate);
         setNewsDate(moment(response.data[0].NewsDate).format("YYYY-MM-DD"));
         setTopicNews(response.data[0].TopicNews);
         setNewsDetail(response.data[0].NewsDetail);
+        setPin(response.data[0].Pin);
         setCreateBy(response.data[0].CreateBy);
     };
     const token = localStorage.getItem("jwt");
@@ -69,11 +71,12 @@ function EditsNews() {
 
     const handlesubmit = (e) => {
         e.preventDefault();
-        Axios.put("http://localhost:5000/news/edit/" + NewsNo, {
+        Axios.put("http://103.253.73.66:5000/news/edit/" + NewsNo, {
             NewsNo: NewsNo,
             NewsDate: NewsDate,
             TopicNews: TopicNews,
             NewsDetail: NewsDetail,
+            Pin: Pin ? 1 : 0,
             CreateBy: CreateBy,
             UpdateDate: UpdateDate,
             UpdateBy: UpdateBy
@@ -100,17 +103,6 @@ function EditsNews() {
                         <div className="card" style={{ "textAlign": "left" }}>
                             <div className="card-body">
                                 <div className="row">
-
-                                    <div className="col-lg-12">
-                                        <div className="form-group">
-                                            <label>NewsNo</label>
-                                            <input
-                                                required value={NewsNo}
-                                                type="text"
-                                                onChange={e => setNewsNo(e.target.value)}
-                                                className="form-control"></input>
-                                        </div>
-                                    </div>
 
                                     <div className="col-lg-12">
                                         <div className="form-group">
@@ -145,6 +137,15 @@ function EditsNews() {
                                                 onChange={e => setNewsDetail(e.target.value)}
                                                 className="form-control" style={{ height: '150px' }}>
                                             </textarea>
+                                        </div>
+                                    </div>
+
+                                    <div className="col-lg-12">
+                                        <div className="form-group">
+                                            <div>
+                                                <label>Pin the news</label>
+                                                <input type="checkbox" checked={Pin} onChange={() => setPin(!Pin)} />
+                                            </div>
                                         </div>
                                     </div>
 

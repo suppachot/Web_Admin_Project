@@ -228,7 +228,7 @@ function BookingApprove() {
             name: 'StartTime',
             sortable: true,
             selector: row => row.StartTime,
-            width: '100px'
+            width: '120px'
         },
         {
             id: 'EndTime',
@@ -281,13 +281,6 @@ function BookingApprove() {
                         {row.Status}
                     </button>
                     <div className="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                        {/* <button
-                            className="dropdown-item"
-                            onClick={() => handleStatusUpdate(row, 'Wait')}
-                            disabled={row.Status === 'Wait'}
-                        >
-                            Wait
-                        </button> */}
                         <button
                             className="dropdown-item"
                             onClick={() => handleStatusUpdate(row, 'Approve')}
@@ -308,7 +301,6 @@ function BookingApprove() {
                 </div>
             ),
         },
-
         {
             name: 'Action',
             selector: row =>
@@ -337,7 +329,7 @@ function BookingApprove() {
         const decodedToken = jwtDecode(token);
         const { emp } = decodedToken;
         const currentDate = moment().format('YYYY-MM-DDTHH:mm:ss');
-        const url = `http://localhost:5000/booking/edit/${row.BookingID}`;
+        const url = `http://103.253.73.66:5000/booking/edit/${row.BookingID}`;
 
         // อัพเดทข้อมูลในตาราง booking_approve ผ่าน API
         fetch(url, {
@@ -383,7 +375,7 @@ function BookingApprove() {
 
 
     useEffect(() => {
-        fetch("http://localhost:5000/bookingmeeting")
+        fetch("http://103.253.73.66:5000/bookingmeeting")
             .then(res => res.json())
             .then(
                 (result) => {

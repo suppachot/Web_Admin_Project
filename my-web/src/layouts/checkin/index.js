@@ -229,7 +229,7 @@ function Checkin() {
   ];
 
   useEffect(() => {
-    fetch("http://localhost:5000/checkin")
+    fetch("http://103.253.73.66:5000/checkin")
       .then(res => res.json())
       .then(
         (result) => {

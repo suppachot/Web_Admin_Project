@@ -45,7 +45,7 @@ function Meeting() {
       confirmButtonText: 'Yes, remove it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        Axios.delete(`http://localhost:5000/deletemeetingroom/${RoomID}`)
+        Axios.delete(`http://103.253.73.66:5000/deletemeetingroom/${RoomID}`)
           .then(() => {
             Swal.fire({
               title: 'Removed successfully!',
@@ -129,7 +129,7 @@ function Meeting() {
   ];
 
   useEffect(() => {
-    fetch("http://localhost:5000/meetingroom")
+    fetch("http://103.253.73.66:5000/meetingroom")
       .then(res => res.json())
       .then(
         (result) => {

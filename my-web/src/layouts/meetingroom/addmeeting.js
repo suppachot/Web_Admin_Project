@@ -34,7 +34,7 @@ function AddMeetingRoom() {
   // อ่านค่าจาก db
   const [meetingroom, setmeetingroom] = useState([]);
   const getmeetingroom = () => {
-    Axios.get('http://localhost:5000/meetingroom').then((response) => {
+    Axios.get('http://103.253.73.66:5000/meetingroom').then((response) => {
       setmeetingroom(response.data);
     });
   }
@@ -57,7 +57,7 @@ function AddMeetingRoom() {
   // ส่งข้อมูล 
   const handlesubmit = (e) => {
     e.preventDefault();
-    Axios.post('http://localhost:5000/meetingroom/add', {
+    Axios.post('http://103.253.73.66:5000/meetingroom/add', {
      // RoomID: roomID,
       RoomName: RoomName,
       Capacity: Capacity,

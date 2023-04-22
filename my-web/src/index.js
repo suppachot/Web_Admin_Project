@@ -9,7 +9,7 @@ import App from "App";
 import { MaterialUIControllerProvider } from "context";
 
 ReactDOM.render(
-  <BrowserRouter>
+  <BrowserRouter basename={'/'}>
     <MaterialUIControllerProvider>
       <App />
     </MaterialUIControllerProvider>

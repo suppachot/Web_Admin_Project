@@ -39,7 +39,7 @@ function EditDepartment() {
     const [departmentList, setdepartmentList] = useState([]);
 
     const getDepartmentID = async () => {
-        const response = await Axios.get('http://localhost:5000/getdepartment/' + departmentID);
+        const response = await Axios.get('http://103.253.73.66:5000/getdepartment/' + departmentID);
         console.log(response);
         setDepartmentID(response.data[0].DepartmentID);
         setDepartmentName(response.data[0].DepartmentName);
@@ -65,7 +65,7 @@ function EditDepartment() {
     // ส่งข้อมูล 
     const handlesubmit = (e) => {
         e.preventDefault();
-        Axios.put("http://localhost:5000/dapartment/edit/" + DepartmentID, {
+        Axios.put("http://103.253.73.66:5000/dapartment/edit/" + DepartmentID, {
             //DepartmentID: DepartmentID,
             DepartmentName: DepartmentName,
             CreateDate: CreateDate,

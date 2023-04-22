@@ -38,7 +38,7 @@ function EditRole() {
     const [RoleList, setRoleList] = useState([]);
 
     // const getRoleID = async () => {
-    //     const response = await Axios.get('http://localhost:5000/getrole/' + roleID);
+    //     const response = await Axios.get('http://103.253.73.66:5000/getrole/' + roleID);
     //     console.log(response);
     //     setRoleID(response.data[0].RoleID);
     //     setRoleName(response.data[0].RoleName);
@@ -47,7 +47,7 @@ function EditRole() {
     // };
 
     const getRoleID = async () => {
-        const response = await Axios.get('http://localhost:5000/getrole/' + roleID);
+        const response = await Axios.get('http://103.253.73.66:5000/getrole/' + roleID);
         console.log(response);
         if (response.data && response.data[0]) {
             setRoleID(response.data[0].RoleID);
@@ -79,7 +79,7 @@ function EditRole() {
     // ส่งข้อมูล 
     const handlesubmit = (e) => {
         e.preventDefault();
-        Axios.put("http://localhost:5000/role/edit/" + RoleID, {
+        Axios.put("http://103.253.73.66:5000/role/edit/" + RoleID, {
             RoleID: RoleID,
             RoleName: RoleName,
             CreateDate: CreateDate,

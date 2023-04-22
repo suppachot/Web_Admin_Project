@@ -102,7 +102,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
   useEffect(() => {
     const fetchInitialNotificationCount = async () => {
       try {
-        const response = await Axios.get("http://localhost:5000/notificationCount");
+        const response = await Axios.get("http://103.253.73.66:5000/notificationCount");
         const count = response.data[0].count;
         setInitialNotificationCount(count);
         setNotificationCount(count);
@@ -184,13 +184,6 @@ function DashboardNavbar({ absolute, light, isMini }) {
             <Breadcrumbs icon="home" title={route[route.length - 1]} route={route} light={light} />
           </Link>
         </MDBox>
-
-        {/* <MDBox display="flex" alignItems="center" ml={1}>
-          <MDTypography variant="body2" fontWeight="bold" color="text">
-            EmployeeID: {emp}
-            Name: {firstName} {lastName}
-          </MDTypography>
-        </MDBox> */}
 
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>

@@ -35,7 +35,7 @@ function ExportEmp() {
         Papa.parse(file, {
             header: true,
             complete: (results) => {
-                axios.post("http://localhost:5000/api/import", results.data)
+                axios.post("http://103.253.73.66:5000/api/import", results.data)
                     .then(() => alert("Data imported successfully!"))
                     .catch((err) => console.error(err));
             },

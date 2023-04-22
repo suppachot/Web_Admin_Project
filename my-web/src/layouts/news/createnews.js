@@ -17,7 +17,6 @@ import jwtDecode from "jwt-decode";
 import Swal from 'sweetalert2';
 
 function CreateNews() {
-  const [NewsNo, setNewsNo] = useState("");
   const [NewsDate, setNewsDate] = useState("");
   const [TopicNews, setTopicNews] = useState("");
   const [NewsDetail, setNewsDetail] = useState("");
@@ -26,12 +25,13 @@ function CreateNews() {
   const [UpdateBy, setUpdateBy] = useState("");
   const [active, setactive] = useState(true);
   const [validation, valchange] = useState(false);
+  const [Pin, setPin] = useState(false);
 
   const navigate = useNavigate();
 
   const [newsList, setNewsList] = useState([]);
   const getNews = () => {
-    Axios.get('http://localhost:5000/news').then((response) => {
+    Axios.get('http://103.253.73.66:5000/news').then((response) => {
       setNewsList(response.data);
     });
   }
@@ -53,26 +53,26 @@ function CreateNews() {
   }, []);
   const handlesubmit = (e) => {
     e.preventDefault();
-    Axios.post("http://localhost:5000/createnews", {
-      NewsNo: NewsNo,
+    Axios.post("http://103.253.73.66:5000/createnews", {
       NewsDate: NewsDate,
       TopicNews: TopicNews,
       NewsDetail: NewsDetail,
+      Pin: Pin ? 1 : 0,
       CreateBy: CreateBy,
       UpdateDate: UpdateDate,
       UpdateBy: UpdateBy
     }).then((res) => {
-        Swal.fire({
-          title: 'Saved successfully.',
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 1500
-        }).then(() => {
-          navigate('/news');
-        });
-      }).catch((err) => {
-        console.log(err.message)
-      })
+      Swal.fire({
+        title: 'Saved successfully.',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 1500
+      }).then(() => {
+        navigate('/news');
+      });
+    }).catch((err) => {
+      console.log(err.message)
+    })
   }
 
   return (
@@ -85,16 +85,7 @@ function CreateNews() {
               <div className="card-body">
                 <div className="row">
 
-                  <div className="col-lg-12">
-                    <div className="form-group">
-                      <label>NewsNo</label>
-                      <input
-                        required value={NewsNo}
-                        type="text"
-                        onChange={e => setNewsNo(e.target.value)}
-                        className="form-control"></input>
-                    </div>
-                  </div>
+
 
                   <div className="col-lg-12">
                     <div className="form-group">
@@ -128,8 +119,17 @@ function CreateNews() {
                       <textarea value={NewsDetail}
                         type="text"
                         onChange={e => setNewsDetail(e.target.value)}
-                        className="form-control"  style={{ height: '150px' }}>
+                        className="form-control" style={{ height: '150px' }}>
                       </textarea>
+                    </div>
+                  </div>
+
+                  <div className="col-lg-12">
+                    <div className="form-group">
+                      <div>
+                        <label>Pin the news</label>
+                        <input type="checkbox" checked={Pin} onChange={() => setPin(!Pin)} />
+                      </div>
                     </div>
                   </div>
 
