@@ -31,7 +31,7 @@ function AddTitle() {
   // อ่านค่าจาก db
   const [titleList, settitleList] = useState([]);
   const getTitle = () => {
-    Axios.get('http://localhost:5000/title').then((response) => {
+    Axios.get('http://103.253.73.66:5000/title').then((response) => {
       settitleList(response.data);
     });
   }
@@ -55,7 +55,7 @@ function AddTitle() {
   // ส่งข้อมูล 
   const handlesubmit = (e) => {
     e.preventDefault();
-    Axios.post('http://localhost:5000/title/add', {
+    Axios.post('http://103.253.73.66:5000/title/add', {
      // TitleID: TitleID,
       TitleName: TitleName,
       CreateDate: CreateDate,

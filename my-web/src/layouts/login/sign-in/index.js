@@ -33,7 +33,7 @@ function Basic() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/login', {
+      const response = await axios.post('http://103.253.73.66:5000/api/login', {
         employeeID,
         password,
       });
@@ -100,7 +100,7 @@ function Basic() {
               />
             </MDBox>
             {error && <div className="error" style={{ color: 'red' }} >{error}</div>}
-
+{/* 
             <MDBox mt={3} mb={1} textAlign="right">
               <MDTypography variant="button" color="text">
                 <MDTypography
@@ -114,7 +114,7 @@ function Basic() {
                   Forgotten password?
                 </MDTypography>
               </MDTypography>
-            </MDBox>
+            </MDBox> */}
 
             <MDBox mt={4} mb={1}>
               <MDButton variant="gradient"

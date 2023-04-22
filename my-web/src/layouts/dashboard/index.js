@@ -38,7 +38,7 @@ function Dashboard() {
   const [acountdata, acountdatachange] = useState(null);
   //------------Count---------------------------------------//
   useEffect(() => {
-    fetch("http://localhost:5000/account/user_app").then((res) => {
+    fetch("http://103.253.73.66:5000/account/user_app").then((res) => {
       return res.json();
     }).then((resp) => {
       acountdatachange(resp);
@@ -47,7 +47,7 @@ function Dashboard() {
     })
   }, [])
   useEffect(() => {
-    fetch("http://localhost:5000/employee/emp_count").then((res) => {
+    fetch("http://103.253.73.66:5000/employee/emp_count").then((res) => {
       return res.json();
     }).then((resp) => {
       count_employeechange(resp);
@@ -56,7 +56,7 @@ function Dashboard() {
     })
   }, [])
   useEffect(() => {
-    fetch("http://localhost:5000/employee/admin_count").then((res) => {
+    fetch("http://103.253.73.66:5000/employee/admin_count").then((res) => {
       return res.json();
     }).then((resp) => {
       count_adminchange(resp);
@@ -70,7 +70,7 @@ function Dashboard() {
   const [data, setData] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-      const result = await axios.get('http://localhost:5000/dashboard/check-in');
+      const result = await axios.get('http://103.253.73.66:5000/dashboard/check-in');
       setData(result.data);
     };
     fetchData();
@@ -79,7 +79,7 @@ function Dashboard() {
   const [data1, setData1] = useState([]);
   useEffect(() => {
     const fetchData1 = async () => {
-      const result1 = await axios.get('http://localhost:5000/dashboard/check-out');
+      const result1 = await axios.get('http://103.253.73.66:5000/dashboard/check-out');
       setData1(result1.data);
     };
     fetchData1();

@@ -42,7 +42,7 @@ function EditEmp() {
   const navigate = useNavigate();
 
   const getEmployeeID = async () => {
-    const response = await Axios.get('http://localhost:5000/getemployee/' + employeeID);
+    const response = await Axios.get('http://103.253.73.66:5000/getemployee/' + employeeID);
     console.log(response);
     setEmployeeID(response.data[0].EmployeeID);
     setTitleName(response.data[0].TitleName);
@@ -74,7 +74,7 @@ function EditEmp() {
 
   const handlesubmit = (e) => {
     e.preventDefault();
-    Axios.put("http://localhost:5000/employee/edit/" + EmployeeID, {
+    Axios.put("http://103.253.73.66:5000/employee/edit/" + EmployeeID, {
       EmployeeID: EmployeeID,
       TitleName: TitleName,
       FirstName: FirstName,

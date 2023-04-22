@@ -25,7 +25,7 @@ function DetailEmpolyee() {
     const [employeedata, employeedatachange] = useState(null);
 
     useEffect(() => {
-        fetch("http://localhost:5000/employee/detail/" + EmployeeID)
+        fetch("http://103.253.73.66:5000/employee/detail/" + EmployeeID)
             .then(res => res.json())
             .then((resp) => {
                 employeedatachange(resp);

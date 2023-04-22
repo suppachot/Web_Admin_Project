@@ -329,7 +329,7 @@ function BookingApprove() {
         const decodedToken = jwtDecode(token);
         const { emp } = decodedToken;
         const currentDate = moment().format('YYYY-MM-DDTHH:mm:ss');
-        const url = `http://localhost:5000/booking/edit/${row.BookingID}`;
+        const url = `http://103.253.73.66:5000/booking/edit/${row.BookingID}`;
 
         // อัพเดทข้อมูลในตาราง booking_approve ผ่าน API
         fetch(url, {
@@ -375,7 +375,7 @@ function BookingApprove() {
 
 
     useEffect(() => {
-        fetch("http://localhost:5000/bookingmeeting")
+        fetch("http://103.253.73.66:5000/bookingmeeting")
             .then(res => res.json())
             .then(
                 (result) => {

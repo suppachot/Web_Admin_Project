@@ -225,7 +225,7 @@ function Checkout() {
 
 
   useEffect(() => {
-    fetch("http://localhost:5000/checkout")
+    fetch("http://103.253.73.66:5000/checkout")
       .then(res => res.json())
       .then(
         (result) => {

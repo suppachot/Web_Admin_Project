@@ -19,7 +19,7 @@ function DetailRole() {
     const [roledata, roledatachange] = useState(null);
 
     useEffect(() => {
-        fetch("http://localhost:5000/role/detail/" + RoleID)
+        fetch("http://103.253.73.66:5000/role/detail/" + RoleID)
             .then(res => res.json())
             .then((resp) => {
                 roledatachange(resp);

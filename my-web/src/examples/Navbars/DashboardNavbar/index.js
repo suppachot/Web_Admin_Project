@@ -102,7 +102,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
   useEffect(() => {
     const fetchInitialNotificationCount = async () => {
       try {
-        const response = await Axios.get("http://localhost:5000/notificationCount");
+        const response = await Axios.get("http://103.253.73.66:5000/notificationCount");
         const count = response.data[0].count;
         setInitialNotificationCount(count);
         setNotificationCount(count);

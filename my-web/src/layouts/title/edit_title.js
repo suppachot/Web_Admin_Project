@@ -38,7 +38,7 @@ function EditTitle() {
   // อ่านค่าจาก db
   const [titleList, settitleList] = useState([]);
   const getTitelID = async () => {
-    const response = await Axios.get('http://localhost:5000/gettitle/' + titleID);
+    const response = await Axios.get('http://103.253.73.66:5000/gettitle/' + titleID);
     console.log(response);
     if (response.data && response.data[0]) {
       setTitleID(response.data[0].TitleID);
@@ -67,7 +67,7 @@ function EditTitle() {
   // ส่งข้อมูล 
   const handlesubmit = (e) => {
     e.preventDefault();
-    Axios.put('http://localhost:5000/title/edit/' + TitleID, {
+    Axios.put('http://103.253.73.66:5000/title/edit/' + TitleID, {
       TitleID: TitleID,
       TitleName: TitleName,
       CreateDate: CreateDate,
