@@ -62,8 +62,10 @@ const style = {
     position: 'absolute',
     top: '50%',
     left: '50%',
-    transform: 'translate(-35%, -50%)',
-    width: 600,
+    transform: 'translate(-50%, -50%)',
+    //width: 600,
+    width: '90%',
+    maxWidth: 600,
     bgcolor: 'background.paper',
     boxShadow: 24,
     p: 4,
@@ -199,7 +201,7 @@ function HomeEmployee() {
             confirmButtonText: 'Yes, remove it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                Axios.delete(`http://localhost:5000/deleteemployee/${EmployeeID}`)
+                Axios.delete(`http://103.253.73.66:5000/deleteemployee/${EmployeeID}`)
                     .then(() => {
                         Swal.fire({
                             title: 'Removed successfully!',
@@ -248,7 +250,7 @@ function HomeEmployee() {
  
      const handleUploadFile = () => {
         if (fileData) {
-            axios.post('http://localhost:5000/import/employee', fileData)
+            axios.post('http://103.253.73.66:5000/import/employee', fileData)
                 .then(res => {
                     console.log(res.data);
                     setCsvError(null);
@@ -396,7 +398,7 @@ function HomeEmployee() {
     ];
 
     useEffect(() => {
-        fetch("http://localhost:5000/employee")
+        fetch("http://103.253.73.66:5000/employee")
             .then(res => res.json())
             .then(
                 (result) => {
@@ -474,28 +476,6 @@ function HomeEmployee() {
      
                         {csvError && <div className="alert alert-danger">{csvError}</div>}
 
-
-
-                        {/* 
-                        //---------------ธรรมดา-search------------//
-                        <div className="card-body col-lg-2" >
-                            <input type="text"
-                                className="form-control"
-                                placeholder="Employee ID"
-                                value={filterText}
-                                onChange={handleFilter}
-                            >
-                            </input>
-                            <button
-                                className="btn btn-danger"
-                                onClick={handleClearFilter}
-                            >
-                                Clear Filter
-                            </button>
-
-                        </div>
-                        //------------------------------------// 
-                        */}
                     </div>
                 </div>
 
