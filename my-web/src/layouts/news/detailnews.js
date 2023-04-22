@@ -1,9 +1,7 @@
 // @mui material components
 import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
 
 // Material Dashboard 2 React components
-import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 
 // Material Dashboard 2 React example components
@@ -20,7 +18,7 @@ function DetailNews() {
     const [newsdata, newsdatachange] = useState(null);
 
     useEffect(() => {
-        fetch("http://localhost:5000/news/detail/" + NewsNo)
+        fetch("http://103.253.73.66:5000/news/detail/" + NewsNo)
             .then(res => res.json())
             .then((resp) => {
                 newsdatachange(resp);
@@ -105,7 +103,6 @@ function DetailNews() {
                     ))}
                     <br></br>
                     <Link className="btn btn-danger" to="/news" >Back</Link>
-
                 </div>
             </div>
         </DashboardLayout>
