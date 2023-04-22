@@ -23,9 +23,6 @@ import jwtDecode from "jwt-decode";
 
 function EditEmp() {
   const { employeeID } = useParams();
-
-  const [employeedata, setemployeedata] = useState([]);
-
   const [EmployeeID, setEmployeeID] = useState("");
   const [TitleName, setTitleName] = useState("");
   const [FirstName, setFirstName] = useState("");
@@ -57,13 +54,11 @@ function EditEmp() {
     setRoleName(response.data[0].RoleName);
     setCreateDate(response.data[0].CreateDate);
     setCreateBy(response.data[0].CreateBy);
-    // setUpdateDate(response.data[0].UpdateDate);
-    // setUpdateBy(response.data[0].UpdateBy);
   };
 
   const token = localStorage.getItem("jwt");
   const decodedToken = jwtDecode(token);
-  const { emp, firstName, lastName } = decodedToken;
+  const { emp } = decodedToken;
   useEffect(() => {
     getEmployeeID();
     const moment = require('moment-timezone');
@@ -92,13 +87,6 @@ function EditEmp() {
       CreateBy: CreateBy,
       UpdateDate: UpdateDate,
       UpdateBy: UpdateBy
-
-      // }).then((res) => {
-      //   alert('Saved successfully.')
-      //   navigate('/employee');
-      // }).catch((err) => {
-      //   console.log(err.message)
-      // })
     }).then((res) => {
       Swal.fire({
         icon: 'success',

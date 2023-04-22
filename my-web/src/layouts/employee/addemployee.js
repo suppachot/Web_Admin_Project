@@ -89,14 +89,14 @@ function AddEmployee() {
 
   const token = localStorage.getItem("jwt");
     const decodedToken = jwtDecode(token);
-    const { emp, firstName, lastName } = decodedToken;
+    const { emp } = decodedToken;
 
     useEffect(() => {
         const moment = require('moment-timezone');
         const date = new Date();
-        const timezone = 'Asia/Bangkok'; // ตามที่ต้องการ
+        const timezone = 'Asia/Bangkok'; 
         const formattedDate = moment(date).tz(timezone).format('YYYY-MM-DDTHH:mm:ss');
-        const username = emp; // แก้ไขเป็นชื่อผู้ใช้จริงที่ต้องการใช้งาน
+        const username = emp; 
         setCreateBy(username);
         setCreateDate(formattedDate);
         setUpdateDate(formattedDate);
@@ -105,10 +105,8 @@ function AddEmployee() {
 
   const handlesubmit = (e) => {
     e.preventDefault();
-
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-
     var raw = JSON.stringify({
       "EmployeeID": employeeID,
       "TitleName": TitleName,
@@ -131,20 +129,6 @@ function AddEmployee() {
       redirect: 'follow'
     };
 
-    //   fetch("http://localhost:5000/employee/add", requestOptions)
-    //     .then(response => response.json())
-    //     // .then(result =>{ 
-    //     //   alert('Saved successfully.')
-    //     //   navigate('/employee'); 
-    //     // })
-    //     .then(result => {
-    //       alert('Saved successfully.')
-    //       if (result['status'] === 'ok') {
-    //         navigate('/employee');
-    //       }
-    //     })
-    //     .catch(error => console.log('error', error));
-    // }
     fetch("http://localhost:5000/employee/add", requestOptions)
       .then(response => response.json())
       .then(result => {

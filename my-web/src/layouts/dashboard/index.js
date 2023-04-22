@@ -76,15 +76,6 @@ function Dashboard() {
     fetchData();
   }, []);
 
-  const formatData = (item) => {
-    const formattedDate = new Date(item.date).toLocaleDateString('en-US');
-    return {
-      ...item,
-      date: formattedDate,
-    };
-  };
-  const formattedData = data.map(formatData);
-  //dashboard check out
   const [data1, setData1] = useState([]);
   useEffect(() => {
     const fetchData1 = async () => {
@@ -167,11 +158,8 @@ function Dashboard() {
                     <PieChart width={800} height={400}>
                       <Pie
                         data={data}
-                        //data={formattedData} 
                         dataKey="attendance"
                         nameKey="status"
-                        // cx={350}
-                        // cy={150}
                         cx="50%"
                         cy="50%"
                         outerRadius={80}

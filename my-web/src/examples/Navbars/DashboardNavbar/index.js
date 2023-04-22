@@ -185,13 +185,6 @@ function DashboardNavbar({ absolute, light, isMini }) {
           </Link>
         </MDBox>
 
-        {/* <MDBox display="flex" alignItems="center" ml={1}>
-          <MDTypography variant="body2" fontWeight="bold" color="text">
-            EmployeeID: {emp}
-            Name: {firstName} {lastName}
-          </MDTypography>
-        </MDBox> */}
-
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
             <MDBox color={light ? "white" : "inherit"}>

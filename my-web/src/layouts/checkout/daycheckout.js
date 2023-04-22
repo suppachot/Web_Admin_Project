@@ -97,13 +97,13 @@ const DetailModal = ({ open, handleClose, transaction }) => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-              Check In Date :
+              Check Out Date :
             </Typography>
             <Typography variant="body1">
               {moment(transaction.CheckOutDate).format('DD/MM/YYYY')}
             </Typography>
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-              Check In Time :
+              Check Out Time :
             </Typography>
             <Typography variant="body1">
               {moment(transaction.CheckOutTime, 'HH:mm:ss').format('HH:mm:ss A')}

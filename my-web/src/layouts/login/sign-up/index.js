@@ -36,7 +36,7 @@ function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/register', {
+      const response = await axios.post("http://localhost:5000/api/register", {
         employeeID,
         email,
         password,
@@ -46,7 +46,7 @@ function SignUp() {
     } catch (error) {
       setError('Invalid EmployeeID or Pincode.');
     }
-    if (password.length < 5 || !/(?=.*[a-zA-Z])(?=.*[0-9])/.test(password)) {
+    if (password.length < 6 || !/(?=.*[a-zA-Z])(?=.*[0-9])/.test(password)) {
       setShowError(true);
       return;
     }
@@ -56,7 +56,7 @@ function SignUp() {
   return (
     <CoverLayout image={bgImage} >
       <Card>
-        
+
         <MDBox
           variant="gradient"
           bgColor="info"
@@ -70,18 +70,30 @@ function SignUp() {
         >
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
             Sign up
-          </MDTypography> 
-    
+          </MDTypography>
+
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form" onSubmit={handleSubmit}>
             <MDBox mb={2}>
-              <MDInput type="text" label="EmployeeID" variant="standard" value={employeeID} required onChange={(e) => setEmployeeID(e.target.value)} fullWidth />
+              <MDInput
+                type="text"
+                label="EmployeeID"
+                variant="standard"
+                value={employeeID} required
+                onChange={(e) => setEmployeeID(e.target.value)}
+                fullWidth />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput type="email" label="Email" variant="standard" value={email} required onChange={(e) => setEmail(e.target.value)} fullWidth />
+              <MDInput
+                type="email"
+                label="Email"
+                variant="standard"
+                value={email}
+                required
+                onChange={(e) => setEmail(e.target.value)}
+                fullWidth />
             </MDBox>
-           
             <MDBox mb={2}>
               <MDInput
                 type={showPassword ? "text" : "password"}
@@ -93,7 +105,7 @@ function SignUp() {
                 fullWidth
                 inputProps={{
                   minLength: 6, // เพิ่มเงื่อนไขความยาวของรหัสผ่านเป็น 8 ตัวอักษรขึ้นไป
-                  pattern: "^(?=.*[a-zA-Z])(?=.*[0-9])", // เพิ่มเงื่อนไขให้มีตัวเลขและตัวอักษรอย่างน้อย 1 ตัว
+                  // pattern: "^(?=.*[a-zA-Z])(?=.*[0-9])", // เพิ่มเงื่อนไขให้มีตัวเลขและตัวอักษรอย่างน้อย 1 ตัว
                 }}
                 InputProps={{
                   endAdornment: (
@@ -105,7 +117,7 @@ function SignUp() {
               />
               {password.length < 6 && (
                 <Typography color="error" style={{ color: "red", fontSize: "1.3rem" }}>
-                 กรุณาตั้งรหัสอย่างน้อย 6 ตัวอักษรขึ้นไป 
+                  กรุณาตั้งรหัสอย่างน้อย 6 ตัวอักษรขึ้นไป
                 </Typography>
               )}
             </MDBox>

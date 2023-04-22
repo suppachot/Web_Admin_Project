@@ -1,21 +1,21 @@
-const express = require('express')
+const express = require("express")
 const app = express();
-const mysql = require('mysql2');
-const cors = require('cors');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const nodemailer = require('nodemailer');
+const mysql = require("mysql2");
+const cors = require("cors");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const nodemailer = require("nodemailer");
 
-const { v4: uuidv4 } = require('uuid');
-const crypto = require('crypto');
+const { v4: uuidv4 } = require("uuid");
+const crypto = require("crypto");
 
 
 app.use(cors());
 app.use(express.json());
 
-const mammoth = require('mammoth');
-const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+const mammoth = require("mammoth");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 
 
 // const upload = multer();
@@ -50,44 +50,10 @@ db.connect((err) => {
     }
 });
 
-// login jwt ธรรมดา
-// app.post('/api/login', async (req, res) => {
-//     const { employeeID, Password } = req.body;
-//     const query = 'SELECT * FROM account_admin LEFT JOIN employee ON account_admin.EmployeeID = employee.EmployeeID WHERE account_admin.EmployeeID = ? AND employee.RoleName = "Administrator"';
-//     db.query(query, [employeeID], (err, results) => {
-//         if (err) {
-//             console.error(err);
-//             return res.status(500).json({ error: 'Internal server error' });
-//         }
-
-//         if (results.length === 0) {
-//             return res.status(401).json({ error: 'Invalid EmployeeID or Pincode' });
-//         }
-
-//         const account_admin = results[0];
-//         if (account_admin.Password !== Password) {
-//             return res.status(401).json({ error: 'Invalid EmployeeID or Pincode' });
-//         }
-
-//         const payload = {
-//             id: account_admin.AccountID,
-//             emp: account_admin.EmployeeID,
-//             firstName: account_admin.FirstName,
-//             lastName: account_admin.LastName,
-//         };
-//         const token = jwt.sign(payload, 'your_jwt_secret', { expiresIn: '5h' });
-//         res.json({
-//             token,
-//             emp: account_admin.EmployeeID,
-//             firstName: account_admin.FirstName,
-//             lastName: account_admin.LastName,
-//         });
-//     });
-// });
-
 app.post('/api/login', async (req, res) => {
     const { employeeID, password } = req.body;
-    const query = 'SELECT * FROM account_admin LEFT JOIN employee ON account_admin.EmployeeID = employee.EmployeeID WHERE account_admin.EmployeeID = ? AND employee.RoleName = "Administrator"';
+    const query = `SELECT * FROM account_admin LEFT JOIN employee ON account_admin.EmployeeID = employee.EmployeeID 
+    WHERE employee.RoleName = "Administrator" AND account_admin.EmployeeID = ?`;
     db.query(query, [employeeID], async (err, results) => {
         try {
             if (err) {
@@ -101,7 +67,7 @@ app.post('/api/login', async (req, res) => {
 
             const account_admin = results[0];
             const isMatch = await bcrypt.compare(password, account_admin.Password);
-            if (account_admin.Password == !isMatch) {
+            if (!isMatch) {
                 return res.status(401).json({ error: 'Invalid EmployeeID or Pincode' });
             }
 
@@ -111,7 +77,7 @@ app.post('/api/login', async (req, res) => {
                 firstName: account_admin.FirstName,
                 lastName: account_admin.LastName,
             };
-            const token = jwt.sign(payload, 'your_jwt_secret', { expiresIn: '5h' });
+            const token = jwt.sign(payload, 'your_jwt_secret', { expiresIn: '30m' });
             res.json({
                 token,
                 emp: account_admin.EmployeeID,
@@ -125,28 +91,6 @@ app.post('/api/login', async (req, res) => {
     });
 });
 
-// register ธรรมดา
-// app.post('/api/register', (req, res) => {
-//     const employeeID = req.body.employeeID;
-//     const email = req.body.email;
-//     const Password = req.body.Password;
-//     db.query("INSERT INTO account_admin( EmployeeID, Email, Password) VALUES(?,?,?);",
-//         [employeeID, email, Password],
-//         (err, result) => {
-//             if (err) {
-//                 console.log(err);
-//                 // res.status(201).json({ message: 'Add User  successfully' ,status : 'ok'});
-//             }
-//             else {
-//                 //res.send("Values Emp inserted");
-//                 res.json({ message: 'Add User  successfully', status: 'ok', result });
-//                 // res.send(result);
-//                 // console.log(result);
-//             }
-//         }
-//     );
-//     console.log('regis success');
-// })
 // register เข้ารหัส
 app.post('/api/register', async (req, res) => {
     try {
@@ -382,7 +326,6 @@ app.get('/title', (req, res) => {
 })
 // create Title
 app.post('/title/add', (req, res) => {
-    //const TitleID = req.body.TitleID;
     const TitleName = req.body.TitleName;
     const CreateDate = req.body.CreateDate;
     const CreateBy = req.body.CreateBy;
@@ -397,7 +340,6 @@ app.post('/title/add', (req, res) => {
             }
             else {
                 res.json({ message: 'Add Title  successfully', status: 'ok', result });
-                //res.send("Values Title inserted");
             }
         }
     );
@@ -448,7 +390,6 @@ app.get('/gettitle/:titleID', (req, res) => {
 //Update title
 app.put('/title/edit/:titleID', (req, res) => {
     const titleID = req.params.titleID;
-    //const TitleID = req.body.TitleID;
     const TitleName = req.body.TitleName;
     const CreateDate = req.body.CreateDate;
     const CreateBy = req.body.CreateBy;
@@ -461,8 +402,6 @@ app.put('/title/edit/:titleID', (req, res) => {
                 console.log(err);
             }
             else {
-                // res.send("Values Updated");
-                //res.json({ message: 'Update User  successfully', status: 'ok', result });
                 res.send(result);
             }
         })
@@ -513,10 +452,11 @@ app.get('/employee/:firstname', (req, res) => {
 app.post('/import/employee', (req, res) => {
     const data = req.body;
     const values = data.map(({ EmployeeID, TitleName, FirstName, LastName, PhoneNumber, Email, DepartmentName, RoleName, CreateBy, UpdateBy }) =>
-        `('${EmployeeID}', '${TitleName}', '${FirstName}', '${LastName}', '${PhoneNumber}', '${Email}', '${DepartmentName}', '${RoleName}', CURRENT_TIMESTAMP(), '${CreateBy}', CURRENT_TIMESTAMP(), '${UpdateBy}')`
+        `('${EmployeeID}', '${TitleName}', '${FirstName}', '${LastName}', '${PhoneNumber}', '${Email}', '${DepartmentName}', '${RoleName}',
+         CURRENT_TIMESTAMP(), '${CreateBy}', CURRENT_TIMESTAMP(), '${UpdateBy}')`
     ).join(', ');
-    const sql = `INSERT INTO employee (EmployeeID, TitleName, FirstName, LastName, PhoneNumber, Email, DepartmentName, RoleName, CreateDate, CreateBy, UpdateDate, UpdateBy) VALUES ${values}`;
-
+    const sql = `INSERT INTO employee (EmployeeID, TitleName, FirstName, LastName, PhoneNumber, Email, DepartmentName, RoleName, CreateDate, CreateBy, UpdateDate, UpdateBy) 
+                VALUES ${values}`;
     db.query(sql, (err, result) => {
         if (err) {
             console.log(err);
@@ -546,18 +486,16 @@ app.post('/employee/add', (req, res) => {
     const UpdateDate = req.body.UpdateDate;
     const UpdateBy = req.body.UpdateBy;
 
-    db.query("INSERT INTO employee (EmployeeID, TitleName, FirstName , LastName, PhoneNumber, Email, DepartmentName, RoleName,CreateDate,CreateBy,UpdateDate,UpdateBy) VALUES(?,?,?,?,?,?,?,?,?,?,?,?);",
+    db.query(`INSERT INTO employee (EmployeeID, TitleName, FirstName , LastName, PhoneNumber, Email, DepartmentName, RoleName,CreateDate,CreateBy,UpdateDate,UpdateBy) 
+        VALUES(?,?,?,?,?,?,?,?,?,?,?,?);`,
         [EmployeeID, TitleName, FirstName, LastName, PhoneNumber, Email, DepartmentName, RoleName, CreateDate, CreateBy, UpdateDate, UpdateBy],
         (err, result) => {
             if (err) {
                 console.log(err);
-                // res.status(201).json({ message: 'Add User  successfully' ,status : 'ok'});
             }
             else {
-                //res.send("Values Emp inserted");
+
                 res.json({ message: 'Add User  successfully', status: 'ok', result });
-                // res.send(result);
-                // console.log(result);
             }
         }
     );
@@ -567,7 +505,6 @@ app.post('/employee/add', (req, res) => {
 //Update employe
 app.put('/employee/edit/:employeeID', (req, res) => {
     const employeeID = req.params.employeeID;
-    //const EmployeeID = req.body.EmployeeID;
     const TitleName = req.body.TitleName;
     const FirstName = req.body.FirstName;
     const LastName = req.body.LastName;
@@ -580,14 +517,13 @@ app.put('/employee/edit/:employeeID', (req, res) => {
     const UpdateDate = req.body.UpdateDate;
     const UpdateBy = req.body.UpdateBy;
 
-    db.query("UPDATE employee SET TitleName=? , FirstName = ? , LastName = ? , PhoneNumber = ? , Email = ? , DepartmentName = ? , RoleName = ? ,CreateDate = ? ,CreateBy = ?,UpdateDate = ?,UpdateBy = ?  WHERE EmployeeID = ?",
+    db.query(`UPDATE employee SET TitleName=? , FirstName = ? , LastName = ? , PhoneNumber = ? , Email = ? , DepartmentName = ? , RoleName = ? ,
+            CreateDate = ? ,CreateBy = ?,UpdateDate = ?,UpdateBy = ?  WHERE EmployeeID = ?`,
         [TitleName, FirstName, LastName, PhoneNumber, Email, DepartmentName, RoleName, CreateDate, CreateBy, UpdateDate, UpdateBy, employeeID], (err, result) => {
             if (err) {
                 console.log(err);
             }
             else {
-                // res.send("Values Updated");
-                //res.json({ message: 'Update User  successfully', status: 'ok', result });
                 res.send(result);
             }
         })
@@ -653,7 +589,6 @@ app.get('/department', (req, res) => {
 })
 // create department
 app.post('/department/add', (req, res) => {
-    // const DepartmentID = req.body.DepartmentID;
     const DepartmentName = req.body.DepartmentName;
     const CreateDate = req.body.CreateDate;
     const CreateBy = req.body.CreateBy;
@@ -676,7 +611,6 @@ app.post('/department/add', (req, res) => {
 //Update dapartment
 app.put('/dapartment/edit/:departmentID', (req, res) => {
     const departmentID = req.params.departmentID;
-    //const EmployeeID = req.body.EmployeeID;
     const DepartmentName = req.body.DepartmentName;
     const CreateDate = req.body.CreateDate;
     const CreateBy = req.body.CreateBy;
@@ -689,8 +623,6 @@ app.put('/dapartment/edit/:departmentID', (req, res) => {
                 console.log(err);
             }
             else {
-                // res.send("Values Updated");
-                //res.json({ message: 'Update User  successfully', status: 'ok', result });
                 res.send(result);
             }
         })
@@ -925,10 +857,10 @@ app.delete('/deletemeetingroom/:RoomID', (req, res) => {
 //bookingApprove
 app.get('/bookingmeeting', (req, res) => {
     db.query(`SELECT *
-    FROM booking_approve b
-    JOIN employee e ON b.EmployeeID = e.EmployeeID
-    JOIN meetingroom m ON b.RoomID = m.RoomID
-    ORDER BY BookingID ASC;`,
+        FROM booking_approve b
+        JOIN employee e ON b.EmployeeID = e.EmployeeID
+        JOIN meetingroom m ON b.RoomID = m.RoomID
+        ORDER BY BookingID DESC;`,
         (err, result) => {
             if (err) {
                 console.log(err);
@@ -987,12 +919,13 @@ app.post('/createnews', (req, res) => {
     const NewsDate = req.body.NewsDate;
     const TopicNews = req.body.TopicNews;
     const NewsDetail = req.body.NewsDetail;
+    const Pin = req.body.Pin;
     const CreateBy = req.body.CreateBy;
     const UpdateDate = req.body.UpdateDate;
     const UpdateBy = req.body.UpdateBy;
 
-    db.query("INSERT INTO news (NewsNo, NewsDate, TopicNews,NewsDetail, CreateBy, UpdateDate, UpdateBy) VALUES (?,?,?,?,?,?,?)",
-        [NewsNo, NewsDate, TopicNews, NewsDetail, CreateBy, UpdateDate, UpdateBy],
+    db.query("INSERT INTO news ( NewsDate, TopicNews,NewsDetail,Pin, CreateBy, UpdateDate, UpdateBy) VALUES (?,?,?,?,?,?,?)",
+        [ NewsDate, TopicNews, NewsDetail, Pin,CreateBy, UpdateDate, UpdateBy],
         (err, result) => {
             if (err) {
                 console.log(err);
@@ -1047,12 +980,13 @@ app.put("/news/edit/:newsNo", (req, res) => {
     const NewsDate = req.body.NewsDate;
     const TopicNews = req.body.TopicNews;
     const NewsDetail = req.body.NewsDetail;
+    const Pin = req.body.Pin;
     const CreateBy = req.body.CreateBy;
     const UpdateDate = req.body.UpdateDate;
     const UpdateBy = req.body.UpdateBy;
 
-    db.query("UPDATE news SET  NewsDate = ? , TopicNews = ?, NewsDetail = ?  ,CreateBy =? , UpdateDate = ? , UpdateBy = ? WHERE NewsNo = ?",
-        [NewsDate, TopicNews, NewsDetail, CreateBy, UpdateDate, UpdateBy, newsNo], (err, result) => {
+    db.query("UPDATE news SET  NewsDate = ? , TopicNews = ?, NewsDetail = ? ,Pin =? ,CreateBy =? , UpdateDate = ? , UpdateBy = ? WHERE NewsNo = ?",
+        [NewsDate, TopicNews, NewsDetail,Pin, CreateBy, UpdateDate, UpdateBy, newsNo], (err, result) => {
             if (err) {
                 console.log(err);
             }
@@ -1089,11 +1023,12 @@ app.get('/account', (req, res) => {
 
 //checkin db
 app.get('/checkin', (req, res) => {
-    db.query(`SELECT*
+    db.query(`SELECT *
     FROM employee e
     INNER JOIN checkin c
     ON e.EmployeeID = c.EmployeeID
-    WHERE CheckInDate >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH); `,
+    WHERE CheckInDate >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
+    ORDER BY TransactionID DESC; `,
         (err, result) => {
             if (err) {
                 console.log(err);
@@ -1126,7 +1061,8 @@ app.get('/checkout', (req, res) => {
     FROM employee e
     INNER JOIN checkout c
     ON e.EmployeeID = c.EmployeeID
-    WHERE CheckOutDate >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH); `,
+    WHERE CheckOutDate >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
+    ORDER BY TransactionID DESC; `,
         (err, result) => {
             if (err) {
                 console.log(err);
@@ -1158,8 +1094,9 @@ app.get('/checkout', (req, res) => {
 app.get('/day/checkin', (req, res) => {
     db.query(`SELECT *FROM employee e 
     INNER JOIN checkin c ON e.EmployeeID = c.EmployeeID 
-    WHERE e.RoleName='Employee' AND date(c.CheckInDate)=curdate();`
-        , (err, result) => {
+    WHERE e.RoleName='Employee' AND date(c.CheckInDate)=curdate()
+    ORDER BY TransactionID DESC;`, 
+    (err, result) => {
             if (err) {
                 console.log(err);
                 res.status(500).send('Internal Server Error');
@@ -1174,9 +1111,9 @@ app.get('/day/checkin', (req, res) => {
 app.get('/day/checkout', (req, res) => {
     db.query(`SELECT *FROM employee e 
     INNER JOIN checkout c ON e.EmployeeID = c.EmployeeID 
-    WHERE e.RoleName='Employee' AND date(c.CheckOutDate)=curdate();
-    
-    `, (err, result) => {
+    WHERE e.RoleName='Employee' AND date(c.CheckOutDate)=curdate()
+    ORDER BY TransactionID DESC;`, 
+    (err, result) => {
         if (err) {
             console.log(err);
         }

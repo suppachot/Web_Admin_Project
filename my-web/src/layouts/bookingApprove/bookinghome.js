@@ -228,7 +228,7 @@ function BookingApprove() {
             name: 'StartTime',
             sortable: true,
             selector: row => row.StartTime,
-            width: '100px'
+            width: '120px'
         },
         {
             id: 'EndTime',
@@ -281,13 +281,6 @@ function BookingApprove() {
                         {row.Status}
                     </button>
                     <div className="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                        {/* <button
-                            className="dropdown-item"
-                            onClick={() => handleStatusUpdate(row, 'Wait')}
-                            disabled={row.Status === 'Wait'}
-                        >
-                            Wait
-                        </button> */}
                         <button
                             className="dropdown-item"
                             onClick={() => handleStatusUpdate(row, 'Approve')}
@@ -308,7 +301,6 @@ function BookingApprove() {
                 </div>
             ),
         },
-
         {
             name: 'Action',
             selector: row =>
