@@ -16,6 +16,7 @@ import Axios from "axios";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
+import { CSVLink, CSVDownload } from "react-csv";
 import moment from "moment/moment";
 import Paper from "@mui/material/Paper";
 
@@ -93,7 +94,7 @@ const DetailModal = ({ open, handleClose, transaction }) => {
             </Typography>
             <Typography variant="body1">{transaction.RoleName}</Typography>
           </Grid>
-          
+
           <Grid item xs={12} sm={6}>
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
               Check In Date :
@@ -151,7 +152,7 @@ function Checkin() {
 
   const [filterText, setFilterText] = useState('');
   const filteredData = items.filter((item) =>
-    item.EmployeeID.toLowerCase().includes(filterText.toLowerCase()) 
+    item.EmployeeID.toLowerCase().includes(filterText.toLowerCase())
 
   );
 
@@ -229,7 +230,7 @@ function Checkin() {
   ];
 
   useEffect(() => {
-    fetch("http://103.253.73.66:5000/checkin")
+    fetch("http://103.253.73.66:5001/checkin")
       .then(res => res.json())
       .then(
         (result) => {
@@ -280,7 +281,6 @@ function Checkin() {
             <DataTable
               title="check-in"
               columns={columns}
-              //data={items}
               data={filteredData}
               highlightOnHover
               pagination
@@ -292,7 +292,9 @@ function Checkin() {
               }}
             />
           </div>
-
+          <CSVLink data={filteredData} filename={"Checkin_T.K.S.csv"} target="_blank" >
+            <button className="btn btn-primary">Export File</button>
+          </CSVLink>
         </Paper>
 
         {selectedTransaction && (

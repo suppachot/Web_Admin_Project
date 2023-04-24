@@ -65,7 +65,7 @@ const DetailModal = ({ open, handleClose, transaction }) => {
           component="h2"
           sx={{ marginBottom: '15px' }}
         >
-          Checkin Detail
+          Checkout Detail
         </Typography>
 
         <Grid container spacing={2}>
@@ -225,7 +225,7 @@ function DayCheckout() {
 
 
   useEffect(() => {
-    fetch("http://103.253.73.66:5000/day/checkout")
+    fetch("http://103.253.73.66:5001/day/checkout")
       .then(res => res.json())
       .then(
         (result) => {

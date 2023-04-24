@@ -19,7 +19,7 @@ function DetailDepartment() {
     const [departmentdata, departmentdatachange] = useState(null);
 
     useEffect(() => {
-        fetch("http://103.253.73.66:5000/department/detail/" + DepartmentID)
+        fetch("http://103.253.73.66:5001/department/detail/" + DepartmentID)
             .then(res => res.json())
             .then((resp) => {
                 departmentdatachange(resp);

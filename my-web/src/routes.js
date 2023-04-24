@@ -58,6 +58,7 @@ import AddMeetingRoom from "layouts/meetingroom/addmeeting";
 import EditMeetingRoom from "layouts/meetingroom/editmeeting";
 //BookingApprove
 import BookingApprove from "layouts/bookingApprove/bookinghome";
+import BookingAll from "layouts/bookingApprove/bookingAll";
 
 //checkin checkout
 import Checkin from "layouts/checkin";
@@ -283,6 +284,12 @@ const routes = [
     component: <EditMeetingRoom />,  
   },
   {
+    key: "bookingall",
+    icon: <Icon fontSize="small"></Icon>,
+    route: "/bookingall",
+    component: <BookingAll />,  
+  },
+  {
     key: "daycheckin",
     icon: <Icon fontSize="small"></Icon>,
     route: "/checkinday",
@@ -309,7 +316,7 @@ const routes = [
   ,{
     key: "resetpw",
     icon: <Icon fontSize="small"></Icon>,
-    route: "/resetpassword",
+    route: "/resetpassword/:resetToken",
     component: <ResetPW />,  
   }
 

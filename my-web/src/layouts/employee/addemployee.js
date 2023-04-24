@@ -39,7 +39,7 @@ function AddEmployee() {
   // อ่านค่าจาก db
   const [employeeList, setEmployeeList] = useState([]);
   const getEmployee = () => {
-    Axios.get('http://103.253.73.66:5000/employee').then((response) => {
+    Axios.get('http://103.253.73.66:5001/employee').then((response) => {
       setEmployeeList(response.data);
     });
   }
@@ -47,7 +47,7 @@ function AddEmployee() {
   // ส่งข้อมูล 
   // const handlesubmit = (e) => {
   //   e.preventDefault();
-  //   Axios.post('http://103.253.73.66:5000/employee/add', {
+  //   Axios.post('http://103.253.73.66:5001/employee/add', {
   //     EmployeeID: employeeID,
   //     TitleName: TitleName,
   //     FirstName: FirstName,
@@ -129,7 +129,7 @@ function AddEmployee() {
       redirect: 'follow'
     };
 
-    fetch("http://103.253.73.66:5000/employee/add", requestOptions)
+    fetch("http://103.253.73.66:5001/employee/add", requestOptions)
       .then(response => response.json())
       .then(result => {
         if (result['status'] === 'ok') {

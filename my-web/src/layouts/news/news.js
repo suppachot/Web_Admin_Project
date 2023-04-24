@@ -258,7 +258,7 @@ function News() {
       confirmButtonText: 'Yes, remove it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        Axios.delete("http://103.253.73.66:5000/deletenews/" + NewsNo, {
+        Axios.delete("http://103.253.73.66:5001/deletenews/" + NewsNo, {
         }).then(() => {
           Swal.fire({
             title: 'Removed successfully!',
@@ -356,7 +356,7 @@ function News() {
     const formData = new FormData();
     formData.append('file', file);
     // formData.append('file', file, file.name);
-    Axios.post('http://103.253.73.66:5000/import-doc', formData, {
+    Axios.post('http://103.253.73.66:5001/import-doc', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -376,7 +376,7 @@ function News() {
   //   event.preventDefault();
   //   const formData = new FormData();
   //   formData.append('file', file);
-  //   Axios.post('http://103.253.73.66:5000/import-doc1', formData, {
+  //   Axios.post('http://103.253.73.66:5001/import-doc1', formData, {
   //     headers: {
   //       'Content-Type': 'multipart/form-data',
   //     },
@@ -392,7 +392,7 @@ function News() {
 
 
   useEffect(() => {
-    fetch("http://103.253.73.66:5000/news")
+    fetch("http://103.253.73.66:5001/news")
       .then(res => res.json())
       .then(
         (result) => {

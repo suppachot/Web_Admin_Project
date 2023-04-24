@@ -35,24 +35,14 @@ function EditRole() {
 
     const navigate = useNavigate();
     // อ่านค่าจาก db
-    const [RoleList, setRoleList] = useState([]);
-
-    // const getRoleID = async () => {
-    //     const response = await Axios.get('http://103.253.73.66:5000/getrole/' + roleID);
-    //     console.log(response);
-    //     setRoleID(response.data[0].RoleID);
-    //     setRoleName(response.data[0].RoleName);
-    //     setCreateDate(response.data[0].CreateDate);
-    //     setCreateBy(response.data[0].CreateBy);
-    // };
 
     const getRoleID = async () => {
-        const response = await Axios.get('http://103.253.73.66:5000/getrole/' + roleID);
+        const response = await Axios.get('http://103.253.73.66:5001/getrole/' + roleID);
         console.log(response);
         if (response.data && response.data[0]) {
             setRoleID(response.data[0].RoleID);
             setRoleName(response.data[0].RoleName);
-            setCreateDate(response.data[0].CreateDate);
+            setCreateDate(moment(response.data[0].CreateDate).format("YYYY-MM-DD"));
             setCreateBy(response.data[0].CreateBy);
         } else {
             console.log("No data found.");
@@ -79,7 +69,7 @@ function EditRole() {
     // ส่งข้อมูล 
     const handlesubmit = (e) => {
         e.preventDefault();
-        Axios.put("http://103.253.73.66:5000/role/edit/" + RoleID, {
+        Axios.put("http://103.253.73.66:5001/role/edit/" + RoleID, {
             RoleID: RoleID,
             RoleName: RoleName,
             CreateDate: CreateDate,
@@ -140,7 +130,7 @@ function EditRole() {
                                     <div className="col-lg-12">
                                         <div className="form-group">
                                             <label>CreateDate</label>
-                                            <input value={moment(CreateDate).format('DD/MM/YYYY HH:mm:ss A')} type="datetime"
+                                            <input value={CreateDate} type="datetime"
                                                 id='CreateDate'
                                                 disabled
                                                 onChange={e => setCreateDate(e.target.value)}

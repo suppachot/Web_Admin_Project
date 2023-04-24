@@ -32,7 +32,7 @@ function EditDepartment() {
     // อ่านค่าจาก db
     const [departmentList, setdepartmentList] = useState([]);
     const getDepartment = () => {
-        Axios.get('http://103.253.73.66:5000/deartment').then((response) => {
+        Axios.get('http://103.253.73.66:5001/deartment').then((response) => {
             setdepartmentList(response.data);
         });
     }
@@ -56,7 +56,7 @@ function EditDepartment() {
     // ส่งข้อมูล 
     const handlesubmit = (e) => {
         e.preventDefault();
-        Axios.post('http://103.253.73.66:5000/department/add', {
+        Axios.post('http://103.253.73.66:5001/department/add', {
             //DepartmentID: DepartmentID,
             DepartmentName: DepartmentName,
             CreateDate: CreateDate,

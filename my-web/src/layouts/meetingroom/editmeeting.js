@@ -40,7 +40,7 @@ function EditMeetingRoom() {
   const navigate = useNavigate();
 
   // const getmeetingroomID = async () => {
-  //   const response = await Axios.get('http://103.253.73.66:5000/getmeetingroom/' + roomID);
+  //   const response = await Axios.get('http://103.253.73.66:5001/getmeetingroom/' + roomID);
   //   console.log(response);
   //   setRoomID(response.data[0].RoomID);
   //   setRoomName(response.data[0].RoomName);
@@ -58,7 +58,7 @@ function EditMeetingRoom() {
   // ส่งข้อมูล 
   // const handlesubmit = (e) => {
   //   e.preventDefault();
-  //   Axios.put('http://103.253.73.66:5000/meetingroom/edit/'+ RoomID, {
+  //   Axios.put('http://103.253.73.66:5001/meetingroom/edit/'+ RoomID, {
   //     RoomID: RoomID,
   //     RoomName: RoomName,
   //     Capacity: Capacity,
@@ -81,13 +81,13 @@ function EditMeetingRoom() {
   // }
 
   const getmeetingroomID = async () => {
-    const response = await Axios.get('http://103.253.73.66:5000/getmeetingroom/' + roomID);
+    const response = await Axios.get('http://103.253.73.66:5001/getmeetingroom/' + roomID);
     console.log(response);
     if(response.data[0]) {
       setRoomID(response.data[0].RoomID);
       setRoomName(response.data[0].RoomName );
       setCapacity(response.data[0].Capacity );
-      setCreateDate(moment(response.data[0].CreateDate).format("YYYY-MM-DD HH:mm:ss A"));
+      setCreateDate(moment(response.data[0].CreateDate).format("YYYY-MM-DD "));
       setCreateBy(response.data[0].CreateBy );
     }
   };
@@ -108,7 +108,7 @@ function EditMeetingRoom() {
   // ส่งข้อมูล 
   const handlesubmit = (e) => {
     e.preventDefault();
-    Axios.put('http://103.253.73.66:5000/meetingroom/edit/'+ RoomID, {
+    Axios.put('http://103.253.73.66:5001/meetingroom/edit/'+ RoomID, {
       RoomID: RoomID,
       RoomName: RoomName,
       Capacity: Capacity,

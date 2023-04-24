@@ -47,7 +47,7 @@ function HomeTitle() {
             confirmButtonText: 'Yes, remove it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                Axios.delete(`http://103.253.73.66:5000/deletetitle/${TitleID}`)
+                Axios.delete(`http://103.253.73.66:5001/deletetitle/${TitleID}`)
                     .then(() => {
                         Swal.fire({
                             title: 'Removed successfully!',
@@ -127,7 +127,7 @@ function HomeTitle() {
     ];
 
     useEffect(() => {
-        fetch("http://103.253.73.66:5000/title")
+        fetch("http://103.253.73.66:5001/title")
             .then(res => res.json())
             .then(
                 (result) => {

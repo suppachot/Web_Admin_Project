@@ -10,7 +10,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import moment from "moment/moment";
-import Typography from '@mui/material/Typography';
+import Typography from "@mui/material/Typography";
 
 function DetailNews() {
 
@@ -18,7 +18,7 @@ function DetailNews() {
     const [newsdata, newsdatachange] = useState(null);
 
     useEffect(() => {
-        fetch("http://103.253.73.66:5000/news/detail/" + NewsNo)
+        fetch("http://103.253.73.66:5001/news/detail/" + NewsNo)
             .then(res => res.json())
             .then((resp) => {
                 newsdatachange(resp);

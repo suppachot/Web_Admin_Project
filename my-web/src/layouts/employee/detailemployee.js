@@ -25,7 +25,7 @@ function DetailEmpolyee() {
     const [employeedata, employeedatachange] = useState(null);
 
     useEffect(() => {
-        fetch("http://103.253.73.66:5000/employee/detail/" + EmployeeID)
+        fetch("http://103.253.73.66:5001/employee/detail/" + EmployeeID)
             .then(res => res.json())
             .then((resp) => {
                 employeedatachange(resp);
@@ -61,7 +61,6 @@ function DetailEmpolyee() {
                                 UpdateBy   : {val.UpdateBy}<br></br>
                             </h5>
                             <br></br>
-
 
 
                         </div>

@@ -31,7 +31,7 @@ function AddRole() {
     // อ่านค่าจาก db
     const [RoleList, setRoleList] = useState([]);
     const getRole = () => {
-        Axios.get('http://103.253.73.66:5000/role').then((response) => {
+        Axios.get('http://103.253.73.66:5001/role').then((response) => {
             setRoleList(response.data);
         });
     }
@@ -55,7 +55,7 @@ function AddRole() {
     // ส่งข้อมูล 
     const handlesubmit = (e) => {
         e.preventDefault();
-        Axios.post('http://103.253.73.66:5000/role/add', {
+        Axios.post('http://103.253.73.66:5001/role/add', {
           //  RoleID: RoleID,
             RoleName: RoleName,
             CreateDate: CreateDate,

@@ -156,7 +156,7 @@ const DetailModal = ({ open, handleClose, booking }) => {
     );
 };
 
-function BookingApprove() {
+function BookingAll() {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
@@ -263,45 +263,6 @@ function BookingApprove() {
             }
         },
         {
-            name: 'Action Status',
-            cell: row => (
-                <div className="btn-group dropright">
-                    <button
-                        id="btnGroupDrop1"
-                        type="button"
-                        className={`btn dropdown-toggle 
-                                ${row.Status === 'Wait' ? 'btn-warning'
-                                : row.Status === 'Approve' ? 'btn-success'
-                                    : row.Status === 'No approve' ? 'btn-danger'
-                                        : ''}`}
-                        data-toggle="dropdown"
-                        aria-haspopup="true"
-                        aria-expanded="false"
-                    >
-                        {row.Status}
-                    </button>
-                    <div className="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                        <button
-                            className="dropdown-item"
-                            onClick={() => handleStatusUpdate(row, 'Approve')}
-                            disabled={row.Status === 'Approve' || row.Status === 'No approve'}
-                            data-bookingid={row.BookingID}
-                        >
-                            Approve
-                        </button>
-                        <button
-                            className="dropdown-item"
-                            onClick={() => handleStatusUpdate(row, 'No approve')}
-                            disabled={row.Status === 'Approve' || row.Status === 'No approve'}
-                            data-bookingid={row.BookingID}
-                        >
-                            No approve
-                        </button>
-                    </div>
-                </div>
-            ),
-        },
-        {
             name: 'Detail',
             selector: row =>
 
@@ -313,68 +274,9 @@ function BookingApprove() {
 
     ];
 
-    const handleStatusUpdate = (row, status) => {
-        // ตรวจสอบสถานะเพื่อเปิดหรือปิดปุ่มแก้ไข
-        const statusButtons = document.querySelectorAll('.dropdown-item');
-        statusButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const status = button.textContent.trim();
-                if (status === 'Wait') {
-                    handleStatusUpdate(row, status);
-                }
-            });
-        });
-
-        const token = localStorage.getItem('jwt');
-        const decodedToken = jwtDecode(token);
-        const { emp } = decodedToken;
-        const currentDate = moment().format('YYYY-MM-DDTHH:mm:ss');
-
-        // อัพเดทข้อมูลในตาราง booking_approve ผ่าน API
-        fetch(`http://103.253.73.66:5001/booking/edit/${row.BookingID}`, {
-            method: 'PUT',
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                Status: status,
-                Attendant: emp,
-                DateApprove: currentDate,
-            }),
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                // อัพเดทสถานะการจองในตาราง Datatable
-                const updatedItems = items.map(item => {
-                    if (item.BookingID === row.BookingID) {
-                        return {
-                            ...item,
-                            Status: status,
-                        };
-                    }
-                    return item;
-                });
-                setItems(updatedItems);
-                if (status === 'Approve' || status === 'No approve') {
-                    clearInterval(intervalId); // หยุด setInterval ที่กำลังทำงานอยู่
-                }
-                if (status === 'Wait') {
-                    const statusButtons = document.querySelectorAll('.dropdown-item');
-                    statusButtons.forEach(button => button.disabled = true);
-                } else if (status === 'Approve' || status === 'No approve') {
-                    const statusButton = document.querySelector(`[data-bookingid="${row.BookingID}"]`);
-                    statusButton.disabled = true;
-                }
-
-            })
-            .catch(error => console.log(error));
-    };
-
-
+   
     useEffect(() => {
-        fetch("http://103.253.73.66:5001/bookingmeeting")
+        fetch("http://103.253.73.66:5001/bookingmeetingAll")
             .then(res => res.json())
             .then(
                 (result) => {
@@ -452,10 +354,6 @@ function BookingApprove() {
                                     }}
                                 />
                             </div>
-                            <div className="btn" style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                <Link to="/bookingall" className="btn btn-primary">booking all</Link>
-                            </div>
-
                         </Paper>
 
                         {selectedBooking && (
@@ -473,4 +371,4 @@ function BookingApprove() {
         );
     }
 }
-export default BookingApprove;
+export default BookingAll;

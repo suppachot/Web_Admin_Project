@@ -226,7 +226,7 @@ function DayCheckin() {
   ];
 
   useEffect(() => {
-    fetch("http://103.253.73.66:5000/day/checkin")
+    fetch("http://103.253.73.66:5001/day/checkin")
       .then(res => res.json())
       .then(
         (result) => {
@@ -277,7 +277,6 @@ function DayCheckin() {
             <DataTable
               title="check-in"
               columns={columns}
-              //data={items}
               data={filteredData}
               highlightOnHover
               pagination

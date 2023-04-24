@@ -42,7 +42,7 @@ function EditEmp() {
   const navigate = useNavigate();
 
   const getEmployeeID = async () => {
-    const response = await Axios.get('http://103.253.73.66:5000/getemployee/' + employeeID);
+    const response = await Axios.get('http://103.253.73.66:5001/getemployee/' + employeeID);
     console.log(response);
     setEmployeeID(response.data[0].EmployeeID);
     setTitleName(response.data[0].TitleName);
@@ -53,6 +53,7 @@ function EditEmp() {
     setDepartmentName(response.data[0].DepartmentName);
     setRoleName(response.data[0].RoleName);
     setCreateDate(response.data[0].CreateDate);
+    setCreateDate(moment(response.data[0].CreateDate).format("YYYY-MM-DD"));
     setCreateBy(response.data[0].CreateBy);
   };
 
@@ -74,7 +75,7 @@ function EditEmp() {
 
   const handlesubmit = (e) => {
     e.preventDefault();
-    Axios.put("http://103.253.73.66:5000/employee/edit/" + EmployeeID, {
+    Axios.put("http://103.253.73.66:5001/employee/edit/" + EmployeeID, {
       EmployeeID: EmployeeID,
       TitleName: TitleName,
       FirstName: FirstName,
@@ -229,7 +230,7 @@ function EditEmp() {
                   <div className="col-lg-12">
                     <div className="form-group">
                       <label>CreateDate</label>
-                      <input value={moment(CreateDate).format('DD/MM/YYYY HH:mm:ss A')} type="datetime"
+                      <input value={CreateDate} type="datetime"
                         id='CreateDate'
                         disabled
                         onChange={e => setCreateDate(e.target.value)}

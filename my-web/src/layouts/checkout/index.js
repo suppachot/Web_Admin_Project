@@ -15,6 +15,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Axios from "axios";
 import { useState, useEffect } from "react";
 import DataTable from 'react-data-table-component';
+import { CSVLink, CSVDownload } from "react-csv";
 import moment from "moment/moment";
 import Paper from "@mui/material/Paper";
 
@@ -65,7 +66,7 @@ const DetailModal = ({ open, handleClose, transaction }) => {
           component="h2"
           sx={{ marginBottom: '15px' }}
         >
-          Checkin Detail
+          Checkout Detail
         </Typography>
 
         <Grid container spacing={2}>
@@ -225,7 +226,7 @@ function Checkout() {
 
 
   useEffect(() => {
-    fetch("http://103.253.73.66:5000/checkout")
+    fetch("http://103.253.73.66:5001/checkout")
       .then(res => res.json())
       .then(
         (result) => {
@@ -276,7 +277,6 @@ function Checkout() {
             <DataTable
               title="check-out"
               columns={columns}
-              //data={items}
               data={filteredData}
               highlightOnHover
               pagination
@@ -288,6 +288,9 @@ function Checkout() {
               }}
             />
           </div>
+          <CSVLink data={filteredData} filename={"Checkout_T.K.S.csv"} target="_blank" >
+            <button className="btn btn-primary">Export File</button>
+          </CSVLink>
         </Paper>
         {selectedTransaction && (
           <DetailModal

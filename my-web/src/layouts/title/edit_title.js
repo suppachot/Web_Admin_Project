@@ -38,12 +38,12 @@ function EditTitle() {
   // อ่านค่าจาก db
   const [titleList, settitleList] = useState([]);
   const getTitelID = async () => {
-    const response = await Axios.get('http://103.253.73.66:5000/gettitle/' + titleID);
+    const response = await Axios.get('http://103.253.73.66:5001/gettitle/' + titleID);
     console.log(response);
     if (response.data && response.data[0]) {
       setTitleID(response.data[0].TitleID);
       setTitleName(response.data[0].TitleName);
-      setCreateDate(response.data[0].CreateDate);
+      setCreateDate(moment(response.data[0].CreateDate).format("YYYY-MM-DD"));
       setCreateBy(response.data[0].CreateBy);
     } else {
       console.log("No data found.");
@@ -67,7 +67,7 @@ function EditTitle() {
   // ส่งข้อมูล 
   const handlesubmit = (e) => {
     e.preventDefault();
-    Axios.put('http://103.253.73.66:5000/title/edit/' + TitleID, {
+    Axios.put('http://103.253.73.66:5001/title/edit/' + TitleID, {
       TitleID: TitleID,
       TitleName: TitleName,
       CreateDate: CreateDate,
@@ -127,7 +127,7 @@ function EditTitle() {
                   <div className="col-lg-12">
                     <div className="form-group">
                       <label>CreateDate</label>
-                      <input value={moment(CreateDate).format('DD/MM/YYYY HH:mm:ss A')} type="datetime"
+                      <input value={CreateDate} type="datetime"
                         id='CreateDate'
                         disabled
                         onChange={e => setCreateDate(e.target.value)}

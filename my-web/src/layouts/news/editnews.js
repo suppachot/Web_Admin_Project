@@ -42,7 +42,7 @@ function EditsNews() {
     const [newsdata, newsdatachange] = useState(null);
 
     const getNewNo = async () => {
-        const response = await Axios.get('http://103.253.73.66:5000/getnews/' + newsNo);
+        const response = await Axios.get('http://103.253.73.66:5001/getnews/' + newsNo);
         console.log(response);
         setNewsNo(response.data[0].NewsNo);
         //setNewsDate(response.data[0].NewsDate);
@@ -71,7 +71,7 @@ function EditsNews() {
 
     const handlesubmit = (e) => {
         e.preventDefault();
-        Axios.put("http://103.253.73.66:5000/news/edit/" + NewsNo, {
+        Axios.put("http://103.253.73.66:5001/news/edit/" + NewsNo, {
             NewsNo: NewsNo,
             NewsDate: NewsDate,
             TopicNews: TopicNews,

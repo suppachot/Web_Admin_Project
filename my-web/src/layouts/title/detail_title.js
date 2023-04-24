@@ -20,7 +20,7 @@ function DetailTitle() {
     const [titledata, titledatachange] = useState(null);
 
     useEffect(() => {
-        fetch("http://103.253.73.66:5000/title/detail/" + TitleID)
+        fetch("http://103.253.73.66:5001/title/detail/" + TitleID)
             .then(res => res.json())
             .then((resp) => {
                 titledatachange(resp);

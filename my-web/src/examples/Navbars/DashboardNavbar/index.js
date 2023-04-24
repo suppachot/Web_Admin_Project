@@ -102,7 +102,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
   useEffect(() => {
     const fetchInitialNotificationCount = async () => {
       try {
-        const response = await Axios.get("http://103.253.73.66:5000/notificationCount");
+        const response = await Axios.get("http://103.253.73.66:5001/notificationCount");
         const count = response.data[0].count;
         setInitialNotificationCount(count);
         setNotificationCount(count);
@@ -209,7 +209,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
                   {miniSidenav ? "menu_open" : "menu"}
                 </Icon>
               </IconButton>
-              <IconButton
+              {/* <IconButton
                 size="small"
                 disableRipple
                 color="inherit"
@@ -217,7 +217,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 onClick={handleConfiguratorOpen}
               >
                 <Icon sx={iconsStyle}>settings</Icon>
-              </IconButton>
+              </IconButton> */}
               <IconButton
                 size="small"
                 disableRipple

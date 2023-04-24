@@ -21,7 +21,6 @@ import csvToJson from "csvtojson";
 import Papa from 'papaparse';
 import { Link, useNavigate } from 'react-router-dom';
 import { CSVLink, CSVDownload } from "react-csv";
-import FilterComponent from "./FilterComponent";
 import "bootstrap/dist/js/bootstrap.bundle.js";
 import "bootstrap/dist/css/bootstrap.css";
 import { useMemo } from "react";
@@ -201,7 +200,7 @@ function HomeEmployee() {
             confirmButtonText: 'Yes, remove it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                Axios.delete(`http://103.253.73.66:5000/deleteemployee/${EmployeeID}`)
+                Axios.delete(`http://103.253.73.66:5001/deleteemployee/${EmployeeID}`)
                     .then(() => {
                         Swal.fire({
                             title: 'Removed successfully!',
@@ -250,7 +249,7 @@ function HomeEmployee() {
  
      const handleUploadFile = () => {
         if (fileData) {
-            axios.post('http://103.253.73.66:5000/import/employee', fileData)
+            axios.post('http://103.253.73.66:5001/import/employee', fileData)
                 .then(res => {
                     console.log(res.data);
                     setCsvError(null);
@@ -398,7 +397,7 @@ function HomeEmployee() {
     ];
 
     useEffect(() => {
-        fetch("http://103.253.73.66:5000/employee")
+        fetch("http://103.253.73.66:5001/employee")
             .then(res => res.json())
             .then(
                 (result) => {

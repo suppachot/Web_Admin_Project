@@ -39,11 +39,11 @@ function EditDepartment() {
     const [departmentList, setdepartmentList] = useState([]);
 
     const getDepartmentID = async () => {
-        const response = await Axios.get('http://103.253.73.66:5000/getdepartment/' + departmentID);
+        const response = await Axios.get('http://103.253.73.66:5001/getdepartment/' + departmentID);
         console.log(response);
         setDepartmentID(response.data[0].DepartmentID);
         setDepartmentName(response.data[0].DepartmentName);
-        setCreateDate(moment(response.data[0].CreateDate).format("YYYY-MM-DD HH:mm:ss A"));
+        setCreateDate(moment(response.data[0].CreateDate).format("YYYY-MM-DD "));
         setCreateBy(response.data[0].CreateBy);
         //setUpdateDate(response.data[0].UpdateDate);
         // setUpdateBy(response.data[0].UpdateBy);
@@ -65,7 +65,7 @@ function EditDepartment() {
     // ส่งข้อมูล 
     const handlesubmit = (e) => {
         e.preventDefault();
-        Axios.put("http://103.253.73.66:5000/dapartment/edit/" + DepartmentID, {
+        Axios.put("http://103.253.73.66:5001/dapartment/edit/" + DepartmentID, {
             //DepartmentID: DepartmentID,
             DepartmentName: DepartmentName,
             CreateDate: CreateDate,

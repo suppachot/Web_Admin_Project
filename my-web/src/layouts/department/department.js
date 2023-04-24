@@ -50,7 +50,7 @@ function Department() {
       confirmButtonText: 'Yes, remove it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        Axios.delete("http://103.253.73.66:5000/deletedepartment/" + DepartmentID, {
+        Axios.delete("http://103.253.73.66:5001/deletedepartment/" + DepartmentID, {
         }).then(() => {
           Swal.fire({
             title: 'Removed successfully!',
@@ -125,7 +125,7 @@ function Department() {
 
 
   useEffect(() => {
-    fetch("http://103.253.73.66:5000/department")
+    fetch("http://103.253.73.66:5001/department")
       .then(res => res.json())
       .then(
         (result) => {

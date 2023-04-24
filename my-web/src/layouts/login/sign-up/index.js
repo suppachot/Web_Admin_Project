@@ -36,7 +36,7 @@ function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://103.253.73.66:5000/api/register", {
+      const response = await axios.post("http://103.253.73.66:5001/api/register", {
         employeeID,
         email,
         password,

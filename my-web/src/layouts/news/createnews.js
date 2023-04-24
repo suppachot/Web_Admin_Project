@@ -31,7 +31,7 @@ function CreateNews() {
 
   const [newsList, setNewsList] = useState([]);
   const getNews = () => {
-    Axios.get('http://103.253.73.66:5000/news').then((response) => {
+    Axios.get('http://103.253.73.66:5001/news').then((response) => {
       setNewsList(response.data);
     });
   }
@@ -53,7 +53,7 @@ function CreateNews() {
   }, []);
   const handlesubmit = (e) => {
     e.preventDefault();
-    Axios.post("http://103.253.73.66:5000/createnews", {
+    Axios.post("http://103.253.73.66:5001/createnews", {
       NewsDate: NewsDate,
       TopicNews: TopicNews,
       NewsDetail: NewsDetail,

@@ -30,7 +30,7 @@ function Cover() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://103.253.73.66:5000/api/forgot-password', {
+      const response = await fetch('http://103.253.73.66:5001/api/forgot-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -39,7 +39,8 @@ function Cover() {
       });
   
       if (response.ok) {
-        await Swal.fire('Reset password email sent');
+        await Swal.fire('กรุณาตรวจสอบ Email');
+        navigate('/login/sign-in');
       } else {
         const error = await response.json();
         await Swal.fire('Error', error.message, 'error');
@@ -76,7 +77,7 @@ function Cover() {
             </MDBox>
             <MDBox mt={6} mb={1}>
               <MDButton variant="gradient" color="info" type="submit" fullWidth>
-              Send Reset Password Email
+              Send
               </MDButton>
             </MDBox>
           </MDBox>

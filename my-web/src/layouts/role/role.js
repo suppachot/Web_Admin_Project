@@ -44,7 +44,7 @@ function Role() {
       confirmButtonText: 'Yes, remove it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        Axios.delete("http://103.253.73.66:5000/deleterole/" + RoleID, {}).then((res) => {
+        Axios.delete("http://103.253.73.66:5001/deleterole/" + RoleID, {}).then((res) => {
           Swal.fire({
             title: 'Removed successfully.',
             icon: 'success',
@@ -115,7 +115,7 @@ function Role() {
 
 
   useEffect(() => {
-    fetch("http://103.253.73.66:5000/role")
+    fetch("http://103.253.73.66:5001/role")
       .then(res => res.json())
       .then(
         (result) => {
