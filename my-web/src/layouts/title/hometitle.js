@@ -73,42 +73,42 @@ function HomeTitle() {
             name: 'TitleID',
             selector: row => row.TitleID,
             sortable: true,
-            width: '150px'
+            width: '130px'
         },
         {
             id: 'title',
             name: 'Title',
             selector: row => row.TitleName,
             sortable: true,
-            width: '150px'
+            width: '130px'
         },
         {
             id: 'createdate',
             name: 'CreateDate',
             selector: row => moment(row.CreateDate).format('DD/MM/YYYY HH:mm:ss A'),
             sortable: true,
-            width: '250px'
+            width: '220px'
         },
         {
             id: 'createby',
             name: 'CreateBy',
             selector: row => row.CreateBy,
             sortable: true,
-            width: '150px'
+            width: '130px'
         },
         {
             id: 'updatedate',
             name: 'UpdateDate',
             selector: row => moment(row.UpdateDate).format('DD/MM/YYYY HH:mm:ss A'),
             sortable: true,
-            width: '250px'
+            width: '220px'
         },
         {
             id: 'updateby',
             name: 'UpdateBy',
             selector: row => row.UpdateBy,
             sortable: true,
-            width: '150px'
+            width: '130px'
         },
         {
             name: 'Action',

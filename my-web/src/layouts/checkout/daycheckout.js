@@ -186,7 +186,7 @@ function DayCheckout() {
       name: 'EmployeeID',
       selector: row => row.EmployeeID,
       sortable: true,
-      width: '200px'
+      width: '150px'
     },
     {
       name: 'CheckOutDate',
@@ -198,7 +198,7 @@ function DayCheckout() {
       name: 'CheckOutTime',
       selector: row => row.CheckOutTime,
       sortable: true,
-      width: '200px'
+      width: '150px'
     },
     {
       name: 'Location',

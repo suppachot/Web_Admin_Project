@@ -1,3 +1,4 @@
+
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
@@ -6,25 +7,36 @@ import Card from "@mui/material/Card";
 import MDBox from "components/MDBox";
 import MDBadge from "components/MDBadge";
 import MDTypography from "components/MDTypography";
-import { Box } from "@mui/material";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import DashboardNavbar1 from "examples/Navbars/DashboardNavbar/indexEmp";
 
 import Axios from "axios";
+import axios from "axios";
 import { useState, useEffect } from "react";
 import DataTable from 'react-data-table-component';
 import moment from "moment/moment";
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { CSVLink, CSVDownload } from "react-csv";
-import Paper from "@mui/material/Paper";
-import Swal from 'sweetalert2';
-import jwtDecode from "jwt-decode";
+import csvToJson from "csvtojson";
+import Papa from 'papaparse';
+import "bootstrap/dist/js/bootstrap.bundle.js";
+import "bootstrap/dist/css/bootstrap.css";
+import { useMemo } from "react";
+import * as React from 'react';
+import CssBaseline from "@mui/material/CssBaseline";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Paper from '@mui/material/Paper';
+import { message } from "antd";
+import Swal from "sweetalert2";
 import Modal from '@mui/material/Modal';
-import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+import { CSVReader } from 'react-papaparse';
+import Icon from "@mui/material/Icon";
+import jwtDecode from "jwt-decode";
 
 // ประกาศตัวแปรสำหรับสไตล์ Modal
 const style = {
@@ -155,11 +167,40 @@ const DetailModal = ({ open, handleClose, booking }) => {
         </Modal>
     );
 };
-
-function BookingAll() {
+function HistoryMeeting() {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
+
+    const Removefunction = (BookingID) => {
+        Swal.fire({
+            title: 'คุณต้องการยกเลิกการจองใช่ไหม ?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Axios.delete(`http://103.253.73.66:5001/deletebookingg/${BookingID}`)
+                    .then(() => {
+                        Swal.fire({
+                            title: 'Removed successfully!',
+                            icon: 'success'
+                        })
+                        window.location.reload()
+                    })
+                    .catch((error) => {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: error.message,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        })
+                    })
+            }
+        })
+    }
 
     //ทำ modal Detail
     const [open, setOpen] = useState(false);
@@ -197,14 +238,8 @@ function BookingAll() {
         setFilterDate('');
     };
 
+
     const columns = [
-        {
-            id: 'BookingID',
-            name: 'BookingID',
-            sortable: true,
-            selector: row => row.BookingID,
-            width: '120px'
-        },
         {
             id: 'RoomName',
             name: 'RoomName',
@@ -266,44 +301,65 @@ function BookingAll() {
             }
         },
         {
-            name: 'Detail',
+            id: 'Attendant',
+            name: 'Attendant',
+            sortable: true,
+            selector: row => row.Attendant,
+            width: '120px'
+        },
+        {
+            id: 'DateApprove',
+            name: 'DateApprove',
+            sortable: true,
+            selector: row => moment(row.DateApprove).format('DD/MM/YYYY '),
+            width: '120px'
+        },
+        // {
+        //     name: 'Detail',
+        //     selector: row =>
+        //         <div class="btn-group" role="group" aria-label="Basic example">
+        //             <button className="btn btn-primary" onClick={() => handleOpenModal(row)}>Detail</button>
+        //         </div>
+
+        // },
+        {
+            name: 'Cancel',
             selector: row =>
-
+                row.Status === 'Wait' ?
                 <div class="btn-group" role="group" aria-label="Basic example">
-                    <button className="btn btn-primary" onClick={() => handleOpenModal(row)}>Detail</button>
+                    <button className="btn btn-danger" onClick={() => { Removefunction(row.BookingID) }} >ยกเลิก</button>
                 </div>
-
+                :
+                null
         }
-
+        
     ];
 
-
     useEffect(() => {
-        fetch("http://103.253.73.66:5001/bookingmeetingAll")
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    setIsLoaded(true);
-                    setItems(result);
-                },
-                (error) => {
-                    setIsLoaded(true);
-                    setError(error);
-                }
-            ).catch((err) => {
-                console.log(err.message);
-            })
-    }, [items]);
+        const employeeID = sessionStorage.getItem('emp');
+        const fetchData = () => {
+            fetch(`http://103.253.73.66:5001/historymeeting/${employeeID}`)
+                .then(res => res.json())
+                .then(
+                    (result) => {
+                        setIsLoaded(true);
+                        setItems(result);
+                        console.log(result);
+                    },
+                    (error) => {
+                        setIsLoaded(true);
+                        setError(error);
+                    }
+                ).catch((err) => {
+                    console.log(err.message);
+                });
+        };
+        fetchData();
+        const intervalId = setInterval(fetchData, 3000);
+        return () => clearInterval(intervalId);
+    }, []);
+    
 
-    useEffect(() => {
-        if (items.length > 0) {
-            const intervalId = setInterval(() => {
-                window.location.reload();
-            }, 3000); // รีเฟรชหน้าเว็บทุก ๆ 3 วินาที หลังมีการเปลี่ยนค่าของข้อมูล
-
-            return () => clearInterval(intervalId);
-        }
-    }, [items]);
 
 
     if (error) {
@@ -313,10 +369,9 @@ function BookingAll() {
     } else {
         return (
             <DashboardLayout>
-                <DashboardNavbar />
-
+                <DashboardNavbar1 />
                 <div className="LayoutContainer">
-                    <div className="card-body" >
+                    <div className="card-body">
 
                         <Box display="flex" mb={3}>
                             <Box sx={{ flexGrow: 2 }}>
@@ -350,23 +405,20 @@ function BookingAll() {
                         <Paper sx={{ p: 1 }} style={{ backgroundColor: '#F2F3F4' }}>
                             <div className="card-body" >
                                 <DataTable
-                                    title="Meetingroom Approve"
+                                    title=""
                                     columns={columns}
-                                    //data={items}
                                     data={filteredData}
                                     highlightOnHover
                                     pagination
-                                    paginationPerPage={10}
-                                    paginationRowsPerPageOptions={[10, 15, 25, 50]}
+                                    paginationPerPage={5}
+                                    paginationRowsPerPageOptions={[5, 15, 25, 50]}
                                     paginationComponentOptions={{
                                         rowsPerPageText: 'Records per page:',
                                         rangeSeparatorText: 'out of',
                                     }}
-                                    
                                 />
                             </div>
                         </Paper>
-
                         {selectedBooking && (
                             <DetailModal
                                 open={open}
@@ -374,12 +426,12 @@ function BookingAll() {
                                 booking={selectedBooking}
                             />
                         )}
-
-
                     </div>
-                </div >
+                </div>
             </DashboardLayout >
+
         );
     }
 }
-export default BookingAll;
+export default HistoryMeeting;
+

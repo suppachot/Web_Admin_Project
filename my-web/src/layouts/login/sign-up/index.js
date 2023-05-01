@@ -19,7 +19,7 @@ import axios from "axios";
 // login layout components
 import CoverLayout from "layouts/login/components/CoverLayout";
 // Images backgrond
-import bgImage from "assets/images/TKS_lo.jpg";
+import bgImage from "assets/images/bg.jpg";
 
 
 function SignUp() {

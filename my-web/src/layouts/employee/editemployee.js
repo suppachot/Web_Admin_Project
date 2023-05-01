@@ -72,7 +72,6 @@ function EditEmp() {
   }, []);
 
 
-
   const handlesubmit = (e) => {
     e.preventDefault();
     Axios.put("http://103.253.73.66:5001/employee/edit/" + EmployeeID, {

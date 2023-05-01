@@ -88,25 +88,25 @@ function Department() {
       name: 'CreateDate',
       selector: row => moment(row.CreateDate).format('DD/MM/YYYY HH:mm:ss A'),
       sortable: true,
-      width: '250px'
+      width: '200px'
     },
     {
       name: 'CreateBy',
       selector: row => row.CreateBy,
       sortable: true,
-      width: '150px'
+      width: '120px'
     },
     {
       name: 'UpdateDate',
       selector: row => moment(row.UpdateDate).format('DD/MM/YYYY HH:mm:ss A'),
       sortable: true,
-      width: '250px'
+      width: '200px'
     },
     {
       name: 'UpdateBy',
       selector: row => row.UpdateBy,
       sortable: true,
-      width: '150px'
+      width: '120px'
     },
     {
       name: 'Action',

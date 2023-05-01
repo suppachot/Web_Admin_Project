@@ -187,7 +187,7 @@ function Checkout() {
       name: 'EmployeeID',
       selector: row => row.EmployeeID,
       sortable: true,
-      width: '200px'
+      width: '150px'
     },
     {
       name: 'CheckOutDate',
@@ -199,7 +199,7 @@ function Checkout() {
       name: 'CheckOutTime',
       selector: row => row.CheckOutTime,
       sortable: true,
-      width: '200px'
+      width: '150px'
     },
     {
       name: 'Location',

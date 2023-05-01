@@ -13,7 +13,7 @@ import MDBox from "components/MDBox";
 // Material Dashboard 2 React context
 import { useMaterialUIController, setLayout } from "context";
 
-function DashboardLayout({ children }) {
+function DashboardLayout({ children}) {
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav } = controller;
   const { pathname } = useLocation();

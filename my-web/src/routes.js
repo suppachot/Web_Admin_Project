@@ -65,6 +65,7 @@ import Checkin from "layouts/checkin";
 import DayCheckin from "layouts/checkin/daycheckin";
 import Checkout from "layouts/checkout";
 import DayCheckout from "layouts/checkout/daycheckout";
+import Summarize from "layouts/summarize/summarize";
 
 
 import SignIn from "layouts/login/sign-in";
@@ -74,7 +75,6 @@ import Cover from "layouts/login/reset-password/cover";
 import ResetPW from "layouts/login/reset-password/cover/resetpassword";
 // @mui icons
 import Icon from "@mui/material/Icon";
-import { ImportExport, MeetingRoom } from "@mui/icons-material";
 import { PeopleAltIcon } from '@mui/icons-material/PeopleAlt';
 
 const routes = [
@@ -88,7 +88,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Employee",
+    name: "พนักงาน",
     key: "employee",
     icon: <Icon fontSize="small">groups</Icon>,
     route: "/employee",
@@ -96,7 +96,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Department",
+    name: "แผนกงาน",
     key: "department",
     icon: <Icon fontSize="small">people_alt</Icon>,
     route: "/department",
@@ -104,7 +104,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Role",
+    name: "ตำแหน่งาน",
     key: "role",
     icon: <Icon fontSize="small">engineering</Icon>,
     route: "/role",
@@ -112,7 +112,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Title",
+    name: "คำนำหน้าชื่อ",
     key: "title",
     icon: <Icon fontSize="small">man</Icon>,
     route: "/title",
@@ -120,7 +120,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Meetingroom",
+    name: "จัดการห้องประชุม",
     key: "meetingroom",
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/meetingroom",
@@ -128,7 +128,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Bookingmeeting",
+    name: "อนุมัติคำขอห้องประชุม",
     key: "bookingmeeting",
     icon: <Icon fontSize="small">mark_as_unread</Icon>,
     route: "/bookingmeeting",
@@ -136,7 +136,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "News",
+    name: "ข่าวสาร",
     key: "news",
     icon: <Icon fontSize="small">feed</Icon>,
     route: "/news",
@@ -144,7 +144,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Checkin",
+    name: "ประะวัติการเข้างาน",
     key: "checkin",
     icon: <Icon fontSize="small">how_to_reg</Icon>,
     route: "/checkin",
@@ -152,12 +152,36 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Checkout",
+    name: "ประะวัติการออกงาน",
     key: "checkout",
     icon: <Icon fontSize="small">how_to_reg</Icon>,
     route: "/checkout",
     component: <Checkout />,  
   },
+  {
+    type: "collapse",
+    name: "สรุปรายเดือน",
+    key: "summarize",
+    icon: <Icon fontSize="small">assessment</Icon>,
+    route: "/summarize",
+    component: <Summarize />,  
+  },
+  // {
+  //   type: "collapse",
+  //   name: "จองห้องประชุม",
+  //   key: "test",
+  //   icon: <Icon fontSize="small"></Icon>,
+  //   route: "/test",
+  //   component: <Test />,  
+  // },
+  // {
+  //   type: "collapse",
+  //   name: "ประวัติการจอง",
+  //   key: "test",
+  //   icon: <Icon fontSize="small"></Icon>,
+  //   route: "/test2",
+  
+  // },
   {
     type: "collapse",
     name: "Logout",
@@ -319,7 +343,8 @@ const routes = [
     route: "/resetpassword/:resetToken",
     component: <ResetPW />,  
   }
-
+  
 ];
-
 export default routes;
+
+

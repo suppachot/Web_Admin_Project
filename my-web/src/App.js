@@ -1,5 +1,5 @@
 
-import React ,{ useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 
 // react-router components
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
@@ -18,14 +18,13 @@ import Configurator from "examples/Configurator";
 
 // Material Dashboard 2 React themes
 import theme from "assets/theme";
-import themeRTL from "assets/theme/theme-rtl";
 
 // Material Dashboard 2 React Dark Mode themes
 import themeDark from "assets/theme-dark";
-import themeDarkRTL from "assets/theme-dark/theme-rtl";
 
 // Material Dashboard 2 React routes
 import routes from "routes";
+import Emproutes from "Emproutes";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";
@@ -40,6 +39,7 @@ import jwt_decode from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 
 export default function App() {
+
   //useAutoLogout();
   const navigate = useNavigate();
   useEffect(() => {
@@ -53,9 +53,7 @@ export default function App() {
 
         if (decoded.exp < currentTime) {
           localStorage.removeItem('jwt');
-          // localStorage.removeItem('firstName');
-          // localStorage.removeItem('lastName');
-          // localStorage.removeItem('emp');
+          sessionStorage.removeItem('role');
           sessionStorage.removeItem('emp');
           sessionStorage.removeItem('firstName');
           sessionStorage.removeItem('lastName');
@@ -72,7 +70,6 @@ export default function App() {
       clearInterval(interval);
     };
   }, [navigate]);
-
 
   const [controller, dispatch] = useMaterialUIController();
   const {
@@ -119,6 +116,10 @@ export default function App() {
     document.scrollingElement.scrollTop = 0;
   }, [pathname]);
 
+  // Check user role and set routes accordingly
+  const userRole = sessionStorage.getItem('role');
+  const authorizedRoutes = userRole === 'Administrator' ? routes : Emproutes;
+
   const getRoutes = (allRoutes) =>
     allRoutes.map((route) => {
       if (route.collapse) {
@@ -135,7 +136,8 @@ export default function App() {
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />
-      {layout === "dashboard" && (
+      {/* {/* อันแรก */}
+      {/* {layout === "dashboard" && (
         <>
           <Sidenav
             color={sidenavColor}
@@ -147,13 +149,70 @@ export default function App() {
           />
           <Configurator />
         </>
-        
+      )}  */}
+
+  
+      {layout === "dashboard" && sessionStorage.getItem('role') === 'Administrator' && (
+        <>
+          <Sidenav
+            color={sidenavColor}
+            brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
+            brandName="TKS"
+            routes={routes}
+            onMouseEnter={handleOnMouseEnter}
+            onMouseLeave={handleOnMouseLeave}
+          />
+          <Configurator />
+        </>
       )}
+
+      {layout === "dashboard" && sessionStorage.getItem('role') === 'Employee' && (
+        <>
+          <Sidenav
+            color={sidenavColor}
+            brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
+            brandName="TKS"
+            routes={Emproutes}
+            onMouseEnter={handleOnMouseEnter}
+            onMouseLeave={handleOnMouseLeave}
+          />
+          <Configurator />
+        </>
+      )}
+
+        {/* แยก sidenav อย่างเดียวไม่แยกสิทธ์เจ้าถึง */}
+      {/* {layout === "dashboard" && (
+        <>
+          <Sidenav
+            color={sidenavColor}
+            brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
+            brandName="TKS"
+            routes={routes.filter(route => {
+              // ตรวจสอบสิทธ์การเข้าถึงของผู้ใช้
+              if (sessionStorage.getItem('role') === 'Administrator') {
+                if (route.name === 'จองห้องประชุม') {
+                  return false; // ซ่อนเมนูสำหรับ Administrator
+                }
+                return true; // แสดงเมนูทั้งหมดสำหรับ Administrator ยกเว้น ....
+              } else if (route.name === "จองห้องประชุม" || route.name === "ประวัติการจอง" || route.name === "Logout") {
+                return true; // แสดงเมนู Logout และ test สำหรับผู้ใช้ทั่วไปtest
+              } else {
+                return false; // ซ่อนเมนูอื่นๆ สำหรับผู้ใช้ทั่วไป
+              }
+            })}
+            onMouseEnter={handleOnMouseEnter}
+            onMouseLeave={handleOnMouseLeave}
+          />
+          <Configurator />
+        </>
+      )} */}
+
       {layout === "vr" && <Configurator />}
       <Routes>
-        
-        {getRoutes(routes)}
-        
+
+        {/* {getRoutes(routes)} */}
+        {getRoutes(authorizedRoutes)}
+
         <Route path="*" element={<Navigate to="/login/sign-in" />} />
 
       </Routes>

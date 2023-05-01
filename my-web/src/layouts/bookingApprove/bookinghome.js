@@ -177,22 +177,25 @@ function BookingApprove() {
         setOpen(false);
     };
 
-    const [filterText, setFilterText] = useState('');
-    const filteredData = items.filter((item) =>
-        item.RoomName.toLowerCase().includes(filterText.toLowerCase()) ||
-        item.Topic.toLowerCase().includes(filterText.toLowerCase()) ||
-        item.Status.toLowerCase().includes(filterText.toLowerCase())
-    );
+    const [filterStatus, setFilterStatus] = useState('');
+    const [filterDate, setFilterDate] = useState('');
+    const filteredData = items.filter((item) => {
+        const itemDate = item.Date.split('/').reverse().join('/'); // แปลง format ของวันที่ใน items
+        return (filterStatus === '' || item.Status === filterStatus) &&
+            (filterDate === '' || itemDate >= filterDate) &&
+            (filterDate === '' || itemDate <= filterDate + 'T23:59:59.999'); // ใส่เวลาสุดท้ายของวันที่
+    });
 
-    const handleFilter = (e) => {
-        setFilterText(e.target.value);
+    const handleFilterStatus = (e) => {
+        setFilterStatus(e.target.value);
     };
-
+    const handleFilterDate = (e) => {
+        setFilterDate(e.target.value);
+    };
     const handleClearFilter = () => {
-        setFilterText('');
+        setFilterStatus("");
+        setFilterDate('');
     };
-
-
 
     const columns = [
         {
@@ -304,7 +307,6 @@ function BookingApprove() {
         {
             name: 'Detail',
             selector: row =>
-
                 <div class="btn-group" role="group" aria-label="Basic example">
                     <button className="btn btn-primary" onClick={() => handleOpenModal(row)}>Detail</button>
                 </div>
@@ -410,37 +412,44 @@ function BookingApprove() {
             <DashboardLayout>
                 <DashboardNavbar />
 
-                <Box display="flex">
-                    <Box sx={{ flexGrow: 2 }} >
-                        <div class="input-group col-lg-4" >
-                            <input type="text"
-                                className="form-control"
-                                placeholder="Search"
-                                value={filterText}
-                                onChange={handleFilter}
-                            >
-                            </input>
-                            <button
-                                className="btn btn-danger"
-                                onClick={handleClearFilter}
-                            >
-                                Clear
-                            </button>
-                        </div>
-                    </Box>
-                </Box>
-
                 <div className="LayoutContainer">
-
                     <div className="card-body" >
-                        <div className="card-body" >
-                        </div>
+
+                        <Box display="flex" mb={3}>
+                            <Box sx={{ flexGrow: 2 }}>
+                                <div class="input-group ">
+                                    <select
+                                        className="btn btn-secondary me-2"
+                                        value={filterStatus}
+                                        onChange={handleFilterStatus}
+                                    >
+                                        <option value="">Status all</option>
+                                        <option value="Wait">Wait</option>
+                                        <option value="Approve">Approve</option>
+                                        <option value="No approve">No approve</option>
+                                    </select>
+                                    <input
+                                        className="form-control"
+                                        type="date"
+                                        style={{ maxWidth: "200px" }}
+                                        value={filterDate}
+                                        onChange={handleFilterDate}
+                                    />
+                                    <button
+                                        className="btn btn-danger"
+                                        onClick={handleClearFilter}
+                                    >
+                                        Clear
+                                    </button>
+                                </div>
+                            </Box>
+                        </Box>
+
                         <Paper sx={{ p: 1 }} style={{ backgroundColor: '#F2F3F4' }}>
                             <div className="card-body" >
                                 <DataTable
                                     title="Meetingroom Approve"
                                     columns={columns}
-                                    //data={items}
                                     data={filteredData}
                                     highlightOnHover
                                     pagination

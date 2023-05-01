@@ -40,6 +40,7 @@ import Modal from '@mui/material/Modal';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { CSVReader } from 'react-papaparse';
+import Icon from "@mui/material/Icon";
 
 //(1)
 function parseCsv(file) {
@@ -229,25 +230,25 @@ function HomeEmployee() {
     //     setItems(parsedData);
     // };
     //********************************** */
-     // import file
-     const [csvError, setCsvError] = useState(null);
-     const [fileData, setFileData] = useState(null);
- 
-     const handleFileChangeFile = (e) => {
-         const file = e.target.files[0];
-         Papa.parse(file, {
-             header: true,
-             skipEmptyLines: true,
-             complete: (result) => {
-                 setFileData(result.data);
-             },
-             error: (err) => {
-                 console.log(err);
-             }
-         });
-     };
- 
-     const handleUploadFile = () => {
+    // import file
+    const [csvError, setCsvError] = useState(null);
+    const [fileData, setFileData] = useState(null);
+
+    const handleFileChangeFile = (e) => {
+        const file = e.target.files[0];
+        Papa.parse(file, {
+            header: true,
+            skipEmptyLines: true,
+            complete: (result) => {
+                setFileData(result.data);
+            },
+            error: (err) => {
+                console.log(err);
+            }
+        });
+    };
+
+    const handleUploadFile = () => {
         if (fileData) {
             axios.post('http://103.253.73.66:5001/import/employee', fileData)
                 .then(res => {
@@ -274,35 +275,35 @@ function HomeEmployee() {
             console.log("No file selected!");
         }
     };
- 
-    //-----------------------------------------------------//
 
-    //Fitter Search-1------------------------------------------------------//
-
-    // const [filteredData, setFilteredData] = useState(items);
-    // const handleFilter = (searchTerm) => {
-    //     const filteredResults = items.filter((item) => {
-    //         return item.FirstName.toLowerCase().includes(searchTerm.toLowerCase());
-    //     });
-    //     setFilteredData(filteredResults);
-    // };
-
-    //v.2------------------------------------------------//
-    const [filterText, setFilterText] = useState('');
-    const filteredData = items.filter((item) =>
-        item.EmployeeID.toLowerCase().includes(filterText.toLowerCase()) ||
-        item.FirstName.toLowerCase().includes(filterText.toLowerCase()) ||
-        item.LastName.toLowerCase().includes(filterText.toLowerCase()) ||
-        item.DepartmentName.toLowerCase().includes(filterText.toLowerCase())
-    );
+    //Fitter Search------------------------------------------------------//
+    const [filterText, setFilterText] = useState("");
+    const [filterDepartment, setFilterDepartment] = useState("");
+    const [filterRole, setFilterRole] = useState("");
+    const filteredData = items.filter((item) => {
+        const macthTtext = (item.EmployeeID.toLowerCase().includes(filterText.toLowerCase()) ||
+            item.FirstName.toLowerCase().includes(filterText.toLowerCase()) ||
+            item.LastName.toLowerCase().includes(filterText.toLowerCase()));
+        const matchDepartment = item.DepartmentName.toLowerCase().includes(filterDepartment.toLowerCase());
+        const matchRole = item.RoleName.toLowerCase().includes(filterRole.toLowerCase());
+        return macthTtext && matchDepartment && matchRole;
+    });
 
     const handleFilter = (e) => {
         setFilterText(e.target.value);
     };
-
-    const handleClearFilter = () => {
-        setFilterText('');
+    const handleFilterDepartment = (e) => {
+        setFilterDepartment(e.target.value);
     };
+    const handleFilterRole = (e) => {
+        setFilterRole(e.target.value);
+    };
+    const handleClearFilter = () => {
+        setFilterText("");
+        setFilterDepartment("");
+        setFilterRole("");
+    };
+
 
     //ทำ modal Detail
     const [open, setOpen] = useState(false);
@@ -333,36 +334,21 @@ function HomeEmployee() {
             name: 'Title',
             selector: row => row.TitleName,
             sortable: true,
-            width: '100px'
+            width: '120px'
         },
         {
             id: 'firstName',
             name: 'FirstName',
             selector: row => row.FirstName,
             sortable: true,
-            width: '150px'
+            width: '160px'
         },
         {
             id: 'lastName',
             name: 'LastName',
             selector: row => row.LastName,
             sortable: true,
-            width: '150px'
-        },
-        {
-            id: 'phonenumber',
-            name: 'PhoneNumber',
-            selector: row => row.PhoneNumber,
-            sortable: true,
-            width: '150px'
-        },
-
-        {
-            id: 'email',
-            name: 'Email',
-            selector: row => row.Email,
-            sortable: true,
-            width: '200px'
+            width: '160px'
         },
         {
 
@@ -370,12 +356,12 @@ function HomeEmployee() {
             name: 'Department',
             selector: row => row.DepartmentName,
             sortable: true,
-            width: '130px'
+            width: '180px'
         },
         {
             id: 'role',
             name: 'Role',
-            width: '150px',
+            width: '180px',
             sortable: true,
             selector: row =>
                 <div>
@@ -388,6 +374,7 @@ function HomeEmployee() {
             width: '220px',
             selector: row =>
                 <div class="btn-group" role="group" aria-label="Basic example">
+                     {/* <Icon fontSize="small" onClick={() => { LoadEdit(row.EmployeeID) }}>edit</Icon> */}
                     <button className="btn btn-primary" onClick={() => handleOpenModal(row)}>Detail</button>
                     <button className="btn btn-warning" onClick={() => { LoadEdit(row.EmployeeID) }} >Edit</button>
                     <button className="btn btn-danger" onClick={() => { Removefunction(row.EmployeeID) }} >Delete</button>
@@ -426,19 +413,52 @@ function HomeEmployee() {
             <DashboardLayout>
                 <DashboardNavbar />
 
-                <div className="LayoutContainer">
-                    <div className="card-body" >
-
-                        <Box display="flex">
-                            <Box sx={{ flexGrow: 2 }} >
-                                <div class="input-group col-lg-4" >
-                                    <input type="text"
+                <div class="input-group">
+                    <div className="btn">
+                        <div className="btn me-5" >
+                            <Link to="/addEmpolyee" className="btn btn-success" >Add Employee</Link>
+                        </div>
+                        <label for="customFile"  style={{ marginLeft: "20px"}}>import file .csv</label>
+                        <input type="file" accept=".csv" className="btn btn-large-green" onChange={handleFileChangeFile} />
+                        <button className="btn btn-secondary" type="button" onClick={handleUploadFile}>Upload</button>
+                    </div>
+                </div>
+                <div className="LayoutContainer" >
+                    <div className="card-body">
+                        <Box display="flex" alignItems="center" justifyContent="center" >
+                            <Box sx={{ flexGrow: 2 }} mr={1}>
+                                <div class="input-group ">
+                                    <input
+                                        type="text"
                                         className="form-control"
                                         placeholder="Search"
+                                        style={{ maxWidth: "300px",marginLeft: "90px", marginRight: "30px" }}
                                         value={filterText}
                                         onChange={handleFilter}
+                                    />
+                                     <label for="customFile">แผนกงาน </label>
+                                    <select
+                                        className="btn btn-info me-4"
+                                        value={filterDepartment}
+                                        style={{ maxWidth: "200px",marginLeft: "20px", marginRight: "30px" }}
+                                        onChange={handleFilterDepartment}
                                     >
-                                    </input>
+                                        <option value="">Department all</option>
+                                        <option value="ฝ่ายบุคคล">ฝ่ายบุคคล</option>
+                                        <option value="ฝ่ายบัญชี">ฝ่ายบัญชี</option>
+                                        <option value="พนักงานทั่วไป">พนักงานทั่วไป</option>
+                                    </select>
+                                    <label for="customFile">ตำแหน่งงาน </label>
+                                    <select
+                                        className="btn btn-info me-4"
+                                        value={filterRole}
+                                        style={{ maxWidth: "200px",marginLeft: "20px", marginRight: "30px" }}
+                                        onChange={handleFilterRole}
+                                    >
+                                        <option value="">Role all</option>
+                                        <option value="Administrator">Administrator</option>
+                                        <option value="Employee">Employee</option>
+                                    </select>
                                     <button
                                         className="btn btn-danger"
                                         onClick={handleClearFilter}
@@ -446,44 +466,29 @@ function HomeEmployee() {
                                         Clear
                                     </button>
                                 </div>
-
                             </Box>
-                            {/* <Box>
-                                <button
-                                    className="btn btn-danger"
-                                    onClick={handleClearFilter}
-                                >
-                                    Clear
-                                </button>
-                            </Box> */}
                         </Box>
-
-                        <div class="input-group">
-                            <div className="btn">
-                                <div className="btn" >
-                                    <Link to="/addEmpolyee" className="btn btn-success">Add Employees</Link>
-                                </div>
-                                {/* <div className="btn">
-                                    <Link to="/export-Empolyee" className="btn btn-success">Import.CSV</Link>
-                                </div> */}
-                                <label for="customFile">import file .csv</label>
-                                <input type="file" accept=".csv" className="btn btn-large-green" onChange={handleFileChangeFile} />
-                                <button className="btn btn-secondary" type="button" onClick={handleUploadFile}>Upload</button>
-                            </div>
-                        </div>
-                        
-     
-                        {csvError && <div className="alert alert-danger">{csvError}</div>}
-
                     </div>
                 </div>
+
+                {/* <div class="input-group">
+                    <div className="btn">
+                        <div className="btn me-5" >
+                            <Link to="/addEmpolyee" className="btn btn-success" >Add Employee</Link>
+                        </div>
+                        <label for="customFile"  style={{ marginLeft: "20px"}}>import file .csv</label>
+                        <input type="file" accept=".csv" className="btn btn-large-green" onChange={handleFileChangeFile} />
+                        <button className="btn btn-secondary" type="button" onClick={handleUploadFile}>Upload</button>
+                    </div>
+                </div> */}
+                {csvError && <div className="alert alert-danger">{csvError}</div>}
+
 
                 <Paper sx={{ p: 1 }} style={{ backgroundColor: '#F2F3F4' }}>
                     <div className="card-body" >
                         < DataTable
                             title="Employee List"
                             columns={columns}
-                            //data={items}
                             data={filteredData}
                             defaultSortField="EmployeeID"
                             noDataMessage="No records found."

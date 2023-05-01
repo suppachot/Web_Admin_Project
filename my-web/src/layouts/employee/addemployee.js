@@ -87,7 +87,7 @@ function AddEmployee() {
   //   console.log("message")
   // }
 
-  const token = localStorage.getItem("jwt");
+    const token = localStorage.getItem("jwt");
     const decodedToken = jwtDecode(token);
     const { emp } = decodedToken;
 

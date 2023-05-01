@@ -11,7 +11,7 @@ import MDButton from "components/MDButton";
 import CoverLayout from "layouts/login/components/CoverLayout";
 
 // Images
-import bgImage from "assets/images/TKS_lo.jpg";
+import bgImage from "assets/images/bg.jpg";
 
 import { useState } from "react";
 // react-router-dom components

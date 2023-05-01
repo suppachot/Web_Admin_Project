@@ -21,6 +21,7 @@ const Logout = () => {
         sessionStorage.setItem('firstName', sessionStorage.getItem('firstName'));
         sessionStorage.setItem('lastName', sessionStorage.getItem('lastName'));
         sessionStorage.setItem('emp', sessionStorage.getItem('emp'));
+        sessionStorage.setItem('role', sessionStorage.getItem('role'));
         navigate(-1);
       }
     });

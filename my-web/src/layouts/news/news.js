@@ -305,7 +305,7 @@ function News() {
       name: 'NewsDate',
       sortable: true,
       selector: row => moment(row.NewsDate).format('DD/MM/YYYY '),
-      width: '200px'
+      width: '150px'
     },
     {
       id: 'topicNews',
@@ -319,21 +319,21 @@ function News() {
       name: 'CreateBy',
       sortable: true,
       selector: row => row.CreateBy,
-      width: '150px'
+      width: '120px'
     },
     {
       id: 'updatedate',
       name: 'UpdateDate',
       sortable: true,
       selector: row => moment(row.UpdateDate).format('DD/MM/YYYY HH:mm:ss A'),
-      width: '250px'
+      width: '220px'
     },
     {
       id: 'updateby',
       name: 'UpdateBy',
       sortable: true,
       selector: row => row.UpdateBy,
-      width: '150px'
+      width: '120px'
     },
     {
       name: 'Action',

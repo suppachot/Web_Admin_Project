@@ -189,7 +189,7 @@ function DayCheckin() {
       name: 'EmployeeID',
       selector: row => row.EmployeeID,
       sortable: true,
-      width: '200px'
+      width: '150px'
     },
     {
       name: 'CheckInDate',
@@ -201,7 +201,7 @@ function DayCheckin() {
       name: 'CheckInTime',
       selector: row => row.CheckInTime,
       sortable: true,
-      width: '200px'
+      width: '1500px'
     },
     {
       name: 'Location',

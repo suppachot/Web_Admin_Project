@@ -20,15 +20,15 @@ import MDButton from "components/MDButton";
 import BasicLayout from "layouts/login/components/BasicLayout";
 
 // Images backgrond
-import bgImage from "assets/images/TKS_lo.jpg";
+import bgImage from "assets/images/bg.jpg";
 import axios from "axios";
 
 function Basic() {
 
+  const navigate = useNavigate();
   const [employeeID, setEmployeeID] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,14 +38,19 @@ function Basic() {
         password,
       });
 
-      const { token, firstName, lastName, emp } = response.data;
+      const { token, firstName, lastName, emp ,role} = response.data;
       localStorage.setItem('jwt', token);
       sessionStorage.setItem('emp', emp);
       sessionStorage.setItem('firstName', firstName);
       sessionStorage.setItem('lastName', lastName);
+      sessionStorage.setItem('role', role);
 
       setError(null);
-      navigate('/dashboard');
+      if (role === "Administrator") {
+        navigate('/dashboard');
+      } else {
+        navigate('/reservemeeting');
+      }
     } catch (error) {
       setError('Invalid EmployeeID or Password.');
     }
