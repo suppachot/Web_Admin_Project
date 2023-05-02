@@ -54,14 +54,28 @@ function ReserveMeeting() {
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
     const fetchAvailableRooms = async () => {
+        const data = {  
+            startTime: startTime,
+            endTime: endTime,
+            startdate: startdate 
+        }; 
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        };
+    
         try {
-            const response = await fetch(`http://103.253.73.66:5001/meetingroomm/available/startdate=${startdate}&start_time=${startTime}&end_time=${endTime}`);
-            const data = await response.json();
-            setAvailableRooms(data);
+            const response = await fetch(`http://103.253.73.66:5001/meetingroom/available`, options);
+            const responseData = await response.json();
+            setAvailableRooms(responseData);
         } catch (error) {
             console.error(error);
         }
     };
+    
     const handleClearFilter = () => {
         setStartDate("");
         setStartTime('');
