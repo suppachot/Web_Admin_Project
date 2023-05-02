@@ -21,7 +21,7 @@ import Swal from 'sweetalert2';
 import jwtDecode from "jwt-decode";
 
 
-function InsertMeeting() {
+function InsertMeeting(props) {
   // เก็บบันทึกค่าลง state
   const { roomID } = useParams();
   const { state } = useLocation();
@@ -29,11 +29,9 @@ function InsertMeeting() {
   const [RoomName, setRoomName] = useState("");
   const [Topic, setTopic] = useState("");
   const [EmployeeID, setEmployeeID] = useState("");
-  const [startdate, setStartDate] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
   const [validation, valchange] = useState(false);
 
+  const location = useLocation();
   const navigate = useNavigate();
   // อ่านค่าจาก db
   const [meetingroom, setmeetingroom] = useState([]);
@@ -53,6 +51,7 @@ function InsertMeeting() {
     const moment = require('moment-timezone');
     const username = emp;
     setEmployeeID(username);
+    console.log("String",state.startTime);
   }, []);
 
   // ส่งข้อมูล 
@@ -63,9 +62,9 @@ function InsertMeeting() {
       RoomName: RoomName,
       Topic: Topic,
       EmployeeID: EmployeeID,
-      startTime: startTime,
-      endTime: endTime,
-      startdate: startdate
+      startTime: state.startTime,
+      endTime: state.endTime,
+      startdate: state.startdate
     }).then(() => {
       setmeetingroom([
         ...meetingroom,
@@ -74,9 +73,9 @@ function InsertMeeting() {
           RoomName: RoomName,
           Topic: Topic,
           EmployeeID: EmployeeID,
-          startTime: startTime,
-          endTime: endTime,
-          startdate: startdate
+          startTime: state.startTime,
+          endTime: state.endTime,
+          startdate: state.startdate
         }
       ])
       Swal.fire({
@@ -143,7 +142,7 @@ function InsertMeeting() {
                     <div className="form-group">
                       <label>StartTime</label>
                       <input
-                        value={location.state?.startdate} 
+                        value={state.startdate} 
                         type="text"
                         id='startTime'
                         disabled
@@ -156,7 +155,7 @@ function InsertMeeting() {
                     <div className="form-group">
                       <label>EndTime</label>
                       <input
-                        value={location.state?.startTime}
+                        value={state.startTime}
                         type="text"
                         id='endTime'
                         disabled
@@ -169,7 +168,7 @@ function InsertMeeting() {
                     <div className="form-group">
                       <label>Date</label>
                       <input
-                        value={location.state?.endTime}
+                        value={state.endTime}
                         type="text"
                         id='startdate'
                         disabled

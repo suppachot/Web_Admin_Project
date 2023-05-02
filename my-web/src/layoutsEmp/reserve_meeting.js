@@ -79,11 +79,6 @@ function ReserveMeeting() {
         console.log(columns);
     }
 
-    // const LoadEdit = (RoomID) => {
-    //     navigate("/reserve/" + RoomID);
-    //     console.log(columns);
-    // }
-
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
