@@ -17,10 +17,8 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import DataTable from 'react-data-table-component';
 import moment from "moment/moment";
-import csvToJson from "csvtojson";
-import Papa from 'papaparse';
 import { Link, useNavigate } from 'react-router-dom';
-import { CSVLink, CSVDownload } from "react-csv";
+
 import "bootstrap/dist/js/bootstrap.bundle.js";
 import "bootstrap/dist/css/bootstrap.css";
 import { useMemo } from "react";
@@ -36,7 +34,7 @@ import Swal from "sweetalert2";
 import Modal from '@mui/material/Modal';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
-import { CSVReader } from 'react-papaparse';
+
 import Icon from "@mui/material/Icon";
 import jwtDecode from "jwt-decode";
 
@@ -52,12 +50,12 @@ function ReserveMeeting() {
     const [availableRooms, setAvailableRooms] = useState([]);
 
     // กำหนด state สำหรับเก็บค่าวันที่ เวลาเริ่ม เวลาสิ้นสุด
-    const [date, setDate] = useState('');
+    const [startdate, setStartDate] = useState('');
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
     const fetchAvailableRooms = async () => {
         try {
-            const response = await fetch(`http://103.253.73.66:5001/meetingroomm/available/date=${date}&start_time=${startTime}&end_time=${endTime}`);
+            const response = await fetch(`http://103.253.73.66:5001/meetingroomm/available/startdate=${startdate}&start_time=${startTime}&end_time=${endTime}`);
             const data = await response.json();
             setAvailableRooms(data);
         } catch (error) {
@@ -65,14 +63,27 @@ function ReserveMeeting() {
         }
     };
     const handleClearFilter = () => {
-        setDate("");
+        setStartDate("");
         setStartTime('');
         setEndTime('');
     };
-    const LoadEdit = (RoomID) => {
-        navigate("/reserve/" + RoomID);
+    const LoadEdit = (RoomID, startdate, startTime, endTime) => {
+        navigate(`/reserve/${RoomID}`,
+            {
+                state: {  
+                    startTime: startTime,
+                    endTime: endTime,
+                    startdate: startdate
+                }
+            });
         console.log(columns);
     }
+
+    // const LoadEdit = (RoomID) => {
+    //     navigate("/reserve/" + RoomID);
+    //     console.log(columns);
+    // }
+
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
@@ -103,17 +114,10 @@ function ReserveMeeting() {
             width: '220px',
             selector: row =>
                 <div class="btn-group" role="group" aria-label="Basic example">
-                    <button className="btn btn-primary" onClick={() => { LoadEdit(row.RoomID) }}>จอง</button>
+                    <button className="btn btn-primary" onClick={() => { LoadEdit(row.RoomID, startdate, startTime, endTime) }}>จอง</button>
                 </div>
         }
     ];
-
-    // const fetchAvailableRooms = () => {
-    //     fetch(`/meetingroom/available?start_time=${startTime}&end_time=${endTime}&date=${startDate}`)
-    //       .then((response) => response.json())
-    //       .then((json) => setItems(json))
-    //       .catch((error) => console.error(error));
-    //   };
 
     useEffect(() => {
         fetch("http://103.253.73.66:5001/meetingroom")
@@ -147,15 +151,15 @@ function ReserveMeeting() {
                             <Box sx={{ flexGrow: 2 }}>
 
                                 <div class="input-group ">
-                                    <label for="customFile"  style={{marginLeft: "30px" }}>วันที่ต้องการจอง </label>
+                                    <label for="customFile" style={{ marginLeft: "30px" }}>วันที่ต้องการจอง </label>
                                     <input
                                         className="form-control"
                                         type="date"
                                         style={{ marginLeft: "30px", marginRight: "20px" }}
-                                        value={date}
-                                        onChange={(e) => setDate(e.target.value)}
+                                        value={startdate}
+                                        onChange={(e) => setStartDate(e.target.value)}
                                     />
-                                    <label for="customFile"  style={{marginLeft: "30px" }}>ช่วงเวลาที่ต้องการจอง </label>
+                                    <label for="customFile" style={{ marginLeft: "30px" }}>ช่วงเวลาที่ต้องการจอง </label>
                                     <input
                                         className="form-control"
                                         type="time"
@@ -189,7 +193,6 @@ function ReserveMeeting() {
                                 <DataTable
                                     title=""
                                     columns={columns}
-                                    //data={items}
                                     data={availableRooms}
                                     highlightOnHover
                                     pagination

@@ -1,4 +1,3 @@
-import DataTable from 'react-data-table-component';
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
@@ -14,7 +13,8 @@ import DashboardNavbar1 from 'examples/Navbars/DashboardNavbar/indexEmp';
 
 import Axios from "axios";
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 import { select } from 'assets/theme-dark/components/form/select';
 import Select from 'react-select'
 import Swal from 'sweetalert2';
@@ -23,21 +23,24 @@ import jwtDecode from "jwt-decode";
 
 function InsertMeeting() {
   // เก็บบันทึกค่าลง state
-  //const [roomID, setroomID] = useState("");
+  const { roomID } = useParams();
+  const { state } = useLocation();
+  const [RoomID, setRoomID] = useState("");
   const [RoomName, setRoomName] = useState("");
   const [Topic, setTopic] = useState("");
   const [EmployeeID, setEmployeeID] = useState("");
-  const [StartTime, setStartTime] = useState("");
-  const [EndTime, setEndTime] = useState("");
-  const [Datee, setDatee] = useState("");
+  const [startdate, setStartDate] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
   const [validation, valchange] = useState(false);
 
   const navigate = useNavigate();
   // อ่านค่าจาก db
   const [meetingroom, setmeetingroom] = useState([]);
   const get = async () => {
-    const response = await Axios.get('http://103.253.73.66:5001/get/' + RoomID);
+    const response = await Axios.get('http://103.253.73.66:5001/get/' + roomID);
     console.log(response);
+    setRoomID(response.data[0].RoomID);
     setRoomName(response.data[0].RoomName);
   };
 
@@ -46,11 +49,9 @@ function InsertMeeting() {
   const { emp } = decodedToken;
 
   useEffect(() => {
+    get();
     const moment = require('moment-timezone');
-    const date = new Date();
-    const timezone = 'Asia/Bangkok'; // ตามที่ต้องการ
-    const formattedDate = moment(date).tz(timezone).format('YYYY-MM-DDTHH:mm:ss');
-    const username = emp; // แก้ไขเป็นชื่อผู้ใช้จริงที่ต้องการใช้งาน
+    const username = emp;
     setEmployeeID(username);
   }, []);
 
@@ -58,23 +59,24 @@ function InsertMeeting() {
   const handlesubmit = (e) => {
     e.preventDefault();
     Axios.post('http://103.253.73.66:5001/booking/add', {
+      RoomID: RoomID,
       RoomName: RoomName,
       Topic: Topic,
       EmployeeID: EmployeeID,
-      StartTime: StartTime,
-      EndTime: EndTime,
-      Datee: Datee
+      startTime: startTime,
+      endTime: endTime,
+      startdate: startdate
     }).then(() => {
       setmeetingroom([
         ...meetingroom,
         {
-         // RoomID: roomID,
-         RoomName: RoomName,
-         Topic: Topic,
-         EmployeeID: EmployeeID,
-         StartTime: StartTime,
-         EndTime: EndTime,
-         Datee: Datee
+          RoomID: RoomID,
+          RoomName: RoomName,
+          Topic: Topic,
+          EmployeeID: EmployeeID,
+          startTime: startTime,
+          endTime: endTime,
+          startdate: startdate
         }
       ])
       Swal.fire({
@@ -104,10 +106,11 @@ function InsertMeeting() {
                   <div className="col-lg-12">
                     <div className="form-group">
                       <label>RoomName</label>
-                      <input  value={RoomName}
+                      <input value={RoomName}
                         type="text"
                         id='RoomName'
-                        onChange={e => setRoomName(e.target.value)}
+                        disabled
+                        // onChange={e => setRoomName(e.target.value)}
                         className="form-control">
                       </input>
                     </div>
@@ -139,9 +142,12 @@ function InsertMeeting() {
                   <div className="col-lg-12">
                     <div className="form-group">
                       <label>StartTime</label>
-                      <input value={StartTime} type="time"
-                        id='StartTime'
-                        onChange={e => setStartTime(e.target.value)}
+                      <input
+                        value={location.state?.startdate} 
+                        type="text"
+                        id='startTime'
+                        disabled
+                        //onChange={e => setStartTime(e.target.value)}
                         className="form-control"></input>
                     </div>
                   </div>
@@ -149,9 +155,12 @@ function InsertMeeting() {
                   <div className="col-lg-12">
                     <div className="form-group">
                       <label>EndTime</label>
-                      <input value={EndTime} type="time"
-                        id='EndTime'
-                        onChange={e => setEndTime(e.target.value)}
+                      <input
+                        value={location.state?.startTime}
+                        type="text"
+                        id='endTime'
+                        disabled
+                        //onChange={e => setEndTime(e.target.value)}
                         className="form-control"></input>
                     </div>
                   </div>
@@ -159,9 +168,12 @@ function InsertMeeting() {
                   <div className="col-lg-12">
                     <div className="form-group">
                       <label>Date</label>
-                      <input value={Datee} type="date"
-                        id='Date'
-                        onChange={e => setDatee(e.target.value)}
+                      <input
+                        value={location.state?.endTime}
+                        type="text"
+                        id='startdate'
+                        disabled
+                        // onChange={e => setStartDate(e.target.value)}
                         className="form-control">
 
                       </input>

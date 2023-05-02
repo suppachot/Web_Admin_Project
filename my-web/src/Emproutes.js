@@ -38,7 +38,7 @@ const Emproutes = [
   {
     name: "reserve",
     key: "reserve",
-    route: "/reserve/:RoomID",
+    route: "/reserve/:roomID",
     component: <InsertMeeting />,
   },
   {
